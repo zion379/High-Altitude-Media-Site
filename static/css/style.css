@@ -1,0 +1,66 @@
+h1 {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin-top: 10px;
+}
+
+.company-brand {
+    float: left;
+    color: rgb(0, 0, 0);
+    width: 85%;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px; /* Set a fixed height for the footer */
+}
+
+.page-title {
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.left-align-desc {
+    text-align: right;
+    margin-top: 1.5em;
+    margin-right: 1.5em;
+}
+
+.services-list-text {
+    margin-left: 1.5em;
+    vertical-align: middle;
+    margin-bottom: 0%;
+    display: inline-block;
+   /* align-items: center; */
+}
+
+#panorama {
+    width: 100%;
+    height: 80vh;
+}
+
+#pano2 {
+    width: 100%;
+    height: 50vh;
+}
+
+.contact-form-text {
+    color:blanchedalmond;
+}
+
+nav .nav-bar-link-text {
+    color: seashell;
+}
+
+.canvas-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.model-view-controls-text {
+    color: seashell;
+}

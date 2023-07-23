@@ -1,0 +1,6 @@
+#Ignore Test Models
+RidgeWood_Final_Model.glb
+skull_model/
+
+#Ignore Virtual Enviorment
+venv/

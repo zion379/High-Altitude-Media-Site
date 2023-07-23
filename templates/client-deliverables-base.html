@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<!-- 3D Models-->
+<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@v0.154.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@v0.154.0/examples/jsm/"
+    }
+}
+</script>
+
+<!-- Pannellum -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+{% endblock %}
+
+{% block body %}
+<h1 class="page-title">{{ client_property_name }}</h1>
+
+<h3 class="page-title mb-1" style="text-align: center;">Property 3D Model</h3>
+<!-- Loading 3D Models -->
+<div class="container-fluid">
+    <div class="row" >
+        <div class="col-12 canvas-container">
+            <canvas id="Model-Viewer2" class="mx-5 rounded-3"></canvas>
+            <script type="module" src="static/js_scripts/3d_model_viewer.js"></script>
+
+        </div>
+        <div class="col-12" style=" display: flex; justify-content: center;">
+            <div class="card mb-3 mt-1 bg-dark bg-gradient" style="width: 75%; text-align: center;">
+                <h5 class="model-view-controls-text">View Controls</h5>
+                <div class="row mb-2">
+                    <div class="col-2">
+                        <button id="FrontView" class="btn bg-black" onmouseout="this.style.color = 'seashell';" onmouseover="this.style.color = 'green';" style="color: seashell;"> Front View </button>
+                    </div>
+                    <div class="col-2">
+                        <button id="RearView" class="btn bg-black" onmouseout="this.style.color = 'seashell';" onmouseover="this.style.color = 'green';" style="color: seashell;"> Rear View </button>
+                    </div>
+                    <div class="col-4">
+                        <button id="ResetView" class="btn bg-black" onmouseout="this.style.color = 'seashell';" onmouseover="this.style.color = 'green';" style="color: seashell;"> Reset View </button>
+                    </div>
+                    <div class="col-2">
+                        <button id="LeftView" class="btn bg-black" onmouseout="this.style.color = 'seashell';" onmouseover="this.style.color = 'green';" style="color: seashell;"> Left View </button>
+                    </div>
+                    <div class="col-2">
+                        <button id="RightView" class="btn bg-black" onmouseout="this.style.color = 'seashell';" onmouseover="this.style.color = 'green';" style="color: seashell;"> Right View </button>
+                    </div>
+                </div>   
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="page-title mt-5 mb-3" style="text-align: center;">Property Virtual Tour</h3>
+<div class="container-fluid">
+    <div class="row" style="justify-content: center;">
+        <div class="col-10">
+            <!-- Testing Panorma -->
+            <div id="panorama" class="rounded-3 mb-5"></div>
+            <script src="static/js_scripts/Panorama_Image_Viewer.js"></script>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center;">
+    <button class="btn btn-lg mb-3 bg-warning bg-gradient">Download All Assets</button>
+</div>
+
+
+
+{% endblock %}

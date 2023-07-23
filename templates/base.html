@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>High Altitude Media</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href={{url_for('static', filename='css/style.css')}} type="text/css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        
+
+        
+
+        {% block head %} {% endblock %}
+    </head>
+    <body class="bg-light bg-gradient">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        <nav class="navbar navbar-expand-lg bg-dark">
+            <div class="container-fluid">
+                <!--Company Logo-->
+                <img src="https://picsum.photos/50/50" alt="Company Logo">
+                <a href="/" class="navbar-brand company-brand"> <h4 class="ms-3" style="color: seashell;">High Altitude Media - Drone Services</h4></a>
+                <div >
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-bar-link-text nav-link" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-bar-link-text" href="/about">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-bar-link-text" href="/appointment-booking">Book an Appointment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-bar-link-text" href="/contact">Contact</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-bar-link-text" href="/projects">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-bar-link-text" href="/services">Services</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+          </nav>
+
+          {% block body %}{% endblock %}
+    </body>
+    <!--Footer-->
+    <footer class="bg-dark">
+        <div class="container text-light ms-0 me-0">
+            <div class="row pt-3">
+                <div class="col-md-8 text-left">
+                        <h6 class="ms-3">High Altitude Media</h6>
+                </div>
+                <div class="col-md-4 text-left">
+                    <h6 class="ms-4">QUICK LINKS</h6>
+                </div>
+            </div>
+        </div>
+    </footer>
+</html>
