@@ -20,7 +20,7 @@ let property_model = new THREE.Mesh();
 // Load and add the GLB model
 
 const loader = new GLTFLoader();
-loader.load('static/3d_Models/RidgeWood_Final_Model.glb', function (gltf) {
+loader.load('static/3d_Models/skull.glb', function (gltf) {
     property_model = gltf.scene;
    scene.add(property_model);
 }, undefined, function (error) {
@@ -45,6 +45,14 @@ scene.add(directionalLight);
 
 // Create OrbitControls
 const controls = new OrbitControls(camera, canvas);
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor);
+}
+
+window.addEventListener('resize', onWindowResize, false);
 
 // Render the scene
 function animate() {
