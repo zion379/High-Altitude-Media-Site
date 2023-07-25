@@ -20,7 +20,7 @@ let property_model = new THREE.Mesh();
 // Load and add the GLB model
 
 const loader = new GLTFLoader();
-loader.load('static/3d_Models/skull.glb', function (gltf) {
+loader.load('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/example-property/small_format_property.glb', function (gltf) {
     property_model = gltf.scene;
    scene.add(property_model);
 }, undefined, function (error) {
@@ -38,7 +38,7 @@ loader.parse(test_var,'',function(gltf){
 */
 
 // Add directional light
-const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
 directionalLight.position.set(1, 1, 1);
 directionalLight.rotation.y = 180
 scene.add(directionalLight);
