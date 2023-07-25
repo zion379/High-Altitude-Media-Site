@@ -149,7 +149,7 @@ def get_data():
     
 
 # comment this line out before pushing code to server.
-#app.run(debug=True)
+app.run(debug=True)
 
 if __name__ == '__main__':
     app.run()

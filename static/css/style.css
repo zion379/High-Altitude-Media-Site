@@ -20,6 +20,7 @@ h1 {
 .page-title {
     margin-bottom: 30px;
     margin-top: 20px;
+    color: blanchedalmond;
 }
 
 .left-align-desc {
@@ -63,4 +64,13 @@ nav .nav-bar-link-text {
 
 .model-view-controls-text {
     color: seashell;
+}
+
+.hero-image-container {
+    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/DJI_0249.JPG');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 200px;
+    background-position: center right;
 }
