@@ -130,26 +130,30 @@ def contact_send_email():
 @cross_origin()
 @app.route('/deliverables')
 def client_deliverables():
-    #Retrieve the binary data from the API response
-    #https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/example-property/3D-models.glb
-    gltf_json_response = requests.get('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Testing_Models/skull_model/skull.gltf')
-    gltf_normal_response = requests.get('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Testing_Models/skull_model/defaultMat_normal.jpg')
-    gltf_baseColor_response = requests.get('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Testing_Models/skull_model/defaultMat_baseColor.jpg')
-    gltf_bin_response = requests.get('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Testing_Models/skull_model/skull.bin')
-    print(type(gltf_json_response.json()))
-
     client_property_name = "Example Property Name"
-    return render_template('client-deliverables-base.html', client_property_name=client_property_name, property_model=gltf_json_response.json())
+    return render_template('client-deliverables-base.html')
 
 # get 3d model data
 
 @app.route('/get_model_data', methods=['GET'])
 def get_data():
     return 'Hello'
+
+@app.route('/construction-services')
+def construction_services():
+    return render_template('construction-services.html')
+
+@app.route('/aerial-imaging-services')
+def aerial_imaging_services():
+    return render_template('aerial-imaging-services.html')
+
+@app.route('/data-formats-provided')
+def data_formats_provided():
+    return render_template('/data-formats-provided.html')
     
 
 # comment this line out before pushing code to server.
-#app.run(debug=True)
+app.run(debug=True)
 
 if __name__ == '__main__':
     app.run()
