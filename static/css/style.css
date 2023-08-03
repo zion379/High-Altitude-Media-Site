@@ -6,7 +6,7 @@ h1 {
 
 .company-brand {
     float: left;
-    color: rgb(0, 0, 0);
+    color: rgb(34, 34, 34);
     width: 85%;
 }
 
@@ -17,9 +17,18 @@ h1 {
 }
 
 .page-title {
-    margin-bottom: 30px;
-    margin-top: 20px;
-    color: rgb(255, 255, 255);
+    margin-bottom: 10px;
+    margin-top: 10px;
+    color: rgb(53, 52, 52);
+}
+
+.sub-heading {
+    color: rgb(53, 52, 52);
+}
+
+.call-to-action-btn {
+    --bs-btn-color: rgb(53, 52, 52);
+    font-size: 100rem;
 }
 
 .left-align-desc {
@@ -93,16 +102,16 @@ li a{
     /* Default link styles */
     color: white;
     text-decoration: none;
-    background-color: rgb(33, 37, 41);
-    background: linear-gradient(to bottom, #373A3E, #373A3E);
+    /*background-color: rgb(33, 37, 41);*/
+    /*background: linear-gradient(to bottom,#373A3E ,#373A3E);*/
 }
 
 li a:hover {
     /* Hover Styles */
-    background-color: white;
+    background-color: rgb(33, 37, 41);
     color: black;
 }
 
-.drop_dwn_menu:hover {
-    background-color: white;
+.dropdown-menu.show {
+    --bs-dropdown-bg:  rgb(33, 37, 41);
 }
