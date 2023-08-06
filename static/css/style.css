@@ -115,3 +115,47 @@ li a:hover {
 .dropdown-menu.show {
     --bs-dropdown-bg:  rgb(33, 37, 41);
 }
+
+.services_card {
+    width: 15rem;
+    height: 200px;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    --bs-card-bg: rgb(53, 54, 56)!important;
+}
+
+.services_card p {
+    color: rgb(194, 197, 199);
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+}
+
+.services_card h5 {
+    margin-top: 0.5rem;
+    color: rgb(194, 197, 199);
+}
+
+.services_card_button {
+    width: 50%;
+    position: sticky;
+    bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.services_heading {
+    text-align: center;
+    color: rgb(194, 197, 199);
+    margin-top:2rem!important;
+    margin-left: 1rem!important;
+    margin-right: 1rem!important;
+}
+
+body p {
+    color: rgb(194, 197, 199);
+}
+
+body ol {
+    color: rgb(194, 197, 199);
+}
