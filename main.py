@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect
 from flask_mail import Mail, Message
 import requests
 from flask_cors import CORS, cross_origin
@@ -115,17 +115,21 @@ def contact_send_email():
     tst_msg = Message(f"Client Contact - {client_name}", sender=client_email, recipients=['zion.johnson@high-altitude-media.com'])
     tst_msg.body = f"Name: '{client_name}'\nEmail: {client_email}\nPhone: {client_phone}\nProject_Location: {project_location}\nProject_Info: {project_Info}\nStill_imaging_Service: {still_imaging_service}\nVideography_Service: {videography_service}\nVirtual_Tour_Service: {virtual_tour_service}\n3D_Modeling_Service: {model_service}\nUndecided_Service: {undecided_service}"
 
+    #create a varible for storing email status notification
+    status_notification = str()
+
     try:
         if not mail.is_connected:
             mail.connect()
             print(f'mail server connected: {mail.is_connected}')
             mail.send(tst_msg)
-            print('Contact email sent')
+            status_notification = 'Contact Email Successfully sent. We will get back to soon!'
     except Exception as e:
         print("SMTP server connection failed:", str(e))
+        status_notification = f'Error Sending Email: {str(e)}'
         return str(e)
 
-    return 'Contact Email Sent'
+    return render_template("home.html", notification=status_notification)
 
 @cross_origin()
 @app.route('/deliverables')
@@ -153,7 +157,7 @@ def data_formats_provided():
     
 
 # comment this line out before pushing code to server.
-#app.run(debug=True)
+app.run(debug=True)
 
 if __name__ == '__main__':
     app.run()
