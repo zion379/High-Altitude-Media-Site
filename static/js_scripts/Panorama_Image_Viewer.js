@@ -9,7 +9,7 @@ pannellum.viewer('panorama', {
     "scenes": {
         "field": {
             "title": "playground field",
-            "hfov": 110,
+            "hfov": 95,
             "pitch": 0,
             "yaw": 0,
             "type": "equirectangular",
@@ -40,7 +40,7 @@ pannellum.viewer('panorama', {
         },
         "school_intrance": {
             "title": "School Intrance",
-            "hfov": 110,
+            "hfov": 95,
             "pitch": 0,
             "yaw": 0,
             "type": "equirectangular",
@@ -69,7 +69,7 @@ pannellum.viewer('panorama', {
         },
         "playground": {
             "title": "Playground",
-            "hfov": 110,
+            "hfov": 95,
             "pitch": 0,
             "yaw": 0,
             "type": "equirectangular",
@@ -101,7 +101,7 @@ pannellum.viewer('panorama', {
         },
         "basket_ball_court": {
             "title": "Basket Ball Court",
-            "hfov": 110,
+            "hfov": 95,
             "pitch": 0,
             "yaw": 0,
             "type": "equirectangular",

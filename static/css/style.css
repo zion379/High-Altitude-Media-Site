@@ -198,3 +198,29 @@ body ol {
 .bold-text {
     font-weight: bold;
 }
+
+/*Visual Preview styles*/
+.visual_preview_text_container {
+    display: grid;
+    place-items: center;
+}
+
+.visual_preview_txt_right {
+    text-align: right;
+}
+
+@media screen and (max-width:767px) {
+    .visual_preview_txt_right {
+        text-align: center;
+    }
+}
+
+.visual_preview_txt_left {
+    text-align: left;
+}
+
+@media screen and (max-width:787px) {
+    .visual_preview_txt_left {
+        text-align: center;
+    }
+}

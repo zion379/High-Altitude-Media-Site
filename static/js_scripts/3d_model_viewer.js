@@ -4,15 +4,27 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const canvas_scale_factor = 1.2
 
+//Get Rendering Div Dimensions
+var divElement = document.getElementById('model-renderer-container');
+var divWidth = divElement.offsetWidth;
+var divHeight = divElement.offsetHeight;
+
 // Create scene, renderer, and camera
 const scene = new THREE.Scene();
 const canvas = document.querySelector('#Model-Viewer2');
 const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor, true)
+//testing diffrent viewing option
+//renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor, true)
 
-camera.position.z = 5;
+var renderer_height_multiplier = 4
+
+renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
+
+camera.position.z = 4;
+camera.position.y = 4;
+camera.position.x = 4;
 
 let property_model = new THREE.Mesh();
 
@@ -45,11 +57,14 @@ scene.add(directionalLight);
 
 // Create OrbitControls
 const controls = new OrbitControls(camera, canvas);
+//controls.object.position = THREE.Vector3(2.83, 2.46, 3.30)
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  //camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = divWidth / divHeight * renderer_height_multiplier;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor);
+  //renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor);
+  renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
 }
 
 window.addEventListener('resize', onWindowResize, false);
@@ -61,8 +76,19 @@ function animate() {
   //model_skull.rotation.x += 0.01;
   controls.update();
   renderer.render(scene, camera);
+  //printInfo();
 }
 animate();
+
+// print Info
+function printInfo() {
+  console.log('OrbitControls Position:', controls.object.position);
+  console.log('OrbitControls Rotation:', controls.object.rotation);
+  
+  // 3D model position and rotation
+  console.log('Model Position:', property_model.position);
+  console.log('Model Rotation:', property_model.rotation);
+}
 
 function rotate_Model(model, angle){
   var degrees = angle
@@ -97,8 +123,10 @@ function ResetView() {
 }
 
 //link buttons
+/*
 document.getElementById("FrontView").addEventListener("click", FrontView)
 document.getElementById("RearView").addEventListener("click", RearView)
 document.getElementById("LeftView").addEventListener("click", LeftView)
 document.getElementById("RightView").addEventListener("click", RightView)
 document.getElementById("ResetView").addEventListener("click", ResetView)
+*/
