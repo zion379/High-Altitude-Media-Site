@@ -61,7 +61,7 @@ const controls = new OrbitControls(camera, canvas);
 
 function onWindowResize() {
   //camera.aspect = window.innerWidth / window.innerHeight;
-  camera.aspect = divWidth / divHeight * renderer_height_multiplier;
+  camera.aspect = divWidth / (divHeight * renderer_height_multiplier);
   camera.updateProjectionMatrix();
   //renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor);
   renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
