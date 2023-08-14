@@ -19,34 +19,47 @@ h1 {
 .page-title {
     margin-bottom: 10px;
     margin-top: 10px;
-    color: rgb(194, 197, 199);
+    color: rgb(255, 255, 255);
     text-align: center;
 }
 
 .home-page-title {
     margin-bottom: 10px;
     margin-top: 10px;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     text-align: center;
+    font-weight: bolder;
+    text-shadow: 0 0 5px rgb(0, 0, 0);
 }
 
 .sub-heading {
-    color: rgb(53, 52, 52);
+    color: rgb(255, 255, 255);
+    font-weight: bolder;
+    text-shadow: 0 0 5px rgb(0, 0, 0);
 }
 
 .call-to-action-btn {
     --bs-btn-color: rgb(53, 52, 52);
     font-size: 100rem;
+    border-color: rgb(255, 255, 255) !important;
+    text-shadow: 0 0 5px rgb(0, 0, 0);
+    shadow: 0 0 5px rgb(0, 0, 0);
+}
+
+.call-to-action-btn:hover {
+    border-color: rgb(0, 0, 0) !important;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
 }
 
 .call-to-action-btn a {
     text-decoration: none;
-    color: white;
+    color: rgb(255, 255, 255);
     font-weight: bold;
 }
 
 .call-to-action-btn a:hover {
-    color: black;
+    color: rgb(0, 0, 0);
 }
 
 .left-align-desc {
@@ -93,13 +106,28 @@ nav .nav-bar-link-text {
 }
 
 .hero-image-container {
-    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/DJI_0249.JPG');
+    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Site_Images/Construction_Birds_Eye_View.jpeg');
     background-size: cover;
     background-repeat: no-repeat;
     width: 100%;
     height: 400px;
-    background-position: center;
+    background-position: right 50% bottom 25%;
+    display: flex;
+    text-align: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
+
+/*
+.hero-image-container::before {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+*/
 
 body {
     margin: 0;

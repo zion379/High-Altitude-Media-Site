@@ -154,6 +154,10 @@ def aerial_imaging_services():
 @app.route('/data-formats-provided')
 def data_formats_provided():
     return render_template('/data-formats-provided.html')
+
+@app.route('/portfolio')
+def portfolio():
+    return render_template('/portfolio.html')
     
 
 # comment this line out before pushing code to server.
