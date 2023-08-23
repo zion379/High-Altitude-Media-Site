@@ -43,7 +43,6 @@ h1 {
     font-size: 100rem;
     border-color: rgb(255, 255, 255) !important;
     text-shadow: 0 0 5px rgb(0, 0, 0);
-    shadow: 0 0 5px rgb(0, 0, 0);
 }
 
 .call-to-action-btn:hover {
@@ -118,16 +117,6 @@ nav .nav-bar-link-text {
     padding-right: 0 !important;
 }
 
-/*
-.hero-image-container::before {
-    background-color: rgba(0, 0, 0, 0.5);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-*/
 
 body {
     margin: 0;
@@ -168,18 +157,22 @@ li a:hover {
     text-align: center;
     left: 50%;
     transform: translateX(-50%);
-    --bs-card-bg: rgb(53, 54, 56)!important;
+    /*--bs-card-bg: rgb(53, 54, 56)!important;*/
+    --bs-card-bg: none!important;
+    backdrop-filter: blur(30px) grayscale(30%);
 }
 
 .services_card p {
-    color: rgb(194, 197, 199);
+    color: rgb(255, 255, 255);
     margin-left: 0.25rem;
     margin-right: 0.25rem;
+    text-shadow: 0 0 5px rgb(0, 0, 0);
 }
 
 .services_card h5 {
     margin-top: 0.5rem;
-    color: rgb(194, 197, 199);
+    color: rgb(255, 255, 255);
+    text-shadow: 0 0 5px rgb(0, 0, 0);
 }
 
 .services_card_button {
@@ -188,14 +181,25 @@ li a:hover {
     bottom: 0;
     margin-left: auto;
     margin-right: auto;
+    --bs-btn-bg: rgba(0, 0, 0, 0.473) !important;
+    --bs-hover-btn-bg: rgba(0, 0, 0, 0.747) !important;
+}
+
+.services_sub-heading {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    margin-top:2rem!important;
+    margin-left: 1rem!important;
+    margin-right: 1rem!important;
+    text-shadow: 0 0 5px rgb(0, 0, 0);
 }
 
 .services_heading {
     text-align: center;
-    color: rgb(194, 197, 199);
-    margin-top:2rem!important;
-    margin-left: 1rem!important;
-    margin-right: 1rem!important;
+    text-shadow: 0 0 5px rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
 }
 
 body p {
@@ -252,3 +256,23 @@ body ol {
         text-align: center;
     }
 }
+
+/* Parallax Effect */
+.parallax-container {
+    position: relative;
+    overflow: hidden;
+    height: 600%; /* Adjust based on requirements */
+    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Site_Images/Parallax-Images/construction_parallax_01_clipdrop-enhance.jpeg');
+    background-size: cover;
+    /*background-position: center 10px;*/
+}
+
+.parallax-content {
+    position: relative;
+    padding: 20px;
+}
+
+.transparent-card {
+    
+}
+
