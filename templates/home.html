@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block head %} 
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital@1&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -9,7 +11,7 @@
     <!-- Services Description and Related Image Section-->
     <div class="row">
         <div class="col-12 hero-image-container">
-            <div style="backdrop-filter: grayscale(5%) opacity(100%) blur(2.5px); flex: 1;">
+            <div class="hero-image-filter">
                 <!-- Page Title -->
             <h1 class="home-page-title mt-5">Elevating Construction Progress Monitoring</h1>
             <!-- Sub Heading -->
@@ -21,11 +23,12 @@
     </div>
     <script src="static/js_scripts/background_scroll.js"></script>
     <!-- Services Overview -->
-    <div class="row parallax-container">
+    <div class="row parallax-container services-parallax">
         <h2 class="services_heading parallax-content" >What We Do</h2>
         <div class="col parallax-content" style="align-content: center;">
             <div class="card services_card my-1">
                 <h5 class="card-title">Aerial Still Images / Progression Still Images</h5>
+                <img src="https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/graphics/Services_graphics/a%20minimal%20camera%20icon_clipdrop-background-removal.png" class="card-img" alt="Aerial Imagery Icon">
                 <!-- Possible Graphic Here -->
                 <p>
                     Using advanced drones, we provide high-resolution aerial photos of your construction project. Our progression imaging captures your build's evolution, presenting a clear visual timeline for effortless monitoring and sharing with your team and stakeholders.
@@ -39,6 +42,7 @@
         <div class="col parallax-content" style="align-content: center;">
             <div class="card services_card my-1">
                 <h5 class="card-title">Aerial Videography / Progression Videography</h5>
+                <img src="https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/graphics/Services_graphics/_a%20minimal%20video%20camera%20icon%20side%20view_clipdrop-background-removal.png" class="card-img" alt="Videography services graphic">
                 <p>
                     Elevate your visual narrative with our aerial videography services, offering high-definition videos of your construction site from multiple perspectives. Document your project's progression in a compelling format with our videography service.
                 </p>
@@ -50,6 +54,7 @@
         <div class="col parallax-content" style="align-content: center;">
             <div class="card services_card my-1">
                 <h5 class="card-title">Property 3D Models</h5>
+                <img src="https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/graphics/Services_graphics/an%20icon%20that%20represents%20a%203D%20model%20for%20a%20website_clipdrop-background-removal.png" class="card-img" alt="Property Model Graphic">
                 <p>
                     Our Property 3D Modeling service uses high-tech drones and sophisticated software to create detailed, interactive 3D models of your construction site, facilitating advanced visualization, and aiding in project planning and presentation.
                 </p>
@@ -61,6 +66,7 @@
         <div class="col parallax-content" style="align-content: center;">
             <div class="card services_card my-1">
                 <h5 class="card-title">2D Orthomosaics</h5>
+                <img src="https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/graphics/Services_graphics/a%20minimal%20professional%20icon%20of%20a%20satellite%20map%20view%20of%20a%20construction%20property%20grayscale_clipdrop-variants.jpeg" class="card-img" alt="2D Orthomosiac Graphic">
                 <p>
                     With our 2D Orthomosaic services, we offer precision mapping of your construction site. This service provides a detailed, accurate, and scaled aerial view of the site, making it an invaluable tool for surveying, planning, and monitoring construction progress.
                </p>
@@ -72,6 +78,7 @@
         <div class="col parallax-content" style="align-content: center;">
             <div class="card services_card my-1">
                 <h5 class="card-title">Virtual Tour Services for Properties</h5>
+                <img src="https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/graphics/Services_graphics/a%20minimal%20icon%20that%20represents%20virtual%20tours%20(1)_clipdrop-cleanup_clipdrop-background-removal.png" class="card-img" alt="Virtual Tour Graphics">
                 <p>
                     Experience an immersive journey of your project with our Virtual Tour service, allowing remote exploration with 360-degree views, ideal for reviews, presentations, and marketing.
                 </p>
@@ -80,43 +87,45 @@
                 </a>
             </div>
         </div>
-
-        <h4 class="services_sub-heading">
-            Our services are designed to empower construction builders with a comprehensive suite of aerial imaging tools to streamline project tracking, enhance communication, and boost efficiency. Get a complete view of your project, anytime, anywhere, with our cutting-edge aerial imagery services.
-        </h4>
+        <div class="paragraph-content-box-glass rounded-4">
+            <h4 class="services_sub-heading">
+                Our services are designed to empower construction builders with a comprehensive suite of aerial imaging tools to streamline project tracking, enhance communication, and boost efficiency. Get a complete view of your project, anytime, anywhere, with our cutting-edge aerial imagery services.
+            </h4>
+        </div>
     </div>
 
     <!-- Why Choose Us -->
-    <div class="row">
-        <div class="col">
-            <h3 style="text-align: center; color: rgb(194, 197, 199); margin-top: 3rem;">Why Choose Us</h3>
+    <div class="row parallax-container parallax-choose-us">
+        <div class="col parallax-content">
+            <div class="content-box rounded-4">
+                <h3 style="text-align: center; color: rgb(194, 197, 199); margin-top: 3rem;">Why Choose Us</h3>
             <ol  class="my-3 mx-4">
                 <li>
-                    <p class="bold-text">Diverse Data Formats</p>
+                    <h5 class="bold-text">Diverse Data Formats</h5>
                     <p>
                         We understand that different projects require different views. That's why we offer a wide range of data formats from high-resolution aerial images, detailed 2D orthomosaics, immersive 3D models, to captivating virtual tours. Whatever your project needs, we've got you covered.
                     </p>
                 </li>
                 <li>
-                    <p class="bold-text">Easy Online Viewing</p>
+                    <h5 class="bold-text">Easy Online Viewing</h5>
                     <p>
                         Ease of access is key in today’s digital world. With our services, you can effortlessly view your property’s data formats online. Be it an aerial image, 3D model, or virtual tour, our user-friendly interface makes it simple for you to navigate and explore your project.
                     </p>
                 </li>
                 <li>
-                    <p class="bold-text">Downloadable Assets</p>
+                    <h5 class="bold-text">Downloadable Assets</h5>
                     <p>
                         Not only can you view your assets online, but we also offer the option to download them for offline use. Whether you need to present to stakeholders, incorporate them into a report, or use them for marketing, you have the freedom to use these assets as you need, whenever you need them.
                     </p>
                 </li>
                 <li>
-                    <p class="bold-text">Innovative Technology</p>
+                    <h5 class="bold-text">Innovative Technology</h5>
                     <p>
                         We employ cutting-edge drone technology and sophisticated software to create detailed and accurate aerial imagery. Our dedication to technology ensures you get the highest quality outputs that offer unique and comprehensive perspectives on your construction project.
                     </p>
                 </li>
                 <li>
-                    <p class="bold-text">Customer-Centric Approach</p>
+                    <h5 class="bold-text">Customer-Centric Approach</h5>
                     <p>
                         We believe in a customer-centric approach where your needs are our top priority. We work closely with you to understand your specific requirements and deliver tailored solutions that enhance your project planning, tracking, and presentation capabilities.
                     </p>
@@ -125,6 +134,7 @@
             <h4 class="mb-5" style="text-align: center; color: rgb(194, 197, 199);">
                 Choosing us means opting for flexibility, ease of use innovation, and a dedicated partner in your construction journey. Leverage our aerial imagery services to elevate your construction poject management to the next level.
             </h4>
+            </div>
         </div>
     </div>
 

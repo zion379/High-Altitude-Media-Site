@@ -30,12 +30,37 @@ h1 {
     text-align: center;
     font-weight: bolder;
     text-shadow: 0 0 5px rgb(0, 0, 0);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5em;
 }
 
 .sub-heading {
     color: rgb(255, 255, 255);
     font-weight: bolder;
     text-shadow: 0 0 5px rgb(0, 0, 0);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.3em;
+}
+
+@media screen and (max-width:767px) {
+    .home-page-title {
+        margin-bottom: 10px;
+        margin-top: 10px;
+        color: rgb(255, 255, 255);
+        text-align: center;
+        font-weight: bolder;
+        text-shadow: 0 0 5px rgb(0, 0, 0);
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 2em;
+    }
+
+    .sub-heading {
+        color: rgb(255, 255, 255);
+        font-weight: bolder;
+        text-shadow: 0 0 5px rgb(0, 0, 0);
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 1em;
+    }
 }
 
 .call-to-action-btn {
@@ -117,6 +142,12 @@ nav .nav-bar-link-text {
     padding-right: 0 !important;
 }
 
+.hero-image-filter {
+    -webkit-backdrop-filter: blur(2.5px);
+    backdrop-filter: grayscale(5%) opacity(100%) blur(2.5px);
+    flex: 1;
+}
+
 
 body {
     margin: 0;
@@ -160,6 +191,7 @@ li a:hover {
     /*--bs-card-bg: rgb(53, 54, 56)!important;*/
     --bs-card-bg: none!important;
     backdrop-filter: blur(30px) grayscale(30%);
+    -webkit-backdrop-filter: blur(30px);
 }
 
 .services_card p {
@@ -251,7 +283,7 @@ body ol {
     text-align: left;
 }
 
-@media screen and (max-width:787px) {
+@media screen and (max-width:767px) {
     .visual_preview_txt_left {
         text-align: center;
     }
@@ -261,8 +293,6 @@ body ol {
 .parallax-container {
     position: relative;
     overflow: hidden;
-    height: 600%; /* Adjust based on requirements */
-    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Site_Images/Parallax-Images/construction_parallax_01_clipdrop-enhance.jpeg');
     background-size: cover;
     /*background-position: center 10px;*/
 }
@@ -272,7 +302,28 @@ body ol {
     padding: 20px;
 }
 
-.transparent-card {
-    
+.services-parallax {
+    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Site_Images/Parallax-Images/construction_parallax_01_clipdrop-enhance.jpeg');
+    height: 800%; /* Adjust based on requirements */
 }
 
+.parallax-choose-us {
+    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Parallax_Images/A%20detailed%20building%20under%20construction%20grayscale_clipdrop-enhance.jpeg');
+    height: 800%; /* Adjust based on requirements */
+}
+
+.content-box {
+    padding: 20px;
+    margin: 20px auto;
+    background-color: rgba(0, 0, 0, 0.384);
+    backdrop-filter: blur(25px) grayscale(25%);
+    -webkit-backdrop-filter: blur(30px);
+}
+
+.paragraph-content-box-glass {
+    padding: 2px;
+    margin: 3px auto;
+    background-color: none;
+    backdrop-filter: blur(25px) grayscale(25%);
+    -webkit-backdrop-filter: blur(30px);
+}

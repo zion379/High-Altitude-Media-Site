@@ -1,9 +1,13 @@
 document.addEventListener('scroll', function() {
-    const parallaxContainer = document.querySelector('.parallax-container');
+    const parallaxContainers = document.getElementsByClassName('parallax-container');
 
     //Calculate scroll ratio
-    const scrolled = window.scrollY / 5;
+    const scrolled = window.scrollY / 2;
 
-    // Apply the parallax effect
-    parallaxContainer.style.backgroundPosition = 'center ' + -scrolled + 'px';
+    console.log(parallaxContainers.length);
+
+    for (var i = 0; i < parallaxContainers.length; i++) {
+        // Apply the parallax effect
+        parallaxContainers[i].style.backgroundPosition = 'center ' + -scrolled + 'px';
+    }
 });
