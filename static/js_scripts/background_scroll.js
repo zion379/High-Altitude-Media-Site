@@ -4,7 +4,8 @@ document.addEventListener('scroll', function() {
     //Calculate scroll ratio
     const scrolled = window.scrollY / 2;
 
-    console.log(parallaxContainers.length);
+    //Testing
+    //console.log(parallaxContainers.length);
 
     for (var i = 0; i < parallaxContainers.length; i++) {
         // Apply the parallax effect

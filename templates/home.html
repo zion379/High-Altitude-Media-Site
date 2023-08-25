@@ -3,14 +3,15 @@
 {% block head %} 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:ital@1&family=Quicksand&family=Geologica:wght@600&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
 <div class="container-fluid">
     <!-- Services Description and Related Image Section-->
     <div class="row">
-        <div class="col-12 hero-image-container">
+        <!-- <script src="static/js_scripts/Zoom_Out_Effect.js"></script> -->
+        <div class="col-12 hero-image-container zoom-out-effect">
             <div class="hero-image-filter">
                 <!-- Page Title -->
             <h1 class="home-page-title mt-5">Elevating Construction Progress Monitoring</h1>
@@ -139,42 +140,54 @@
     </div>
 
     <!-- How to get started-->
-    <div class="row get_started_section">
-        <h2 class="get_started_heading">How To Get Started</h2>
+    <div class="row get_started_section parallax-container">
+        <div class="content-box parallax-content">
+            <h2 class="get_started_heading">How To Get Started</h2>
         <p class="get_started_heading mb-3">
             Our process is straightforward and designed with your convenience in mind. Here are the steps to get started with our services.
         </p>
-        <div class="col">
-            <h3>Step One</h3>
+        </div>
+        <div class="col-lg-3" style="text-align: center;">
+            <div class="content-box rounded-4 parallax-content">
+                <h3>Step One</h3>
             <h4>Get In Touch</h4>
             <p>
                 The first step is to get in touch. Fill out the contact form on our website with your contact number, email, and details relating to your project. Alternatively, you can give us a call to provide a brief overview of your project. We're here to listen and understand your needs.
             </p>
+            </div>
         </div>
-        <div class="col">
-            <h3>Step Two</h3>
+        <div class="col-lg-3" style="text-align: center;">
+            <div class="content-box rounded-4 parallax-content">
+                <h3>Step Two</h3>
             <h4>Service Confirmation</h4>
             <p>
                 Next, we will arrange a meeting with you either in person or via email to discuss your project in more detail. This is the time to confirm the services you need and exclude any you don't require. We'll collaborate with you to tailor a solution that perfectly fits your project's needs.
             </p>
+            </div>
         </div>
-        <div class="col">
-            <h3>Step Three</h3>
-            <h4>Scheduling the Flight</h4>
-            <p>
-                Once we have a clear understanding of your project, we'll schedule the flight. Our pilots will visit the property a day in advance to familiarize themselves with the site and prepare for the flight. We will confirm the flight date with you, ensuring it fits within your project timeline.
-            </p>
+        <div class="col-lg-3" style="text-align: center;">
+            <div class="content-box rounded-4 parallax-content">
+                <h3>Step Three</h3>
+                <h4>Scheduling the Flight</h4>
+                <p>
+                    Once we have a clear understanding of your project, we'll schedule the flight. Our pilots will visit the property a day in advance to familiarize themselves with the site and prepare for the flight. We will confirm the flight date with you, ensuring it fits within your project timeline.
+                </p>
+            </div>
         </div>
-        <div class="col">
-            <h3>Step Four</h3>
+        <div class="col-lg-3" style="text-align: center;">
+            <div class="content-box rounded-4 parallax-content">
+                <h3>Step Four</h3>
             <h4>Data Collection & Processing</h4>
             <p>Step Three
                 Leave the rest to us. We handle everything from this point forward. We'll operate the drone flight, collect the aerial data, and process it into the required formats. Once processed, you will have access to view your assets online. You also have the option to download the assets for offline use.
             </p>
+            </div>
         </div>
-        <h4 class="mt-2 mb-4 get_started_heading">
-            Get started with us today and elevate your project monitoring and tracking with our high-quality aerial imagery services. We’re committed to making your construction project a seamless and efficient experience.
-        </h4>
+        <div class="content-box parallax-content">
+            <h4 class="mt-2 mb-4 get_started_heading">
+                Get started with us today and elevate your project monitoring and tracking with our high-quality aerial imagery services. We’re committed to making your construction project a seamless and efficient experience.
+            </h4>
+        </div>
     </div>
     <!-- Still Images for Construction Progress Section -->
 

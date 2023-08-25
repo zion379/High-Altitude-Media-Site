@@ -38,7 +38,7 @@ h1 {
     color: rgb(255, 255, 255);
     font-weight: bolder;
     text-shadow: 0 0 5px rgb(0, 0, 0);
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: 'Quicksand', sans-serif;
     font-size: 1.3em;
 }
 
@@ -58,7 +58,7 @@ h1 {
         color: rgb(255, 255, 255);
         font-weight: bolder;
         text-shadow: 0 0 5px rgb(0, 0, 0);
-        font-family: 'IBM Plex Mono', monospace;
+        font-family: 'Quicksand', sans-serif;
         font-size: 1em;
     }
 }
@@ -84,6 +84,10 @@ h1 {
 
 .call-to-action-btn a:hover {
     color: rgb(0, 0, 0);
+}
+
+.card-title {
+    font-family: 'Quicksand', sans-serif !important;
 }
 
 .left-align-desc {
@@ -194,11 +198,13 @@ li a:hover {
     -webkit-backdrop-filter: blur(30px);
 }
 
+
 .services_card p {
     color: rgb(255, 255, 255);
     margin-left: 0.25rem;
     margin-right: 0.25rem;
     text-shadow: 0 0 5px rgb(0, 0, 0);
+    font-family: 'Quicksand', sans-serif;
 }
 
 .services_card h5 {
@@ -224,6 +230,7 @@ li a:hover {
     margin-left: 1rem!important;
     margin-right: 1rem!important;
     text-shadow: 0 0 5px rgb(0, 0, 0);
+    font-family: 'Quicksand', sans-serif;
 }
 
 .services_heading {
@@ -252,11 +259,25 @@ body ol {
 
 .get_started_section h4 {
     color: rgb(194, 197, 199);
+    font-family: 'Quicksand', sans-serif;
+}
+
+.get_started_section h5 {
+    font-family: 'Geologica', sans-serif;
 }
 
 .get_started_heading {
     text-align: center;
     margin-bottom: 1rem;
+}
+
+.get_started_section p {
+    font-family: 'Quicksand', sans-serif;
+}
+
+.get_started_section {
+    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Parallax_Images/construction%20property_clipdrop-enhance.jpeg');
+    background-size: 100%;
 }
 
 .bold-text {
@@ -318,6 +339,18 @@ body ol {
     background-color: rgba(0, 0, 0, 0.384);
     backdrop-filter: blur(25px) grayscale(25%);
     -webkit-backdrop-filter: blur(30px);
+}
+
+.content-box p {
+    font-family: 'Quicksand', sans-serif;
+}
+
+.content-box li {
+    font-family: 'Quicksand', sans-serif;
+}
+
+.content-box h5 {
+    font-family: 'Geologica', sans-serif;
 }
 
 .paragraph-content-box-glass {
