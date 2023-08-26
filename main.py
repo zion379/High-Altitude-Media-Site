@@ -96,7 +96,7 @@ def projects():
 def services():
     return render_template('services.html')
 
-@app.route('/conact_send_email', methods=['POST'])
+@app.route('/contact_send_email', methods=['POST'])
 def contact_send_email():
     client_name = request.form.get('client-name')
     client_email = request.form.get('client-email')

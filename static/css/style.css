@@ -8,13 +8,43 @@ h1 {
     float: left;
     color: rgb(34, 34, 34);
     width: 85%;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+
+
+.company-brand h4 {
+    font-size: 1.75rem !important;
+    margin-right: 0;
+}
+
+.company-logo {
+    width: 80px;
+    height: 80px;
+}
+
+@media screen and (max-width:992px) {
+    .company-logo {
+        width: 120px;
+        height: 120px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .nav-bar-container{
+        text-align: center;
+        justify-content: center !important;
+    }
 }
 
 .footer {
     bottom: 0;
     width: 100%;
-    height: 50px; /* Set a fixed height for the footer */
 }
+.footer h6 {
+    text-align: center;
+}
+
 
 .page-title {
     margin-bottom: 10px;
@@ -115,7 +145,8 @@ h1 {
 }
 
 .contact-form-text {
-    color:blanchedalmond;
+    color:rgb(255, 255, 255);
+    font-family: 'Quicksand', sans-serif !important;
 }
 
 nav .nav-bar-link-text {
@@ -239,6 +270,8 @@ li a:hover {
     color: rgb(255, 255, 255);
     padding-top: 10px !important;
     padding-bottom: 10px !important;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.3rem;
 }
 
 body p {
@@ -251,6 +284,10 @@ body ol {
 
 .get_started_section h2 {
     color: rgb(194, 197, 199);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3em;
 }
 
 .get_started_section h3 {
@@ -260,18 +297,17 @@ body ol {
 .get_started_section h4 {
     color: rgb(194, 197, 199);
     font-family: 'Quicksand', sans-serif;
+    text-align: center;
 }
 
 .get_started_section h5 {
     font-family: 'Geologica', sans-serif;
+    color: rgb(194, 197, 199);
 }
 
-.get_started_heading {
+.get_started_heading p {
     text-align: center;
-    margin-bottom: 1rem;
-}
-
-.get_started_section p {
+    margin-bottom: 0px;
     font-family: 'Quicksand', sans-serif;
 }
 
@@ -359,4 +395,106 @@ body ol {
     background-color: none;
     backdrop-filter: blur(25px) grayscale(25%);
     -webkit-backdrop-filter: blur(30px);
+}
+
+.content-box-glass-light {
+    padding: 2px;
+    margin: 10px auto;
+    background-color: rgba(0, 0, 0, 0.192);
+    backdrop-filter: blur(30px) grayscale(25%);
+    -webkit-backdrop-filter: blur(30px);
+}
+
+.content-box-glass-light h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-size: 3em;
+}
+
+.contact-body {
+    background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Parallax_Images/Top-Down-Construction%20Photo.jpeg');
+    background-size: cover;
+    width: 100vw;
+    height: 120vh;
+}
+
+.contact-background-filter {
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: grayscale(5%) opacity(100%) blur(2.5px);
+    flex: 1;
+    height: 120vh; /* This Value Needs to be the same as contact body height */
+    display: flex;
+}
+
+.contact-form {
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: grayscale(5%) opacity(100%) blur(40px);
+    background-color: rgba(0, 0, 0, 0.7);
+    margin-bottom: 50px;
+    display:grid;
+}
+
+.contact-form-input-section {
+    display: grid;
+}
+
+.contact-form-input-section input {
+    width: 50%;
+}
+
+.contact-form-input-section input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+    justify-self: center;
+    text-align: center;
+}
+
+
+@media screen and (max-width:992px) {
+
+    .contact-form-input-section label {
+        justify-self: center;
+    }
+
+    .contact-form-input-section input {
+        width: 88%;
+        justify-self: center;
+        text-align: center;
+    }
+
+    .contact-form-input-section input[type="checkbox"] {
+        width: 30px;
+        height: 30px;
+        justify-self: center;
+        text-align: center;
+    }
+
+    .contact-form-input-section div {
+        justify-self: center;
+        text-align: center;
+    }
+
+    .contact-form-input-section textarea {
+        justify-self: center;
+    }
+
+    .contact-body {
+        background-image: url('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Parallax_Images/Top-Down-Construction%20Photo.jpeg');
+        background-size: cover;
+        width: 100vw;
+        height: 200vh;
+    }
+    
+    .contact-background-filter {
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: grayscale(5%) opacity(100%) blur(2.5px);
+        flex: 1;
+        height: 200vh; /* This Value Needs to be the same as contact body height */
+        display: flex;
+    }
+}
+
+.contact-input {
+    background-color: rgba(119, 127, 134, 0.425) !important;
 }

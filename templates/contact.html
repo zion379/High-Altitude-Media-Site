@@ -3,91 +3,103 @@
 {% block head %}{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h2 class="page-title">Get In Contact</h2>
-    <h4 class="page-title">Explore the variety of <a href="/data-formats-provided" style="text-decoration: none; font-weight: bold;">data formats</a> we offer, ensuring seamless accessibility for all clients, even if you're not familiar with them!</h4>
-    <!-- Contact Form -->
-    <form action="/conact_send_email" method="POST" class="bg-dark bg-gradient rounded-4">
-        <div class="row">
-            <div class="col-4">
-                <!-- Customer Name -->
-                <div class="mb-3 ms-3 me-3 mt-3">
-                    <label for="client-name" class="form-label contact-form-text">Your Name</label>
-                    <input type="text" id="client-name" name="client-name" class="form-control bg-secondary bg-gradient" style="width: 50%;">
-                </div>
-            </div>
-            <div class="col-4">
-                <!-- Customer Email -->
-                <div class="mb-3 ms-3 me-3 mt-3">
-                    <label for="client-email" class="form-label contact-form-text">Email Address</label>
-                    <input type="email" name="client-email" id="client-email" class="form-control bg-secondary bg-gradient" style="width: 50%;">
-                    <div id="emailHelp" class="form-text"><p class="contact-form-text">We'll never share your email with anyone else<p></div>
-                </div>
-            </div>
-            <div class="col-4">
-                <!-- Phone Number -->
-                <div class="mb-3 ms-3 me-3 mt-3">
-                    <label for="client-phone-number" class="form-label contact-form-text">Contact Phone Number:</label>
-                    <input type="text" name="client-phone-number" id="client-phone-number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="xxx-xxx-xxxx" class="form-control bg-secondary bg-gradient" style="width: 50%;">
-                </div>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-6">
-                <!-- Project Location -->
-                <div class="mb-3 ms-3 me-3">
-                    <label for="property-location" class="form-label contact-form-text">Project Location</label>
-                    <input type="text" name="property-location" id="property-location" class="form-control bg-secondary bg-gradient" style="width: 80%;">
-                    <div id="location-help" class="form-text"><p class="contact-form-text">Property Location can be an Address or Tax Parcel Number.</p></div>
-                </div>
-                <!-- Project Info -->
-                <div class="mb-3 ms-3 me-3">
-                    <label for="project-info-text-area" class="form-label contact-form-text">Project Info</label>
-                    <textarea class="form-control bg-secondary bg-gradient" name="project-info-text-area" id="project-info-text-area" rows="4" style="width: 80%;"></textarea>
-                    <div id="project-info-help" class="form-text"><p class="contact-form-text">Breif Description of Project</p></div>
-                </div>
-            </div>
-            <div class="col-6">
-                <!-- Desired Service -->
-                <div class="mb-3 ms-3 me-3">
-                    <label class="form-label contact-form-text">Services of Interest:</label>
-                    <!--- Service Options-->
-                    <div class="row">
-                        <div class="col-4">
-                            <div class="mb-2">
-                                <input type="checkbox" class="form-check-input bg-secondary bg-gradient" name="still-image-service" id="still-image-service" style="border-width: 2px;">
-                                <label for="still-image-service" class="form-label contact-form-text">Still Imaging / Still Imaging Progression<label>
-                            </div>
-                            <div class="mb-2">
-                                <input type="checkbox" class="form-check-input bg-secondary bg-gradient" name="videography-service" id="videography-service" style="border-width: 2px;">
-                                <label for="videography-service" class="form-label contact-form-text">Video / Video Progression</label>
-                            </div>
+    
+            <div class="contact-body parallax-container">
+                <div class="contact-background-filter">
+                    <div class="container">
+                        <div class="content-box-glass-light rounded-1">
+                            <h2 class="page-title" style="margin-top: 0%;">Get In Contact</h2>
+                            <h4 class="page-title">Explore the variety of <a href="/data-formats-provided" style="text-decoration: none; font-weight: bold;">data formats</a> we offer, ensuring seamless accessibility for all clients, even if you're not familiar with them!</h4>          
                         </div>
-                        <div class="col-4">
-                            <div class="mb-2">
-                                <input type="checkbox" class="form-check-input bg-secondary bg-gradient" name="virtual-tour-service" id="virtual-tour-service" style="border-width: 2px;">
-                                <label for="virtual-tour-service" class="form-label contact-form-text">Aerial Virtual Tour<label>
+                        <!-- Contact Form -->
+                        <form action="/contact_send_email" method="POST" class="bg-gradient contact-form rounded-4 parallax-content">
+                            <div class="row">
+                                <div class="col-lg-4 col-sm-12">
+                                    <!-- Customer Name -->
+                                    <div class="mb-3 ms-3 me-3 mt-3 contact-form-input-section">
+                                        <label for="client-name" class="form-label contact-form-text">Your Name</label>
+                                        <input type="text" id="client-name" name="client-name" class="form-control contact-input bg-gradient">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <!-- Customer Email -->
+                                    <div class="mb-3 ms-3 me-3 mt-3 contact-form-input-section">
+                                        <label for="client-email" class="form-label contact-form-text">Email Address</label>
+                                        <input type="email" name="client-email" id="client-email" class="form-control contact-input bg-gradient">
+                                        <div id="emailHelp" class="form-text"><p class="contact-form-text">We'll never share your email with anyone else<p></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <!-- Phone Number -->
+                                    <div class="mb-3 ms-3 me-3 mt-3 contact-form-input-section">
+                                        <label for="client-phone-number" class="form-label contact-form-text">Contact Phone Number:</label>
+                                        <input type="text" name="client-phone-number" id="client-phone-number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="xxx-xxx-xxxx" class="form-control contact-input bg-gradient">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-2">
-                                <input type="checkbox" class="form-check-input bg-secondary bg-gradient" name="model-3d-service" id="model-3d-service" style="border-width: 2px;">
-                                <label for="3D-Model" class="form-label contact-form-text">3D-Model</label>
+                            <div class="row mt-3">
+                                <div class="col-lg-6 col-sm-12">
+                                    <!-- Project Location -->
+                                    <div class="mb-3 ms-3 me-3 contact-form-input-section">
+                                        <label for="property-location" class="form-label contact-form-text">Project Location</label>
+                                        <input type="text" name="property-location" id="property-location" class="form-control contact-input bg-gradient" style="width: 80%;">
+                                        <div id="location-help" class="form-text"><p class="contact-form-text">Property Location can be an Address or Tax Parcel Number.</p></div>
+                                    </div>
+                                    <!-- Project Info -->
+                                    <div class="mb-3 ms-3 me-3 contact-form-input-section">
+                                        <label for="project-info-text-area" class="form-label contact-form-text">Project Info</label>
+                                        <textarea class="form-control contact-input bg-gradient" name="project-info-text-area" id="project-info-text-area" rows="4" style="width: 80%;"></textarea>
+                                        <div id="project-info-help" class="form-text"><p class="contact-form-text">Breif Description of Project</p></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-12">
+                                    <!-- Desired Service -->
+                                    <div class="mb-3 ms-3 me-3 contact-form-input-section">
+                                        <label class="form-label contact-form-text">Services of Interest:</label>
+                                        <!--- Service Options-->
+                                        <div class="row">
+                                            <div class="col-lg-4 col-sm-4">
+                                                <div class="mb-2">
+                                                    <input type="checkbox" class="form-check-input contact-input bg-gradient" name="still-image-service" id="still-image-service" style="border-width: 2px;">
+                                                    <label for="still-image-service" class="form-label contact-form-text">Still Imaging / Still Imaging Progression<label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4">
+                                                <div class="mb-2">
+                                                    <input type="checkbox" class="form-check-input contact-input bg-gradient" name="videography-service" id="videography-service" style="border-width: 2px;">
+                                                    <label for="videography-service" class="form-label contact-form-text">Video / Video Progression</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4">
+                                                <div class="mb-2">
+                                                    <input type="checkbox" class="form-check-input contact-input bg-gradient" name="virtual-tour-service" id="virtual-tour-service" style="border-width: 2px;">
+                                                    <label for="virtual-tour-service" class="form-label contact-form-text">Aerial Virtual Tour<label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4">
+                                                <div class="mb-2">
+                                                    <input type="checkbox" class="form-check-input contact-input bg-gradient" name="model-3d-service" id="model-3d-service" style="border-width: 2px;">
+                                                    <label for="3D-Model" class="form-label contact-form-text">3D-Model</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-sm-4">
+                                                <div class="mb-2">
+                                                    <input type="checkbox" class="form-check-input contact-input bg-gradient" name="unsure-service" id="unsure-service" style="border-width: 2px;">
+                                                    <label for="unsure-service" class="form-label contact-form-text">Undecided</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="mb-2">
-                                <input type="checkbox" class="form-check-input bg-secondary bg-gradient" name="unsure-service" id="unsure-service" style="border-width: 2px;">
-                                <label for="unsure-service" class="form-label contact-form-text">Undecided</label>
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-primary bg-gradient mt-2 mb-3" type="submit" style="width: 33%;">Submit Form</button>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </form>
+                    </div> 
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-12 text-center">
-                <button class="btn btn-primary bg-gradient mt-2 mb-3" type="submit" style="width: 33%;">Submit Form</button>
-            </div>
-        </div>
-    </form>
-</div>
+
 {% endblock %}
