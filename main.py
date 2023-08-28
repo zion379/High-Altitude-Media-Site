@@ -37,6 +37,9 @@ mail = Mail(app)
 #stripe setup
 stripe.api_key = os.getenv('STRIPE_API_KEY') # Secret key create enviorment variable
 
+#site dev testing Mode varible for testing
+dev_testing_mode = False
+
 
 '''
 #Digital Ocean setup
@@ -187,7 +190,16 @@ def Payment():
 def create_checkout_session():
 	# make condition if there is not a product ID
 	productID = request.args.get('product')
-	paymentMode = request.args.get('mode') # mode can only be subcription,
+	paymentMode = request.args.get('mode') # mode can only be subcription
+
+	domain = 'www.high-altitude-media.com'
+
+	if dev_testing_mode == True:
+		domain = 'http://10.0.0.218:5000'
+
+	url_success = domain + '/payment-success'
+	url_cancel = domain + '/payment-cancled'
+
 
 	print(paymentMode)
 	try:
