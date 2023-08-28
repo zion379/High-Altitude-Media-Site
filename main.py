@@ -188,6 +188,7 @@ def Payment():
 # this route takes in a query Paramerter for product ex. /page?product='product ID'
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
+	load_dotenv()
 	# make condition if there is not a product ID
 	productID = request.args.get('product')
 	paymentMode = request.args.get('mode') # mode can only be subcription
