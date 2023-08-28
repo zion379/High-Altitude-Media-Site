@@ -8,9 +8,12 @@ import os
 from dotenv import load_dotenv
 
 app = Flask(__name__)
+#site dev testing Mode varible for testing
+dev_testing_mode = False
 
-#Load Enviorment Variables
-load_dotenv()
+#Load Enviorment Variables for testing
+if dev_testing_mode==True:
+	load_dotenv()
 
 digital_ocean_cors_config = {
     "origins": ["https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com"]
@@ -36,10 +39,6 @@ mail = Mail(app)
 
 #stripe setup
 stripe.api_key = os.getenv('STRIPE_API_KEY') # Secret key create enviorment variable
-
-#site dev testing Mode varible for testing
-dev_testing_mode = False
-
 
 '''
 #Digital Ocean setup
