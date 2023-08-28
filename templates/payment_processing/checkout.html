@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<h1> Payment Check Out</h1>
+<div class="row">
+    <div class="col" style="display: grid;">
+        <form action="/create-checkout-session?mode=subscription&product=price_1NjahmCK7If5xGgqW0irdwsP" method="POST" style="justify-self: center;">
+            <button class="btn btn-primary mt-3" type="submit">Progression 3D Model Check Out</button>
+        </form>
+        <form action="/create-checkout-session?mode=payment&product=price_1NjZrGCK7If5xGgqcPtvSd2i" method="POST" style="justify-self: center;">
+            <button class="btn btn-primary mt-3" type="submit">Virtual Tour Check Out</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

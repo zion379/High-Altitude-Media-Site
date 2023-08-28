@@ -2,10 +2,15 @@ from flask import Flask, render_template, request, jsonify, redirect
 from flask_mail import Mail, Message
 import requests
 from flask_cors import CORS, cross_origin
-
+import stripe
 import boto3
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+
+#Load Enviorment Variables
+load_dotenv()
 
 digital_ocean_cors_config = {
     "origins": ["https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com"]
@@ -18,8 +23,8 @@ cors= CORS(app, resources={r"/deliverables": {"origins": "https://high-altitude-
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USERNAME'] = 'zaltitudemedia@gmail.com'
-app.config['MAIL_PASSWORD'] = 'zenerhdjmwwwodri'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USER_NAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_USE_SSL'] = True
 #app.config['SECURITY_EMAIL_SENDER'] = 'zion.johnson@high-altitude-media.com'
 
@@ -28,6 +33,10 @@ app.config['MAIL_USE_SSL'] = True
 #zoho app pass : k6GHuPTqjNH6
 
 mail = Mail(app)
+
+#stripe setup
+stripe.api_key = os.getenv('STRIPE_API_KEY') # Secret key create enviorment variable
+
 
 '''
 #Digital Ocean setup
@@ -158,7 +167,63 @@ def data_formats_provided():
 @app.route('/portfolio')
 def portfolio():
     return render_template('/portfolio.html')
+
+# Payment Processor
+'''
+#Testing Stripe API
+@app.route('/payment', methods=['GET'])
+def Payment():
+    #Get customers and print them out.
+    customers = stripe.Customer.list()
+    #emails = [Customer['email'] for customer in customers]
+    #emails = stripe.Customer.data
     
+    return jsonify(customers['data'][0]['email']), 200
+'''
+
+# Need to create a debug mode for backend testing
+# this route takes in a query Paramerter for product ex. /page?product='product ID'
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+	# make condition if there is not a product ID
+	productID = request.args.get('product')
+	paymentMode = request.args.get('mode') # mode can only be subcription,
+
+	print(paymentMode)
+	try:
+		session = stripe.checkout.Session.create(
+			line_items=[
+				{
+				# provide Price ID (ex. pr_1234) of the product i want to sell
+				"price": productID,
+				"quantity": 1,
+				},
+			],
+			mode= f'{paymentMode}',
+			success_url= 'http://10.0.0.218:5000/payment-success',
+			cancel_url= 'http://10.0.0.218:5000/payment-cancled',
+			automatic_tax={'enabled': False},
+		)
+
+	except Exception as e:
+		return str(e)
+		
+	return redirect(session.url, code=303)
+
+# Payment Success Endpoint
+@app.route('/payment-success', methods=['GET'])
+def payment_success():
+    return render_template('/payment_processing/payment_success.html')
+
+# Payment Cancel Endpoint
+@app.route('/payment-cancled', methods=['GET'])
+def payment_cancled():
+    return render_template('/payment_processing/payment_cancel.html')
+
+# Check out page
+@app.route('/service-check-out')
+def service_checkout():
+    return render_template('/payment_processing/checkout.html')
 
 # comment this line out before pushing code to server.
 #app.run(debug=True)

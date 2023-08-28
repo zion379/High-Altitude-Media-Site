@@ -4,3 +4,6 @@ skull_model/
 
 #Ignore Virtual Enviorment
 venv/
+
+#Ignore Enviorment variables
+.env
