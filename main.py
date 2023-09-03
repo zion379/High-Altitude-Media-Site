@@ -15,6 +15,8 @@ dev_testing_mode = False
 if dev_testing_mode==True:
 	load_dotenv()
 
+#SQL Database Setup
+
 digital_ocean_cors_config = {
     "origins": ["https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com"]
 }
