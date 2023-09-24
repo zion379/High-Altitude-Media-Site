@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 #site dev testing Mode varible for testing
-dev_testing_mode = False
+dev_testing_mode = True
 
 #Load Enviorment Variables for testing
 if dev_testing_mode==True:
@@ -240,6 +240,10 @@ def service_checkout():
 
 # comment this line out before pushing code to server.
 #app.run(debug=True)
+
+#Run in debug mode while testing
+if dev_testing_mode==True:
+    app.run(debug=True)
 
 if __name__ == '__main__':
     app.run()
