@@ -6,8 +6,94 @@ import stripe
 import boto3
 import os
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
+#user login
+app.config['SECRET_KEY'] = 'testsecret' # change this and add it to an enviorment variable
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://zioncjohnson:roBots3790**@localhost/ham-site-dev-db' # Create Database and change name if needed
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+
+#Data Base Schemas
+class Users(UserMixin,db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+
+#load user details
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    status_notification = str()
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        print(f'Username: {username}, Password: {password}')
+        user = Users.query.filter_by(username=username).first()
+        if user and user.password == password:
+            login_user(user)
+            return redirect('/dashboard')
+        else:
+            print('Unable to sign in user') #  testing delete later
+            status_notification='Username or Password is incorrect.'
+
+    return render_template('/user_templates/login.html',notification=status_notification) # create this file
+
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+    status_notification = str()
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        retyped_password = request.form['re-typed-password']
+        print(f'username: {username}\n email: {email}\n password: {password}\n re-typed password: {retyped_password}')
+        #check if email and username exist.
+        existing_username_test = Users.query.filter_by(username=username).first()
+        existing_email_test = Users.query.filter_by(email=email).first()
+
+        print(f'Existing User Name: {existing_username_test}\nExisting Email:{existing_email_test}')
+        # do conditinal testing for existing email and password if both vars return none continue with signup process
+        if existing_username_test == None and existing_email_test == None:
+            print(f'Saving email and username to database')
+            # Create a new user
+            new_user = Users(username=username, email=email, password=password)
+            #Add the new user to the session
+            db.session.add(new_user)
+            # Commit the session to save the data
+            db.session.commit()
+            # show message
+            status_notification = 'successfully created account!'
+
+            #log in user
+            user = Users.query.filter_by(username=username).first() 
+            login_user(user)
+
+            # redirect to dashboard
+            return redirect('/dashboard')
+        else:
+            print(f'Username and or email already exist {username}, {email}')
+            status_notification=f'Username and or email already exist {username}, {email}'
+
+    return render_template('/user_templates/signup.html', notification=status_notification)
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('/user_templates/dashboard.html', username=current_user.username)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect('/login')
+
 #site dev testing Mode varible for testing
 dev_testing_mode = True
 
@@ -246,4 +332,5 @@ if dev_testing_mode==True:
     app.run(debug=True)
 
 if __name__ == '__main__':
+    db.create_all() # Create database tables
     app.run()

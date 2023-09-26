@@ -7,3 +7,7 @@ venv/
 
 #Ignore Enviorment variables
 .env
+
+#Ignore Dev Database log file and instance directory
+logfile
+instance/
