@@ -8,10 +8,41 @@
 <div class="container">
     <div class="row">
         <div class="col">
-           <a href="/logout"><button>Logout</button></a>
+            <a href="/profile-settings">
+                <button class="btn">
+                    <span class="material-symbols-outlined">
+                        settings
+                    </span>
+                </button>
+            </a>
+           <a href="/logout">
+                <button class="btn">
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+                </button>
+            </a>
         </div>
         <div class="col-12">
             <h1 style="color: white;">Welocome to your dash board {{username}}.</h1>
+        </div>
+        <h3 style="color: white; text-align: center;"> Projects</h3>
+        <div class="col-12" style="display: flex; justify-content: center;">
+            <div class="card" style="width: 14rem;">
+                <!-- Create route for project creation page-->
+                <div class="card-body" style="text-align: center;">
+                    <a href="/start-project">
+                        <button class="btn">
+                            <span class="material-symbols-outlined">
+                                add
+                            </span>
+                            <h4>
+                                Start Project
+                            </h4>
+                        </button>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

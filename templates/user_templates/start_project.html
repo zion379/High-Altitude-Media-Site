@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <!-- navigation -->
+                <a href="/dashboard">
+                    <button>
+                        <span class="material-symbols-outlined">
+                            arrow_left_alt
+                        </span>
+                    </button>
+                </a>
+
+                <!-- title -->
+                <h2 style="color: white; text-align: center;">Start Project</h2>
+
+                <div id="section1">
+                    <h4 style="text-align: center; color: white;"> Where is this project located?</h4>
+                    <!-- First Set of Questions -->
+                    <form id="form1">
+                        <div class="row">
+                            <div class="col">
+                                <label for="location_type" style="color: white;">Location_type:</label>
+                                <select name="location_type" id="location_type">
+                                    <option value="street_address">Street Address</option>
+                                    <option value="tax_parcel_number">Tax Parcel Number</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="project_location" style="color: white;">Project Location:</label>
+                                <input type="text" id="project_location" name="project_location" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="section2">
+                    <h4 style="text-align: center; color: white;">What services are you needing?</h4>
+                    <!-- Second set of questions-->
+                    <form id="form2">
+                        <div class="row">
+                            <div class="col">
+                                <label for="desired_services" style="color: white;">Services of Intrest:</label>
+                                <div container>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label for="service_choice" style="color: white;">Still Imagary Services </label>
+                                            <input type="checkbox" name="service_choice[]" value="still_images">
+                                        </div>
+                                        <div class="col">
+                                            <label for="service_choice" style="color: white;">Progression Still Imagary Services </label>
+                                            <input type="checkbox" name="service_choice[]" value="progression_still_images">
+                                        </div>
+                                        <div class="col">
+                                            <label for="service_choice" style="color: white;">Videography Services</label>
+                                            <input type="checkbox" name="service_choice[]" value="videography">
+                                        </div>
+                                        <div class="col">
+                                            <label for="service_choice" style="color: white;">Progression Videography Services </label>
+                                            <input type="checkbox" name="service_choice[]" value="progression_videography">
+                                        </div>
+                                        <div class="col">
+                                            <label for="service_choice" style="color: white;">2D Orthomosaic Services </label>
+                                            <input type="checkbox" name="service_choice[]" value="ortho">
+                                        </div>
+                                        <div class="col">
+                                            <label for="service_choice" style="color: white;">Virtual Tour Services </label>
+                                            <input type="checkbox" name="service_choice[]" value="virtual_tour">
+                                        </div>
+                                        <div class="col">
+                                            <label for="service_choice" style="color: white;">3D Model Services </label>
+                                            <input type="checkbox" name="service_choice[]" value="model_3d">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="section3">
+                    <h4 style="text-align: center; color: white;">When Would you like to start this project?</h4>
+                    <!-- Third set of questions-->
+                    <form id="form3">
+                        <div class="row">
+                            <div class="col">
+                                <label for="project_start" style="color: white;">Project Start Date:</label>
+                                <input type="date" id="project_start" name="project_start" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="section4">
+                    <h4 style="text-align: center; color: white;">Additional Project Details</h4>
+                    <!-- Fourth set of questions-->
+                    <form id="form4">
+                        <div class="row">
+                            <div class="col">
+                                <label for="project_start" style="color: white;">Additional Details:</label>
+                                <textarea name="additional_details" id="additional_details" cols="30" rows="3">Additional Details..</textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Form Navigation -->
+                <div class="col-12">
+                    <button id="previous_form" onclick="previous()" style="float: left;">
+                        <span class="material-symbols-outlined">
+                            navigate_before
+                        </span>
+                    </button>
+
+                    <button id="next_form" onclick="next()" style="float: right;">
+                        <span class="material-symbols-outlined">
+                            navigate_next
+                        </span>
+                    </button>
+                </div>
+
+                <!-- Submit button -->
+                <div class="col mt-3" style="justify-content: center; display: flex;">
+                    <button id="submit_btn" onclick="SubmitForm()">Submit Project</button>
+                </div>
+
+                <!-- Questionaire script -->
+                <script>
+                    var total_sections = 2; // default value
+                    var sectionindex = 1;
+
+                    function showSection(sectionId) {
+                        // Hide all sections and display the selected one
+                        const sections = document.querySelectorAll('div[id^="section"]');
+                        total_sections = sections.length;
+                        sections.forEach(section => {
+                            section.style.display = 'none';
+                        });
+                        document.getElementById(sectionId).style.display = 'block';
+                    }
+
+                    function SubmitForm() {
+
+                        // Gather data from all form sections and submit to server
+                        const forms = document.querySelectorAll('form');
+
+                        // Loop through the selected form elements
+                        forms.forEach(function(element) {
+                            // Convert form data to a JavaScript object
+                            const formObject = {};
+                            text_field_inputs = element.querySelectorAll('input[type="text"]');
+                            if (text_field_inputs.length > 0) {
+                                
+                                console.log(str(text_field_inputs.value));
+                            }
+                        });
+                        
+                        // Send data to the server via AJAX or form submission
+                    }
+
+                    function next() {
+                        if (sectionindex <= total_sections) {
+                            // Show next form
+                            console.log('showing next form');
+                            sectionindex += 1;
+                            //Update view
+                            showSection('section' + String(sectionindex));
+                            Update_btn_hide();
+                        }
+                    }
+
+                    function previous() {
+                        if (sectionindex > 1) {
+                            console.log('showing previous form');
+                            sectionindex -= 1;
+                            //Update view
+                            showSection('section' + String(sectionindex));
+                            Update_btn_hide();
+                        } 
+                    }
+
+                    function Update_btn_hide() {
+                        // disable and hide next button on last section
+                        const next_btn = document.getElementById('next_form');
+                        const previous_btn = document.getElementById('previous_form');
+                        const submit_btn = document.getElementById('submit_btn')
+
+                        if (sectionindex > 1) {
+                            previous_btn.style.display = "block";
+                            // Show previous
+                        } else if (sectionindex == 1) {
+                            // hide previous button
+                            previous_btn.style.display = "none";
+                        }
+                        
+                        if (sectionindex == total_sections) {
+                            // hide next btn
+                            next_btn.style.display = "none";
+                            submit_btn.style.display = "block";
+                        }  else if (sectionindex < total_sections) {
+                            // Show next btn
+                            next_btn.style.display = "block";
+                            submit_btn.style.display = "none";
+                        }
+                    }
+
+                    showSection('section' + String(sectionindex)); // show the fist section by default
+                    Update_btn_hide();
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

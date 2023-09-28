@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <a href="/dashboard">
+        <button>
+            <span class="material-symbols-outlined">
+                arrow_left_alt
+            </span>
+        </button>
+    </a>
+
+    <h2 style="color: white; text-align: center;">{{username}}'s Profile Settings</h2>
+    <div class="row">
+        <div class="col">
+                <div class="row">
+                    <!-- Create Individual Pages for update client attributes-->
+                    <div class="col-12">
+                            <label for="username" style="color: white;">current username : {{username}}</label>
+                            <a href="/profile-settings?update=username">
+                                <button>Update Email</button>
+                            </a>
+                    </div>
+                    <div class="col-12">
+                        <label for="email" style="color: white;">current email : {{email}}</label>
+                        <a href="/profile-settings?update=email">
+                            <button>Update Email</button>
+                        </a>
+                    </div>
+                    <div class="col-12">
+                        <label for="phone_number" style="color: white;">current phone number : {{phone_number}}</label>
+                        <a href="/profile-settings?update=phone_number">
+                            <button>Update Phone Number</button>
+                        </a>
+                    </div>
+                    <div class="col-12">
+                        <label for="company" style="color: white;">current company : {{company}}</label>
+                        <a href="/profile-settings?update=company">
+                            <button>Update Company</button>
+                        </a>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

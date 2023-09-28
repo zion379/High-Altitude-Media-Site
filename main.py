@@ -12,21 +12,25 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 app = Flask(__name__)
 #user login
 app.config['SECRET_KEY'] = 'testsecret' # change this and add it to an enviorment variable
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://zioncjohnson:roBots3790**@localhost/ham-site-dev-db' # Create Database and change name if needed
+digital_ocean_db_URI ='postgresql://doadmin:AVNS_mfXskbA-MY1KzGf-g2c@db-postgresql-nyc1-ham-site-do-user-14392698-0.b.db.ondigitalocean.com:25060/defaultdb?sslmode=require'
+local_dev_db='postgresql://zioncjohnson:roBots3790**@localhost/ham-site-dev-db'
+app.config['SQLALCHEMY_DATABASE_URI'] = digital_ocean_db_URI # Create Database and change name if needed
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 
 #Data Base Schemas
-class Users(UserMixin,db.Model):
+class Clients(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    email = db.Column(db.String(150), nullable=False)
+    username = db.Column(db.Text, unique=True, nullable=False)
+    password = db.Column(db.Text, nullable=False)
+    email = db.Column(db.Text, nullable=False)
+    phone_number = db.Column(db.Integer, nullable=True)
+    company = db.Column(db.Text,nullable=True)
 
 #load user details
 @login_manager.user_loader
 def load_user(user_id):
-    return Users.query.get(int(user_id))
+    return Clients.query.get(int(user_id))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -35,7 +39,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         print(f'Username: {username}, Password: {password}')
-        user = Users.query.filter_by(username=username).first()
+        user = Clients.query.filter_by(username=username).first()
         if user and user.password == password:
             login_user(user)
             return redirect('/dashboard')
@@ -55,15 +59,15 @@ def signup():
         retyped_password = request.form['re-typed-password']
         print(f'username: {username}\n email: {email}\n password: {password}\n re-typed password: {retyped_password}')
         #check if email and username exist.
-        existing_username_test = Users.query.filter_by(username=username).first()
-        existing_email_test = Users.query.filter_by(email=email).first()
+        existing_username_test = Clients.query.filter_by(username=username).first()
+        existing_email_test = Clients.query.filter_by(email=email).first()
 
         print(f'Existing User Name: {existing_username_test}\nExisting Email:{existing_email_test}')
         # do conditinal testing for existing email and password if both vars return none continue with signup process
         if existing_username_test == None and existing_email_test == None:
             print(f'Saving email and username to database')
             # Create a new user
-            new_user = Users(username=username, email=email, password=password)
+            new_user = Clients(username=username, email=email, password=password)
             #Add the new user to the session
             db.session.add(new_user)
             # Commit the session to save the data
@@ -72,7 +76,7 @@ def signup():
             status_notification = 'successfully created account!'
 
             #log in user
-            user = Users.query.filter_by(username=username).first() 
+            user = Clients.query.filter_by(username=username).first() 
             login_user(user)
 
             # redirect to dashboard
@@ -83,16 +87,32 @@ def signup():
 
     return render_template('/user_templates/signup.html', notification=status_notification)
 
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    return render_template('/user_templates/dashboard.html', username=current_user.username)
-
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect('/login')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('/user_templates/dashboard.html', username=current_user.username)
+
+@app.route('/profile-settings', methods=['GET','PUT'])
+@login_required
+def profile_settings():
+    #Create routes and pages to update individual fields
+    username = current_user.username
+    email = current_user.email
+    phone_number = current_user.phone_number
+    company = current_user.company
+   
+    return render_template('/user_templates/profile_settings.html', username=username, email=email, phone_number=phone_number, company=company)
+
+@app.route('/start-project', methods=['GET', 'POST'])
+@login_required
+def start_project():
+    return render_template('/user_templates/start_project.html')
 
 #site dev testing Mode varible for testing
 dev_testing_mode = True
