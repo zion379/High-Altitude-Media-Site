@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from flask_mail import Mail, Message
 import requests
 from flask_cors import CORS, cross_origin
@@ -7,7 +7,11 @@ import boto3
 import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import json
+from datetime import datetime
 
 app = Flask(__name__)
 #user login
@@ -26,6 +30,30 @@ class Clients(UserMixin,db.Model):
     email = db.Column(db.Text, nullable=False)
     phone_number = db.Column(db.Integer, nullable=True)
     company = db.Column(db.Text,nullable=True)
+    
+    #Create one-to-many relationship to Projects
+    projects = relationship('Projects', back_populates='client')
+
+class Projects(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.Integer, ForeignKey('clients.id'), nullable=False)
+    creation_date = db.Column(db.Date, nullable=False)
+    project_description = db.Column(db.Text, nullable=True)
+    project_address = db.Column(db.Text, nullable=True)
+    project_tax_parcel = db.Column(db.Text, nullable=True)
+    still_image_service = db.Column(db.Text, default=False)
+    videography_service = db.Column(db.Boolean, default=False)
+    model_3d_service = db.Column(db.Boolean, default=False)
+    ortho_service = db.Column(db.Boolean, default=False)
+    virtual_tour_service = db.Column(db.Boolean, default=False)
+    airspace_authorization = db.Column(db.Boolean, default=False)
+    intial_site_visit = db.Column(db.Boolean, default=False)
+    flight_plan_created = db.Column(db.Boolean, default=False)
+    data_collected = db.Column(db.Boolean, default=False)
+    deliverables_uploaded = db.Column(db.Boolean, default=False)
+
+    # Create a many-to-one relation ship to clients
+    client = relationship('Clients', back_populates='projects')
 
 #load user details
 @login_manager.user_loader
@@ -93,10 +121,89 @@ def logout():
     logout_user()
     return redirect('/login')
 
+# dashboard helper objects
+class Project:
+    def __init__(self,project_id , description, project_date, project_url):
+        self.project_id = project_id
+        self.description = description
+        self.project_date = project_date
+        self.project_url = project_url
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('/user_templates/dashboard.html', username=current_user.username)
+    # load projects
+    current_user_projects = Projects.query.filter_by(client_id=current_user.id).all()
+    project_count = len(current_user_projects)
+
+    project_index = 0
+
+    project_objects = []
+
+    #Check if there are any projects for client
+    if project_count != 0:
+        for project in current_user_projects:
+            if project_index >= (project_count):
+                project_index = 0
+            
+            # get Project Attributes
+            project_id = str(current_user_projects[project_index].id)
+            description = str(current_user_projects[project_index].project_description)
+            date = str(current_user_projects[project_index].creation_date)
+            project_url = f'/project-view/{project_id}'
+            
+            #create data object and add it to project_objects list
+            project_obj = Project(project_id,description,date, project_url)
+            project_objects.append(project_obj)
+            project_index += 1
+
+    return render_template('/user_templates/dashboard.html', username=current_user.username,project_objects=project_objects )
+
+#Project View Data Object
+class Project_View:
+    def __init__(self,description, date, project_location, model3d_url):
+        self.description = description
+        self.date = date
+        self.project_location = project_location
+        self.model3d_url = model3d_url
+
+@app.route('/project-view/<int:project_id>', methods=['GET'])
+@login_required
+def project_view(project_id):
+
+    #task: validate user access by checking project client id and current logged in user id.
+
+    current_project = Projects.query.filter_by(id=project_id).first()
+
+    #Get Project Data
+    description  = str(current_project.project_description)
+    date = str(current_project.creation_date)
+    project_location = str()
+    project_address = str(current_project.project_address)
+    project_tax_parcel = str(current_project.project_tax_parcel)
+
+    # Do additional checks for project services and gather data for client assets ids.
+
+    #Get address type and set project location var
+    if len(project_address) == 0 and len(project_tax_parcel) == 0:
+        project_location = 'None'
+    elif len(project_address) == 0 and len(project_tax_parcel) != 0:
+        project_location = str(project_tax_parcel)
+    elif len(project_address) != 0 and len(project_tax_parcel) == 0:
+        project_location = project_address
+        print(f'project location: {project_location}')
+
+    #Get 3D Model File URL
+    #model3d_url = 'https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/example-property/small_format_property.glb'
+    # Testing 3D Model Viewer with loading a different model
+    model3d_url = 'https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/example-property/skull.glb'
+
+
+    #Create data object
+    project_view_data = Project_View(description,date, project_location, model3d_url)
+
+    return render_template('/user_templates/project_view.html', username=current_user.username, project_view_data=project_view_data)
+
 
 @app.route('/profile-settings', methods=['GET','PUT'])
 @login_required
@@ -112,7 +219,53 @@ def profile_settings():
 @app.route('/start-project', methods=['GET', 'POST'])
 @login_required
 def start_project():
+    status_message = str()
+
+    if request.method == 'POST':
+        json_data = request.json # Decode bytes to a string if necessary
+        json_object = json.loads(json_data) # convert json string to python dict object
+
+        # Gather data
+        client_id = current_user.id
+
+        current_datetime = datetime.now()
+        current_date = current_datetime.date()
+
+        project_description = json_object["additional_details"]
+
+        location_type = json_object['location_type']
+
+        project_address = str
+        project_tax_parcel = str
+
+        if location_type == "street_address":
+            project_address = json_object['location_val']
+            project_tax_parcel = ''
+        else:
+            project_address = ''
+            project_tax_parcel = json_object['location_val']
+
+        still_image_service = json_object['still_images']
+        videography_service = json_object['videography']
+        model_3d_service = json_object['model_3d']
+        ortho_service = json_object['ortho']
+        virtual_tour_service = json_object['virtual_tour']
+
+        # save data to database
+        #create new project object
+        new_project = Projects(client_id=client_id, creation_date=current_date, project_description=project_description, project_address=project_address, project_tax_parcel=project_tax_parcel, still_image_service=still_image_service, videography_service=videography_service, model_3d_service=model_3d_service, ortho_service=ortho_service,virtual_tour_service=virtual_tour_service)
+
+        db.session.add(new_project)
+
+        db.session.commit()
+
+        # show message to user that data has been saved to database
+        status_message = 'Successfully Created Project!'
+        print('uploaded to database')
+        return redirect('/dashboard')
+
     return render_template('/user_templates/start_project.html')
+
 
 #site dev testing Mode varible for testing
 dev_testing_mode = True

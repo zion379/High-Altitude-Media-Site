@@ -146,22 +146,76 @@
                     }
 
                     function SubmitForm() {
+                        /*
+                            Note: create validation of input fields to make sure there correct formats for text inputs.
+                        */
 
-                        // Gather data from all form sections and submit to server
-                        const forms = document.querySelectorAll('form');
+                        // Convert form data to a JavaScript object
+                        const formObject = {};
 
-                        // Loop through the selected form elements
-                        forms.forEach(function(element) {
-                            // Convert form data to a JavaScript object
-                            const formObject = {};
-                            text_field_inputs = element.querySelectorAll('input[type="text"]');
-                            if (text_field_inputs.length > 0) {
-                                
-                                console.log(str(text_field_inputs.value));
-                            }
+                        // get all form elements
+                        project_location_textfield = document.getElementById('project_location');
+                        location_type_input = document.getElementById('location_type');
+                        // Desired services fields
+                        desired_service_input = document.getElementsByName('service_choice[]');
+
+                        desired_service_input.forEach(function(service){
+                            // populate javascript object service_name: boolean
+                            formObject[service.value] = service.checked;
+
+                            //console.log('element name: '+ service.name + ' value: ' + service.value + ' checked: ' + service.checked);
                         });
-                        
+
+                        // location data
+                        location_val = project_location_textfield.value;
+                        location_type_val = location_type_input.value;
+
+                        // populate javascript object with location data location_type: String, location_value: String
+                        formObject['location_type'] = location_type_val;
+                        formObject['location_val'] = location_val;
+
+                        // project start date data
+                        start_date_input = document.getElementById('project_start');
+                        // populate javascript object with start date data start_date: date
+                        formObject['start_date'] = start_date_input.value;
+
+                        //Additional Details
+                        additional_details_input = document.getElementById('additional_details');
+                        formObject['additional_details'] = additional_details_input.value;
+
+                        //Convert Data object to JSON
+                        const jsonData = JSON.stringify(formObject);
+                        console.log(jsonData);
+
                         // Send data to the server via AJAX or form submission
+                        // configure the request
+                        const url = '/start-project'; // API end point
+                        const options = {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json', // set the content type to JSON
+                            },
+                            body: JSON.stringify(jsonData), // convert to json 
+                        };
+
+                        // Send the POST request
+                        fetch(url, options)
+                            .then(response => {
+                                if(!response.ok) {
+                                    console.error('Request network response was not ok')
+                                }
+                                return response; // Parse the response as JSON
+                            })
+                            .then(data => {
+                                // Handle the response date here
+                                console.log('recieved response data ');
+                                window.location.href = '/dashboard';
+                            })
+                            .catch(error => {
+                                // Handle errors here
+                                console.error('There was a problem with the request: ' + error);
+                            });
+
                     }
 
                     function next() {
@@ -210,7 +264,7 @@
                         }
                     }
 
-                    showSection('section' + String(sectionindex)); // show the fist section by default
+                    showSection('section' + sectionindex); // show the fist section by default
                     Update_btn_hide();
                 </script>
             </div>

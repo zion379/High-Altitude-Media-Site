@@ -27,6 +27,22 @@
             <h1 style="color: white;">Welocome to your dash board {{username}}.</h1>
         </div>
         <h3 style="color: white; text-align: center;"> Projects</h3>
+        {% set test_var = 1 %}
+        {% for project_obj in project_objects %}
+        <div class="col-3">
+            <div class="card" style="width: 14rem;">
+                <!-- Create route for project creation page-->
+                <div class="card-body" style="text-align: center;">
+                    <p style="color: black;">{{ project_obj.description }}</p>
+                    <p style="color: gray;" class="mt-3"> {{project_obj.project_date}}</p>
+                    <a href="{{ project_obj.project_url }}">
+                        <button class="btn" style="color: white; background-color:rgb(56, 53, 53);">Go to Project</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
         <div class="col-12" style="display: flex; justify-content: center;">
             <div class="card" style="width: 14rem;">
                 <!-- Create route for project creation page-->

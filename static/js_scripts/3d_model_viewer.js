@@ -28,11 +28,15 @@ camera.position.x = 4;
 
 let property_model = new THREE.Mesh();
 
+// get model url
+let script_tag = document.querySelector('#model_3d_script');
+let model_url = new String(script_tag.getAttribute("model_url"));
+console.log(model_url);
 
 // Load and add the GLB model
 
 const loader = new GLTFLoader();
-loader.load('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/example-property/small_format_property.glb', function (gltf) {
+loader.load(model_url, function (gltf) {
     property_model = gltf.scene;
    scene.add(property_model);
 }, undefined, function (error) {
