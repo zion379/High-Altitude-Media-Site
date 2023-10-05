@@ -5,63 +5,102 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const canvas_scale_factor = 1.2
 
 //Get Rendering Div Dimensions
-var divElement = document.getElementById('model-renderer-container');
-var divWidth = divElement.offsetWidth;
-var divHeight = divElement.offsetHeight;
+var divElement;
+var divWidth;
+var divHeight;
 
-// Create scene, renderer, and camera
-const scene = new THREE.Scene();
-const canvas = document.querySelector('#Model-Viewer2');
-const renderer = new THREE.WebGLRenderer({antialias: true, canvas});
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+function Get_div_dimensions() {
+  divElement = document.getElementById('model-renderer-container');
+  divWidth = divElement.offsetWidth;
+  divHeight = divElement.offsetHeight;
+}
+Get_div_dimensions();
+
+
+var scene;
+var canvas;
+var renderer;
+var camera;
+
+
+function Create_scene() {
+  // Create scene, renderer, and camera
+  scene = new THREE.Scene();
+  canvas = document.querySelector('#Model-Viewer2');
+  renderer = new THREE.WebGLRenderer({antialias: true, canvas});
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+}
+Create_scene();
+
+//Test Update canvas
+export function updateCanvas() {
+  console.log('Updating Canvas');
+  canvas = document.querySelector('#Model-Viewer2');
+  Get_div_dimensions();
+  Create_scene();
+  Init();
+}
+
+window.updateCanvas = updateCanvas;
+
 
 //testing diffrent viewing option
 //renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor, true)
 
 var renderer_height_multiplier = 4
+var property_model;
+var script_tag;
+var model_url;
+var controls;
 
-renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
+function Init() {
+  
 
-camera.position.z = 4;
-camera.position.y = 4;
-camera.position.x = 4;
+  renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
 
-let property_model = new THREE.Mesh();
+  camera.position.z = 4;
+  camera.position.y = 4;
+  camera.position.x = 4;
 
-// get model url
-let script_tag = document.querySelector('#model_3d_script');
-let model_url = new String(script_tag.getAttribute("model_url"));
-console.log(model_url);
+  property_model = new THREE.Mesh();
 
-// Load and add the GLB model
+  // get model url
+  script_tag = document.querySelector('#model_3d_script');
+  model_url = new String(script_tag.getAttribute("model_url"));
+  console.log(model_url);
 
-const loader = new GLTFLoader();
-loader.load(model_url, function (gltf) {
+  // Load and add the GLB model
+
+  const loader = new GLTFLoader();
+  loader.load(model_url, function (gltf) {
+      property_model = gltf.scene;
+    scene.add(property_model);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+
+  /*
+  const loader = new GLTFLoader();
+  loader.parse(test_var,'',function(gltf){
     property_model = gltf.scene;
-   scene.add(property_model);
-}, undefined, function (error) {
-  console.error(error);
-});
+    scene.add(property_model);
+  }, undefined, function(error) {
+    consle.error(error);
+  });
+  */
 
-/*
-const loader = new GLTFLoader();
-loader.parse(test_var,'',function(gltf){
-  property_model = gltf.scene;
-  scene.add(property_model);
-}, undefined, function(error) {
-  consle.error(error);
-});
-*/
+  // Add directional light
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+  directionalLight.position.set(1, 1, 1);
+  directionalLight.rotation.y = 180
+  scene.add(directionalLight);
 
-// Add directional light
-const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
-directionalLight.position.set(1, 1, 1);
-directionalLight.rotation.y = 180
-scene.add(directionalLight);
+  // Create OrbitControls
+  controls = new OrbitControls(camera, canvas);
+  //controls.object.position = THREE.Vector3(2.83, 2.46, 3.30)
+}
 
-// Create OrbitControls
-const controls = new OrbitControls(camera, canvas);
-//controls.object.position = THREE.Vector3(2.83, 2.46, 3.30)
+Init();
 
 function onWindowResize() {
   //camera.aspect = window.innerWidth / window.innerHeight;
