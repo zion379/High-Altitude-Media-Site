@@ -74,6 +74,7 @@
                     var button = document.getElementById('tour_button');
                     button.disabled = true;
 
+                    load360TourViewer(container);
                     break;
                 case 'model3D':
                     container.innerHTML = ''; //Clear previous content
@@ -137,11 +138,8 @@
               image_btn.disabled = false;
           }
 
-          // Set Default Viewer
-          switchViewer('tour360');
-
           //3D Model Helper Functions
-          function loadScript(src, callback) {
+          function loadScript_model3d(src, callback) {
               const script = document.createElement('script');
               script.src = src;
               script.type = 'module'
@@ -152,7 +150,7 @@
               document.head.appendChild(script);
           }
 
-          function loadAsyncScript(src, callback) {
+          function loadAsyncScript_model3d(src, callback) {
             const script = document.createElement('script');
             script.src = src;
             script.async = true
@@ -160,7 +158,7 @@
             document.head.appendChild(script);
           }
 
-          function addImportMap(mapContent) { 
+          function addImportMap_model_3d(mapContent) { 
               const script = document.createElement('script');
               script.type = 'importmap';
               script.textContent = JSON.stringify(mapContent);
@@ -186,7 +184,7 @@
                
 
                // Reload Script
-               loadAsyncScript('https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js', function() {
+               loadAsyncScript_model3d('https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js', function() {
                     console.log('3D Model Helper Script Loaded')
                 });
               
@@ -197,9 +195,9 @@
                     }
                 }
 
-                addImportMap(importMapContent);
+                addImportMap_model_3d(importMapContent);
 
-               loadScript('/static/js_scripts/3d_model_viewer.js', function() {
+               loadScript_model3d('/static/js_scripts/3d_model_viewer.js', function() {
                 console.log('3D Model Viewer Script Loaded');
                 });
            }
@@ -209,7 +207,7 @@
               console.log(model3d_script_loaded);
               if (model3d_script_loaded === false) {
                 // Load Scripts and styles for 3D Model Viewer
-                loadAsyncScript('https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js', function() {
+                loadAsyncScript_model3d('https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js', function() {
                     console.log('3D Model Helper Script Loaded')
                 });
               
@@ -220,10 +218,10 @@
                     }
                 }
 
-                addImportMap(importMapContent);
+                addImportMap_model_3d(importMapContent);
 
-                loadScript('/static/js_scripts/3d_model_viewer.js', function() {
-                console.log('3D Model Viewer Script Loaded');
+                loadScript_model3d('/static/js_scripts/3d_model_viewer.js', function() {
+                    console.log('3D Model Viewer Script Loaded');
                 });
               }
 
@@ -254,11 +252,44 @@
 
               model3d_script_loaded = true;
           }
+          // Virtual Tour Loading Helper Functions
+          function loadScript_virtual_tour(src, callback) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.type =  'text/javascript';
+            document.head.appendChild(script);
+          }
+
+          function loadStyles_virtual_tour(src, callback) {
+            const styles = document.createElement('link');
+            styles.rel = 'stylesheet';
+            styles.href = src;
+            document.head.appendChild(styles);
+          }
 
           function load360TourViewer(container_) {
               // Load Scripts and styles for 360 Tour Viewer
+              // load styles
+              loadStyles_virtual_tour('https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css', function() {
+                  console.log('Virtual Tour Styles loaded.');
+              });
+
+              // load tour supporting js script
+              loadScript_virtual_tour('https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js', function() {
+                  console.log('Virtual Tour - pannellum script loaded.');
+              });
               tour_script_loaded = true;
+
+              // load tour viewer script
+              loadScript_virtual_tour('/static/js_scripts/Panorama_Image_Viewer.js', function() {
+                console.log('Virtual Tour Viewer script loaded.');
+              });
+
               // Render 360 Tour
+              // create panorama container div
+              const tour_container_div = document.createElement('div');
+              tour_container_div.id = "panorama";
+              container_.appendChild(tour_container_div);
           }
 
           function loadOrtho2DViewer(container_) {
@@ -272,6 +303,12 @@
               video_script_loaded = true;
 
           }
+
+          // Set Default Viewer
+          window.onload = function() {
+            switchViewer('tour360');
+          }
+
       </script> 
         <div class="row">
             <div class="col-12" style="text-align: center;">
