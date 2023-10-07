@@ -55,10 +55,27 @@ class Projects(UserMixin, db.Model):
     # Create a many-to-one relation ship to clients
     client = relationship('Clients', back_populates='projects')
 
+class Site_admin(UserMixin, db.Model):
+    admin_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.Text, nullable=False, unique=True)
+    password  = db.Column(db.Text, nullable=False)
+    email = db.Column(db.Text, nullable=False)
+
+    def id(self):
+        return f'admin_{get_actual_id()}' # modify user id to distinguish between user and admin
+
+    def get_actual_id(self):
+        return admin_id
+
 #load user details
 @login_manager.user_loader
 def load_user(user_id):
-    return Clients.query.get(int(user_id))
+    #check if user is an admin
+    if 'Site_admin' in user_id:
+        extracted_id = int(user_id.split(' ')[5].replace('>','')) # extract user_id and convert to int
+        return Site_admin.query.get(extracted_id)
+    else:
+        return Clients.query.get(int(user_id))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -265,6 +282,29 @@ def start_project():
         return redirect('/dashboard')
 
     return render_template('/user_templates/start_project.html')
+
+
+@app.route('/admin-login', methods = ['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form['admin_username']
+        password = request.form['admin_password']
+        
+        # Check if user exist
+        admin = Site_admin.query.filter_by(username=username).first()
+        if admin and admin.password == password:
+            #login
+            login_user(admin)
+
+            #redirect to admin dashboard
+            return redirect('/admin-dashboard')
+
+    return render_template('/admin_templates/admin_login.html')
+
+@app.route('/admin-dashboard', methods=['GET'])
+@login_required
+def admin_dashboard():
+    return render_template('admin_templates/admin_dashboard.html', username=current_user.username)
 
 
 #site dev testing Mode varible for testing
