@@ -34,7 +34,7 @@
                     <button id="image_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('stills')">Still Images</button>
                 </div>
                 <div class="row">
-                    <div class="col-12" id="viewer_container" style="background-color: slategray;">
+                    <div class="col-12" id="viewer_container" style="background-color: slategray; padding: 0;">
                         <p>Viewer type:</p>
                         <!-- Virtual Tour -->
                         <!-- 3D Model -->
@@ -99,8 +99,16 @@
                     para.style.textAlign = 'center';
                     var node = document.createTextNode("2D OrthoMosaic View");
                     para.appendChild(node);
-
                     container.appendChild(para);
+
+                    // Reset Disabled buttons
+                    resetViewButtons();
+
+                    //display ortho view button as disabled.
+                    var button = document.getElementById('ortho_btn');
+                    button.disabled = true;
+
+                    loadOrtho2DViewer(container);
                     break;
                 case 'video':
                     container.innerHTML = ''; //Clear previous content
@@ -110,6 +118,15 @@
                     para.appendChild(node);
 
                     container.appendChild(para);
+
+                    // Reset Disabled buttons
+                    resetViewButtons();
+
+                    //display Video view button as disabled
+                    var button = document.getElementById('video_btn');
+                    button.disabled = true;
+
+                    loadVideoViewer(container);
                     break;
                 case 'stills':
                     container.innerHTML = ''; //Clear previous content
@@ -119,6 +136,14 @@
                     para.appendChild(node);
 
                     container.appendChild(para);
+
+                    // Reset Disabled buttons
+                    resetViewButtons();
+
+                    //display Video view button as disabled
+                    var button = document.getElementById('image_btn');
+                    button.disabled = true;
+
                     break;
 
               }
@@ -290,16 +315,66 @@
               const tour_container_div = document.createElement('div');
               tour_container_div.id = "panorama";
               container_.appendChild(tour_container_div);
+
+              // Create functionality to load panos from database
           }
 
           function loadOrtho2DViewer(container_) {
               // Load Scripts and styles for 2D ortho Viewer
+              const ortho_div = document.createElement('div');
+              ortho_div.style.justifyContent = 'center';
+              ortho_div.style.display = 'flex';
+              ortho_div.style.padding = '0';
+
+              const ortho_image = document.createElement('img');
+              ortho_image.src  = 'https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/orthomosaic_photos/Ridge_Wood_orthophoto.png';
+
+              // Resize ortho to fit in container
+              const ratio = 1 / 2;
+              width = container.style.width;
+              ortho_image.style.width = '60%';
+              console.log(width);
+
+              // Apply Rotation if needed
+              ortho_image.style.transform = 'rotate(-90deg)'; // todo: add database attribute for rotation
+
+              //Add ortho to ortho div
+              ortho_div.append(ortho_image)
+              container_.appendChild(ortho_div);
+
               ortho2D_script_loaded = true;
               // Render 2D ortho
           }
 
           function loadVideoViewer(container_) {
-              // Load Scripts and styles for Video Viewer
+            // Load Scripts and styles for Video Viewer
+            // create video div
+            const video_div = document.createElement('div');
+            video_div.style.display = 'flex';
+            video_div.style.justifyContent = 'center';
+
+            //create video element
+            const video_element = document.createElement('video');
+            video_element.autoplay = true;
+            video_element.muted = true;
+            video_element.playsInline = true;
+            video_element.loop = true;
+            video_element.style.width = '100%';
+            
+            //add video element to video div
+            video_div.appendChild(video_element);
+
+            // Create source Element
+            const source_element = document.createElement('source');
+            source_element.src = 'https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Videography/Ridge_Wood_School_Property.mp4';
+            source_element.type = 'video/mp4';
+
+            // add source element to video element
+            video_element.appendChild(source_element);
+
+            // add video div to view container
+            container_.appendChild(video_div);
+
               video_script_loaded = true;
 
           }
@@ -312,7 +387,7 @@
       </script> 
         <div class="row">
             <div class="col-12" style="text-align: center;">
-                <button class="btn bg-dark" style="color: white;">Download All Assets</button>
+                <button class="btn m-3" style="color: white; background-color: rgb(58, 119, 84);">Download All Assets</button>
             </div>
         </div>
     </div>

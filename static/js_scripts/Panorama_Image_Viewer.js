@@ -13,7 +13,7 @@ pannellum.viewer('panorama', {
             "pitch": 0,
             "yaw": 0,
             "type": "equirectangular",
-            "panorama": "./static/360s/DJI_0010.JPG",
+            "panorama": "https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Virtual_Tours/Ridgewood_example/DJI_0010.JPG",
             "hotSpots": [
                 {
                     "pitch": -14,
@@ -44,7 +44,7 @@ pannellum.viewer('panorama', {
             "pitch": 0,
             "yaw": 0,
             "type": "equirectangular",
-            "panorama": "./static/360s/DJI_0005.JPG",
+            "panorama": "https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Virtual_Tours/Ridgewood_example/DJI_0005.JPG",
             "hotSpots": [
                 {
                     "pitch": -2,
@@ -73,7 +73,7 @@ pannellum.viewer('panorama', {
             "pitch": 0,
             "yaw": 0,
             "type": "equirectangular",
-            "panorama": "static/360s/DJI_0007.JPG",
+            "panorama": "https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Virtual_Tours/Ridgewood_example/DJI_0007.JPG",
             "hotSpots": [
                 {
                     "pitch": -10,
@@ -105,7 +105,7 @@ pannellum.viewer('panorama', {
             "pitch": 0,
             "yaw": 0,
             "type": "equirectangular",
-            "panorama": "static/360s/DJI_0009.JPG",
+            "panorama": "https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Virtual_Tours/Ridgewood_example/DJI_0009.JPG",
             "hotSpots": [
                 {
                     "pitch": 3,
