@@ -14,10 +14,18 @@ import json
 from datetime import datetime
 
 app = Flask(__name__)
+
+#site dev testing Mode varible for testing
+dev_testing_mode = True
+
+#Load Enviorment Variables for testing
+if dev_testing_mode==True:
+	load_dotenv()
+
 #user login
-app.config['SECRET_KEY'] = 'testsecret' # change this and add it to an enviorment variable
-digital_ocean_db_URI ='postgresql://doadmin:AVNS_mfXskbA-MY1KzGf-g2c@db-postgresql-nyc1-ham-site-do-user-14392698-0.b.db.ondigitalocean.com:25060/defaultdb?sslmode=require'
-local_dev_db='postgresql://zioncjohnson:roBots3790**@localhost/ham-site-dev-db'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') # change this and add it to an enviorment variable
+digital_ocean_db_URI = os.getenv('DATABASE_URI')
+local_dev_db= os.getenv('DEV_DATABASE_URI')
 app.config['SQLALCHEMY_DATABASE_URI'] = digital_ocean_db_URI # Create Database and change name if needed
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -354,13 +362,6 @@ def admin_dashboard():
     return render_template('admin_templates/admin_dashboard.html', username=current_user.username, projects=projects_data_objects)
 
 
-#site dev testing Mode varible for testing
-dev_testing_mode = True
-
-#Load Enviorment Variables for testing
-if dev_testing_mode==True:
-	load_dotenv()
-
 #SQL Database Setup
 
 digital_ocean_cors_config = {
@@ -377,56 +378,11 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USER_NAME')
 app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_USE_SSL'] = True
-#app.config['SECURITY_EMAIL_SENDER'] = 'zion.johnson@high-altitude-media.com'
-
-
-#gmail app pass : zenerhdjmwwwodri
-#zoho app pass : k6GHuPTqjNH6
 
 mail = Mail(app)
 
 #stripe setup
 stripe.api_key = os.getenv('STRIPE_API_KEY') # Secret key create enviorment variable
-
-'''
-#Digital Ocean setup
-session = boto3.session.Session()
-client = session.client('s3',
-                        region_name='nyc3',
-                        endpoint_url='https://nyc3.digitaloceanspaces.com',
-                        aws_access_key_id='DO00HE6V39NHU6ZC7WPM',
-                        aws_secret_access_key='a8+PUQEANJcX7dwmHhIIWWBeX6Y/GqnnrOkyB3pwDC4')
-
-response = client.list_buckets()
-for space in response['Buckets']:
-    print(space['Name'])
-
-#https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/example-property/skull.glb
-
-response = client.list_objects(Bucket='high-altitude-media-assets')
-for obj in response['Contents']:
-    print(obj['Key'])
-
-session = boto3.session.Session()
-
-#dowload file from digital ocean
-#client.download_file('high-altitude-media-assets','example-property/skull.glb', '/static/temp_data/test_model.glb')
-
-
-s3_client = boto3.client('s3', region_name='nyc3', endpoint_url='https://nyc3.digitaloceanspaces.com', aws_access_key_id='DO00HE6V39NHU6ZC7WPM', aws_secret_access_key='a8+PUQEANJcX7dwmHhIIWWBeX6Y/GqnnrOkyB3pwDC4')
-
-bucket_name = 'high-altitude-media-ass'
-object_key = 'DJI_0001.JPG'
-local_dest_path = 'static/temp_data/new-model.glb'
-
-try:
-    s3_client.download_file(bucket_name, object_key, local_dest_path)
-    print(f"File downloaded successfully to {local_dest_path}")
-except Exception as e:
-    print(f"Error downloading file: {e}")
-'''
-
-
 
 @app.route('/')
 def home():
@@ -559,8 +515,8 @@ def create_checkout_session():
 				},
 			],
 			mode= f'{paymentMode}',
-			success_url= 'http://10.0.0.218:5000/payment-success',
-			cancel_url= 'http://10.0.0.218:5000/payment-cancled',
+			success_url= url_success,
+			cancel_url= url_cancel,
 			automatic_tax={'enabled': False},
 		)
 
@@ -580,7 +536,7 @@ def payment_cancled():
     return render_template('/payment_processing/payment_cancel.html')
 
 # Check out page
-@app.route('/service-check-out')
+@app.route('/services-checkout')
 def service_checkout():
     return render_template('/payment_processing/checkout.html')
 

@@ -19,7 +19,9 @@ Deprecated==1.2.14
 Fiona==1.9.4.post1
 Flask==2.3.2
 Flask-Cors==4.0.0
+Flask-Login==0.6.2
 Flask-Mail==0.9.1
+Flask-SQLAlchemy==3.1.1
 flatbuffers==23.5.26
 fonttools==4.40.0
 gast==0.4.0
@@ -28,6 +30,7 @@ geopandas==0.13.2
 google-auth==2.21.0
 google-auth-oauthlib==1.0.0
 google-pasta==0.2.0
+greenlet==2.0.2
 grpcio==1.56.0
 h5py==3.9.0
 idna==3.4
@@ -55,6 +58,7 @@ packaging==23.1
 pandas==2.0.3
 Pillow==10.0.0
 protobuf==4.23.4
+psycopg2==2.9.7
 pyasn1==0.5.0
 pyasn1-modules==0.3.0
 pygltflib==1.15.6
@@ -76,6 +80,7 @@ scipy==1.11.1
 shapely==2.0.1
 six==1.16.0
 snuggs==1.4.7
+SQLAlchemy==2.0.21
 stripe==6.1.0
 tensorboard==2.13.0
 tensorboard-data-server==0.7.1
