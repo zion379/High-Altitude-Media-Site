@@ -3,11 +3,61 @@
 {% block head %}{% endblock %}
 
 {% block body %}
+    <div class="row">
+        <div class="col-12" style="text-align: center;">
+            <h3>Admin Dashboard</h3>
+            <h6>current logged in user {{ username }}</h6>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <a href="/logout-admin">
+                <button class="btn" style="float: left;">
+                    <span class="material-symbols-outlined">
+                        logout
+                    </span>
+                </button>
+            </a>
+        </div>
+    </div>
     <div class="container">
         <div class="row">
-            <div class="col-12" style="text-align: center;">
-                <h3>Admin Dashboard</h3>
-                <h6>current logged in user {{ username }}</h6>
+            <div class="col-12">
+                <h4>Client Projects</h4>
+                <p>Admin can modify client project info, upload assets to projects, and update the status of a project.</p>
+            </div>
+            <div class="col-12">
+                <!-- Table of all clients -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Project ID</th>
+                            <th scope="col">Creation Date</th>
+                            <th scope="col">location</th>
+                            <th scope="col">Client</th>
+                            <th scope="col">Client ID</th>
+                            <th scope="col">Project</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project_obj in projects %}
+                        <tr style="color: rgb(89, 216, 233);">
+                            <td>{{ project_obj.project_id }}</td>
+                            <td>{{ project_obj.date }}</td>
+                            <td>{{ project_obj.location }}</td>
+                            <td>{{ project_obj.client_username }}</td>
+                            <td>{{project_obj.client_id}}</td>
+                            <td>
+                                <div class="card" style="text-align: center; width: 8rem;">
+                                    <a href="{{project_obj.project_url}}">
+                                        <button class="btn" style="color: black;" >View Project</button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

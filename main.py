@@ -301,10 +301,57 @@ def admin_login():
 
     return render_template('/admin_templates/admin_login.html')
 
+@app.route('/logout-admin')
+@login_required
+def admin_logout():
+    logout_user()
+    return redirect('/admin-login')
+
+#Admin Client Projects View Data Object
+class Client_Project_obj:
+    def __init__(self,project_id, date, location, project_url, client_id, client_username):
+        self.project_id = project_id
+        self.date = date
+        self.location = location
+        self.project_url = project_url
+        self.client_id = client_id
+        self.client_username = client_username
+
 @app.route('/admin-dashboard', methods=['GET'])
 @login_required
 def admin_dashboard():
-    return render_template('admin_templates/admin_dashboard.html', username=current_user.username)
+    all_client_projects = Projects.query.all()
+    total_projects = len(all_client_projects)
+    project_index = 0
+
+    projects_data_objects = []
+
+    #Check if any projects exist
+    if total_projects != 0 :
+        for client_project in all_client_projects:
+            project_id = all_client_projects[project_index].id
+            creation_date = all_client_projects[project_index].creation_date
+            location = str
+
+            if all_client_projects[project_index].project_address != None:
+                location = all_client_projects[project_index].project_address
+            else:
+                location = all_client_projects[project_index].project_tax_parcel
+
+            client_id = all_client_projects[project_index].client_id
+            #get client username
+            client_username = Clients.query.filter_by(id=client_id).first().username
+
+            # Create URL to admin project page view
+
+            #create data object
+            project_data = Client_Project_obj(project_id, creation_date, location, '/admin-dashboard', client_id, client_username)
+            
+            projects_data_objects.append(project_data)
+
+            project_index += 1
+
+    return render_template('admin_templates/admin_dashboard.html', username=current_user.username, projects=projects_data_objects)
 
 
 #site dev testing Mode varible for testing
