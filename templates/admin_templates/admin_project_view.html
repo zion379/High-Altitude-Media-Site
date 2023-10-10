@@ -64,42 +64,76 @@
             <p>Model Desc: {{ model.model_desc }}</p>
         </div>
         <div class="col-6">
-            <button class="btn bg-primary" style="color: white;">Modify Model {{ model.model_id }} Values</button>
+            <button class="btn bg-primary" style="color: white;">Modify Model {{ model.model_id }}</button>
         </div>
     {% endfor %}
     </div>
-    <!-- Project Virtual Tours -->
+    <div class="row">
+          <!-- Project Virtual Tours -->
     <h4>Project Virtual Tours</h4>
     {% for tour in admin_proj_view_obj.tours_obj %}
-        <h6>Virtual Tour ID: {{ tour.tour_id }}</h6>
-        <h6>Virtual Tour Project ID: {{ tour.project_id }}</h6>
-        <h6>Tour Creation Date: {{ tour.date }}</h6>
-        <h6>Tour Desc: {{ tour.tour_desc }}</h6>
+        <div class="col-6">
+            <h6>Virtual Tour ID: {{ tour.tour_id }}</h6>
+            <h6>Virtual Tour Project ID: {{ tour.project_id }}</h6>
+            <h6>Tour Creation Date: {{ tour.date }}</h6>
+            <h6>Tour Desc: {{ tour.tour_desc }}</h6>
         <!-- Add Tour Images -->
+        </div>
+        <div class="col-6"> 
+            <button class="btn bg-primary">Modify Tour {{ tour.tour_id }}</button>
+        </div>
     {% endfor %}
-    <!-- Project orthomosaics -->
-    <h4>Project Othomosaics</h4>
-    {% for ortho in admin_proj_view_obj.orthos_obj %}
-        <h6>Ortho ID: {{ ortho.ortho_id }}</h6>
-        <h6>Ortho Project ID: {{ ortho.project_id }}</h6>
-        <h6>Ortho URL: {{ ortho.ortho_url }}</h6>
-        <h6>Ortho Desc {{ ortho.ortho_desc }}
-    {% endfor %}
-    <!-- Project Still Photos -->
-    <h4>Project Still Image</h4>
-    {% for photo in admin_proj_view_obj.stills_obj %}
-        <h6>Image ID: {{ photo.still_id }}</h6>
-        <h6>Image Project ID: {{ photo.project_id }}</h6>
-        <h6>Image URL: {{ photo.photo_url }}</h6>
-        <h6>Progression Image: {{ photo.is_progression_photo }}</h6>
-        <h6>Image Desc: {{ photo.photo_desc }}</h6>
-    {% endfor %}
-    <!-- Project Videos -->
-    <h4>Project Videography</h4>
-    {% for video in admin_proj_view_obj.videos_obj %}
-        <h6>Video ID: {{ video.video_id }}</h6>
-        <h6>Video Project ID: {{ video.project_id }}</h6>
-        <h6>Video Desc: {{ video.video_desc }}</h6>
+    </div>
+    <div class="row">
+        <!-- Project orthomosaics -->
+        <h4>Project Othomosaics</h4>
+        {% for ortho in admin_proj_view_obj.orthos_obj %}
+        <div class="col-6">
+            <div class="card m-1" style="color: black;">
+                <h6>Ortho ID: {{ ortho.ortho_id }}</h6>
+                <h6>Ortho Project ID: {{ ortho.project_id }}</h6>
+                <h6>Ortho URL: {{ ortho.ortho_url }}</h6>
+                <h6>Ortho Desc {{ ortho.ortho_desc }}
+            </div>
+        </div>
+        <div class="col-6">
+            <button class="btn bg-primary">Modify Ortho {{ ortho.ortho_id }}</button>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+         <!-- Project Still Photos -->
+        <h4>Project Still Image</h4>
+        {% for photo in admin_proj_view_obj.stills_obj %}
+        <div class="col-6">
+            <div class="card m-1" style="color: black;">
+                <h6>Image ID: {{ photo.still_id }}</h6>
+                <h6>Image Project ID: {{ photo.project_id }}</h6>
+                <h6>Image URL: {{ photo.photo_url }}</h6>
+                <h6>Progression Image: {{ photo.is_progression_photo }}</h6>
+                <h6>Image Desc: {{ photo.photo_desc }}</h6>
+            </div>
+        </div>
+        <div class="col-6">
+            <button class="btn bg-primary">Modify Still {{ photo.still_id }}</button>
+        </div>
+        {% endfor %}
+    </div>
+   <div class="row">
+        <!-- Project Videos -->
+        <h4>Project Videography</h4>
+        {% for video in admin_proj_view_obj.videos_obj %}
+        <div class="col-6">
+            <div class="card m-1" style="color: black;">
+                <h6>Video ID: {{ video.video_id }}</h6>
+                <h6>Video Project ID: {{ video.project_id }}</h6>
+                <h6>Video Desc: {{ video.video_desc }}</h6>
+            </div>
+        </div>
+        <div class="col-6">
+            <button class="btn bg-primary">Modify Video {{ video.video_id }}</button>
+        </div>
+   </div>
     {% endfor %}
 
 </div>
