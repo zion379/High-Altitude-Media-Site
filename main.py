@@ -63,6 +63,7 @@ class Projects(UserMixin, db.Model):
     # Create a many-to-one relation ship to clients
     client = relationship('Clients', back_populates='projects')
 
+
 class Site_admin(UserMixin, db.Model):
     admin_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.Text, nullable=False, unique=True)
@@ -74,6 +75,62 @@ class Site_admin(UserMixin, db.Model):
 
     def get_actual_id(self):
         return admin_id
+
+class Models_3d(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    project_id = db.Column(db.Integer, ForeignKey('projects.id'), nullable=False)
+    model_url = db.Column(db.Text, nullable=False)
+    model_desc = db.Column(db.Text, nullable=True)
+
+    #Create one-to-one relationship to Projects
+    projects = relationship('Projects', backref='models_3d', uselist=False, lazy='joined')
+
+class Virtual_tour_projects(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    creation_date = db.Column(db.Date, nullable=False)
+    tour_desc = db.Column(db.Text, nullable=True)
+    project_id = db.Column(db.Integer, ForeignKey('projects.id'), nullable=False)
+
+    #Create one-to-one relationship to Projects
+    projects = relationship('Projects', backref='virtual_tour_projects', uselist=False, lazy="joined")
+
+class Virtual_tour_photos(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tour_id = db.Column(db.Integer, ForeignKey('virtual_tour_projects.id'), nullable=False)
+    photo_url = db.Column(db.Text, nullable=False)
+
+    #Create one-to-one relationship to Projects
+    tour_projects = relationship('Virtual_tour_projects', backref='virtual_tour_photos', uselist=False, lazy="joined")
+
+
+class Orthomosaics_2D(UserMixin, db.Model):
+    __tablename__ =  'orthomosaics_2d'
+    id = db.Column(db.Integer, primary_key=True)
+    project_id = db.Column(db.Integer, ForeignKey('projects.id'), nullable=False)
+    ortho_url = db.Column(db.Text, nullable=False)
+    ortho_desc = db.Column(db.Text, nullable=True)
+
+    #Create one-to-one relationship to Projects
+    projects = relationship('Projects', backref='orthomosaics_2d', uselist=False, lazy="joined")
+
+class Still_photos(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    project_id = db.Column(db.Integer, ForeignKey('projects.id'), nullable=False)
+    photo_url = db.Column(db.Text, nullable=False)
+    is_progression_photo = db.Column(db.Boolean, default=False)
+    photo_desc = db.Column(db.Text, nullable=True)
+
+    #Create one-to-one relationship to Projects
+    projects = relationship('Projects', backref='still_photos', uselist=False, lazy="joined")
+
+class Videos(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    project_id = db.Column(db.Integer, ForeignKey('projects.id'), nullable=False)
+    video_url = db.Column(db.Text, nullable=False)
+    video_desc = db.Column(db.Text, nullable=True)
+
+    #Create one-to-one relationship to Projects
+    projects = relationship('Projects', backref='videos', uselist=False, lazy="joined")
 
 #load user details
 @login_manager.user_loader
@@ -353,7 +410,7 @@ def admin_dashboard():
             # Create URL to admin project page view
 
             #create data object
-            project_data = Client_Project_obj(project_id, creation_date, location, '/admin-dashboard', client_id, client_username)
+            project_data = Client_Project_obj(project_id, creation_date, location, f'/admin-project-view/{project_id}', client_id, client_username)
             
             projects_data_objects.append(project_data)
 
@@ -361,6 +418,152 @@ def admin_dashboard():
 
     return render_template('admin_templates/admin_dashboard.html', username=current_user.username, projects=projects_data_objects)
 
+# Admin Project View Objects
+
+#Admin services obj
+class Admin_project_services_obj:
+    def __init__(self, model_service: bool, tour_service: bool, ortho_service: bool, stills_service: bool, video_service: bool):
+        self.model_service: bool = model_service
+        self.tour_service: bool = tour_service
+        self.ortho_service: bool = ortho_service
+        self.stills_service: bool = stills_service
+        self.video_service: bool = video_service
+
+#Admin 3D Models Object
+class Admin_3dModel_obj:
+    def __init__(self, model_id: int, project_id: int, model_url: str, model_desc: str):
+        self.model_id: int = model_id
+        self.project_id: int = project_id
+        self.model_url: str = model_url
+        self.model_desc: str = model_desc
+
+#Admin Tour Object
+class Admin_virtual_tour_obj:
+    def __init__(self, tour_id: int, project_id: int, date: str, tour_desc: str):
+        self.tour_id: int = tour_id
+        self.project_id: int = project_id
+        self.date: str = date
+        self.tour_desc: str = tour_desc
+
+#Admin Tour Image Object
+class Admin_virtual_tour_img_obj:
+    def __init__(self, img_id: int, tour_id: int, photo_url: str):
+        self.img_id: int = img_id
+        self.tour_id: int = tour_id
+        self.photo_url: str = photo_url
+
+#Admin Ortho Object
+class Admin_ortho_obj:
+    def __init__(self, ortho_id: int, project_id: int, ortho_url: str, ortho_desc:str):
+        self.ortho_id: int = ortho_id
+        self.project_id: int = project_id
+        self.ortho_url: str = ortho_url
+        self.ortho_desc: str = ortho_desc
+
+#Admin Still Image Object
+class Admin_still_image_obj:
+    def __init__(self, still_id: int, project_id: int, photo_url: str, is_progression_photo: bool, photo_desc: str):
+        self.still_id: int = still_id
+        self.project_id: int = project_id
+        self.photo_url: str = photo_url
+        self.is_progression_photo: bool = is_progression_photo
+        self.photo_desc: str = photo_desc
+
+#Admin Videos Object
+class Admin_video_obj:
+    def __init__(self, video_id: int, project_id: int, video_url: str, video_desc: str):
+        self.video_id: int = video_id
+        self.project_id: int = project_id
+        self.video_url: str = video_url
+        self.video_desc: str = video_desc
+
+#Admin Project View Object
+class Admin_project_view_obj:
+    def __init__(self, client_id: int, client_username: str, date: str, project_desc: str, project_location, services_obj: Admin_project_services_obj, models_3d_obj: list[Admin_3dModel_obj], tours_obj: list[Admin_virtual_tour_obj], orthos_obj: list[Admin_ortho_obj], stills_obj: list[Admin_still_image_obj], videos_obj: list[Admin_video_obj]):
+        self.client_id: int = client_id
+        self.client_username: str = client_username
+        self.date: str = date
+        self.project_desc: str = project_desc
+        self.project_location = project_location
+        self.services_obj: Admin_project_services_obj = services_obj
+        self.models_3d_obj: list[Admin_3dModel_obj] = models_3d_obj
+        self.tours_obj: list[Admin_virtual_tour_obj] = tours_obj
+        self.orthos_obj: list[Admin_ortho_obj] = orthos_obj
+        self.stills_obj: list[Admin_still_image_obj] = stills_obj
+        self.videos_obj: list[Admin_video_obj] = videos_obj
+
+@app.route('/admin-project-view/<int:project_id>')
+@login_required
+def admin_project_view(project_id):
+    # Create Asset Object Models
+    # Retreive project videos
+    videos_list: Admin_video_obj = [] # Videos Object List
+    all_project_videos = Videos.query.filter_by(project_id=project_id).all() 
+    
+
+    for video in all_project_videos:
+        video_obj = Admin_video_obj(video.id, video.project_id, video.video_url, video.video_desc )
+        videos_list.append(video_obj)
+
+    #Retreive project photos
+    photos_list: Admin_still_image_obj = [] # photos Object List
+    all_project_photos = Still_photos.query.filter_by(project_id=project_id).all()
+
+    for photo in all_project_photos:
+        photo_obj = Admin_still_image_obj(photo.id, photo.project_id, photo.photo_url, photo.is_progression_photo, photo.photo_desc)
+        photos_list.append(photo_obj)
+
+    #Retreive project orthos
+    orthos_list: Admin_ortho_obj = [] # orthos Object List
+    all_project_orthos = Orthomosaics_2D.query.filter_by(project_id=project_id).all()
+
+    for ortho in all_project_orthos:
+        ortho_obj = Admin_ortho_obj(ortho.id, ortho.project_id, ortho.ortho_url, ortho.ortho_desc)
+        orthos_list.append(ortho_obj)
+
+    #Retreive Project Virtual Tour
+    virtual_tours_list: Admin_virtual_tour_obj = [] # virtual Tours list
+    all_project_tours = Virtual_tour_projects.query.filter_by(project_id=project_id).all()
+
+    for tour in all_project_tours:
+        virtual_tour_obj = Admin_virtual_tour_obj(tour.id, tour.project_id, tour.creation_date, tour.tour_desc)
+        virtual_tours_list.append(virtual_tour_obj)
+
+    #Retreive Virtual Tour Images
+    virtual_tour_imgs_list: Admin_virtual_tour_img_obj = [] # virtual_tour_imgs list
+    
+    for tour in virtual_tours_list:
+        all_project_tour_imgs = Virtual_tour_photos.query.filter_by(tour_id=tour.tour_id)
+        for image in all_project_tour_imgs:
+            virtual_tour_img_obj = Admin_virtual_tour_img_obj(image.id, image.tour_id, image.photo_url)
+            virtual_tour_imgs_list.append(virtual_tour_img_obj)
+
+    #Retreive Project 3D Models
+    model_3d_objs_list: Admin_3dModel_obj = []
+    all_project_models = Models_3d.query.filter_by(project_id=project_id).all()
+
+    for model in all_project_models:
+        model_obj = Admin_3dModel_obj(model.id, model.project_id, model.model_url, model.model_desc)
+        model_3d_objs_list.append(model_obj)
+    
+    # Create Services Object Models
+    current_project = Projects.query.filter_by(id=project_id).first()
+    services_obj = Admin_project_services_obj(current_project.model_3d_service, current_project.virtual_tour_service, current_project.ortho_service, current_project.still_image_service, current_project.videography_service)
+
+    # Create Admin_project_view_obj
+    client_username = Clients.query.filter_by(id=current_project.client_id).first().username
+    location = str
+
+    if current_project.project_address != None:
+        location = current_project.project_address
+    else:
+        location = current_project.project_tax_parcel
+
+    admin_proj_view_obj = Admin_project_view_obj(current_project.client_id, client_username, current_project.creation_date, current_project.project_description, location, services_obj, model_3d_objs_list, all_project_tours, orthos_list, all_project_photos, all_project_videos)
+
+    print(admin_proj_view_obj.client_username)
+
+    return render_template('admin_templates/admin_project_view.html', admin_proj_view_obj=admin_proj_view_obj)
 
 #SQL Database Setup
 

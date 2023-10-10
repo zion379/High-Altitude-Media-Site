@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<h3 style="text-align: center;">Admin Project View</h3>
+<div class="row">
+    <div class="col-12">
+        <a href="/admin-dashboard">
+            <button>
+                <span class="material-symbols-outlined">
+                    arrow_left_alt
+                </span>
+            </button>
+        </a>
+    </div>
+</div>
+
+<div class="container" style="color: white;">
+    <!-- Client Username  -->
+    <h5>Client: {{ admin_proj_view_obj.client_username }}</h5>
+    <!-- Client ID -->
+    <h6>Client ID: {{ admin_proj_view_obj.client_id }}</h6>
+    <!-- Project Creation Date -->
+    <h6>Project Creation: {{ admin_proj_view_obj.date }}</h6>
+    <!-- project_location -->
+    <h6>Location: {{ admin_proj_view_obj.project_location }}</h6>
+    <!-- project_description -->
+    <p>Description: {{ admin_proj_view_obj.project_desc }}</p>
+    
+    <!-- Selected Services, add ability to add services -->
+    <h4>Project Services</h4>
+    <table class="table">
+        <thead>
+            <tr style="color: white;">
+                <th scope="col">still imagary service</th>
+                <th scope="col">Videography Service</th>
+                <th scope="col">3D Model Service</th>
+                <th scope="col">Orthomosaic Service</th>
+                <th scope="col">Virtual Tour Service</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="color: rgb(89, 216, 233);">
+                <td>{{ admin_proj_view_obj.services_obj.stills_service }}</td>
+                <td>{{ admin_proj_view_obj.services_obj.video_service }}</td>
+                <td>{{ admin_proj_view_obj.services_obj.model_service }}</td>
+                <td>{{ admin_proj_view_obj.services_obj.ortho_service }}</td>
+                <td>{{ admin_proj_view_obj.services_obj.tour_service }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- Project Workflow State -->
+    <!-- Project Models 3D -->
+    <div class="row">
+        <h4>Project 3D Models</h4>
+    {% for model in admin_proj_view_obj.models_3d_obj %}
+        <div class="col-6">
+            <h6>Model ID: {{ model.model_id }}</h6>
+            <h6>Model Project ID: {{ model.project_id }}</h6>
+            <h6>Model URL: {{ model.model_url }}</h6>
+            <p>Model Desc: {{ model.model_desc }}</p>
+        </div>
+        <div class="col-6">
+            <button class="btn bg-primary" style="color: white;">Modify Model {{ model.model_id }} Values</button>
+        </div>
+    {% endfor %}
+    </div>
+    <!-- Project Virtual Tours -->
+    <h4>Project Virtual Tours</h4>
+    {% for tour in admin_proj_view_obj.tours_obj %}
+        <h6>Virtual Tour ID: {{ tour.tour_id }}</h6>
+        <h6>Virtual Tour Project ID: {{ tour.project_id }}</h6>
+        <h6>Tour Creation Date: {{ tour.date }}</h6>
+        <h6>Tour Desc: {{ tour.tour_desc }}</h6>
+        <!-- Add Tour Images -->
+    {% endfor %}
+    <!-- Project orthomosaics -->
+    <h4>Project Othomosaics</h4>
+    {% for ortho in admin_proj_view_obj.orthos_obj %}
+        <h6>Ortho ID: {{ ortho.ortho_id }}</h6>
+        <h6>Ortho Project ID: {{ ortho.project_id }}</h6>
+        <h6>Ortho URL: {{ ortho.ortho_url }}</h6>
+        <h6>Ortho Desc {{ ortho.ortho_desc }}
+    {% endfor %}
+    <!-- Project Still Photos -->
+    <h4>Project Still Image</h4>
+    {% for photo in admin_proj_view_obj.stills_obj %}
+        <h6>Image ID: {{ photo.still_id }}</h6>
+        <h6>Image Project ID: {{ photo.project_id }}</h6>
+        <h6>Image URL: {{ photo.photo_url }}</h6>
+        <h6>Progression Image: {{ photo.is_progression_photo }}</h6>
+        <h6>Image Desc: {{ photo.photo_desc }}</h6>
+    {% endfor %}
+    <!-- Project Videos -->
+    <h4>Project Videography</h4>
+    {% for video in admin_proj_view_obj.videos_obj %}
+        <h6>Video ID: {{ video.video_id }}</h6>
+        <h6>Video Project ID: {{ video.project_id }}</h6>
+        <h6>Video Desc: {{ video.video_desc }}</h6>
+    {% endfor %}
+
+</div>
+{% endblock %}
