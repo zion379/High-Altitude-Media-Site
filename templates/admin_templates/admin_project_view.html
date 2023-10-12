@@ -58,10 +58,14 @@
         <h4>Project 3D Models</h4>
     {% for model in admin_proj_view_obj.models_3d_obj %}
         <div class="col-6">
-            <h6>Model ID: {{ model.model_id }}</h6>
-            <h6>Model Project ID: {{ model.project_id }}</h6>
-            <h6>Model URL: {{ model.model_url }}</h6>
-            <p>Model Desc: {{ model.model_desc }}</p>
+            <div class="card m-1" style="color: black;">
+                <h6>Model ID: {{ model.model_id }}</h6>
+                <h6>Model Project ID: {{ model.project_id }}</h6>
+                <label for="model_url_input"> Model URL:</label>
+                <input type="text" name="model_url_input" id="model_url_input" value="{{ model.model_url }}">
+                <label for="model_desc_input">Model Desc:</label>
+                <input type="text" name="model_desc_input" id="model_desc_input" value="{{ model.model_desc }}" readonly=true>
+            </div>
         </div>
         <div class="col-6">
             <button class="btn bg-primary" style="color: white;">Modify Model {{ model.model_id }}</button>
@@ -73,14 +77,17 @@
     <h4>Project Virtual Tours</h4>
     {% for tour in admin_proj_view_obj.tours_obj %}
         <div class="col-6">
-            <h6>Virtual Tour ID: {{ tour.tour_id }}</h6>
-            <h6>Virtual Tour Project ID: {{ tour.project_id }}</h6>
-            <h6>Tour Creation Date: {{ tour.date }}</h6>
-            <h6>Tour Desc: {{ tour.tour_desc }}</h6>
+            <div class="card m-1" style="color: black;">
+                <h6>Virtual Tour ID: {{ tour.tour_id }}</h6>
+                <h6>Virtual Tour Project ID: {{ tour.project_id }}</h6>
+                <h6>Tour Creation Date: {{ tour.date }}</h6>
+                <label for="tour_desc_input">Tour Desc:</label>
+                <input type="text" name="tour_desc_input" id="tour_desc_input" value="{{ tour.tour_desc }}" readonly=true>
+            </div>
         <!-- Add Tour Images -->
         </div>
         <div class="col-6"> 
-            <button class="btn bg-primary">Modify Tour {{ tour.tour_id }}</button>
+            <button class="btn bg-primary" style="color: white;" >Modify Tour {{ tour.tour_id }}</button>
         </div>
     {% endfor %}
     </div>
@@ -92,12 +99,14 @@
             <div class="card m-1" style="color: black;">
                 <h6>Ortho ID: {{ ortho.ortho_id }}</h6>
                 <h6>Ortho Project ID: {{ ortho.project_id }}</h6>
-                <h6>Ortho URL: {{ ortho.ortho_url }}</h6>
-                <h6>Ortho Desc {{ ortho.ortho_desc }}
+                <label for="ortho_url_input">Ortho URL:</label>
+                <input type="text" name="ortho_url_input" id="ortho_url_input" value="ortho.ortho_url" readonly=true>
+                <label for="ortho_desc_input">Ortho Desc:</label>
+                <input type="text" name="ortho_desc_input" id="ortho_desc_input" value="{{ ortho.ortho_desc }}" readonly=true>
             </div>
         </div>
         <div class="col-6">
-            <button class="btn bg-primary">Modify Ortho {{ ortho.ortho_id }}</button>
+            <button class="btn bg-primary" style="color: white;" >Modify Ortho {{ ortho.ortho_id }}</button>
         </div>
         {% endfor %}
     </div>
@@ -109,13 +118,21 @@
             <div class="card m-1" style="color: black;">
                 <h6>Image ID: {{ photo.still_id }}</h6>
                 <h6>Image Project ID: {{ photo.project_id }}</h6>
-                <h6>Image URL: {{ photo.photo_url }}</h6>
-                <h6>Progression Image: {{ photo.is_progression_photo }}</h6>
-                <h6>Image Desc: {{ photo.photo_desc }}</h6>
+                <label for="image_url_input">Image URL:</label>
+                <input type="text" name="image_url_input" id="image_url_input" value="{{ photo.photo_url }}" readonly=true>
+                {% if photo.is_progression_photo %}
+                    <label for="progression_bool">Progression Image:</label>
+                    <input type="checkbox" name="progression_bool" id="progression_bool" value="progression" disabled=true checked>
+                {% else %} 
+                    <label for="progression_bool">Progression Image:</label>
+                    <input type="checkbox" name="progression_bool" id="progression_bool" value="progression" disabled=true >
+                {% endif %}
+                <label for="image_desc_input">Image Desc:</label>
+                <input type="text" name="image_desc_input" id="image_desc_input" value="{{ photo.photo_desc }}" readonly=true>
             </div>
         </div>
         <div class="col-6">
-            <button class="btn bg-primary">Modify Still {{ photo.still_id }}</button>
+            <button class="btn bg-primary" style="color: white;" >Modify Still {{ photo.still_id }}</button>
         </div>
         {% endfor %}
     </div>
@@ -127,11 +144,12 @@
             <div class="card m-1" style="color: black;">
                 <h6>Video ID: {{ video.video_id }}</h6>
                 <h6>Video Project ID: {{ video.project_id }}</h6>
-                <h6>Video Desc: {{ video.video_desc }}</h6>
+                <label for="video_desc_input">Video Desc:</label>
+                <input type="text" name="video_desc_input" id="video_desc_input" value="{{ video.video_desc }}" readonly=true>
             </div>
         </div>
         <div class="col-6">
-            <button class="btn bg-primary">Modify Video {{ video.video_id }}</button>
+            <button class="btn bg-primary" style="color: white;" >Modify Video {{ video.video_id }}</button>
         </div>
    </div>
     {% endfor %}
