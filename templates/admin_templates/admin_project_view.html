@@ -67,8 +67,8 @@
                 <input type="text" name="model_desc_input" id="model_desc_input" value="{{ model.model_desc }}" readonly=true>
             </div>
         </div>
-        <div class="col-6">
-            <button class="btn bg-primary" style="color: white;">Modify Model {{ model.model_id }}</button>
+        <div class="col-6 tour_button_container_{{ model.model_id }}">
+            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('model', {{ model.model_id }})">Modify Model {{ model.model_id }}</button>
         </div>
     {% endfor %}
     </div>
@@ -78,7 +78,7 @@
     {% for tour in admin_proj_view_obj.tours_obj %}
         <div class="col-6">
             <div class="card m-1" style="color: black;">
-                <h6>Virtual Tour ID: {{ tour.tour_id }}</h6>
+                <h6>Virtual Tour ID: {{ tour.id }}</h6>
                 <h6>Virtual Tour Project ID: {{ tour.project_id }}</h6>
                 <h6>Tour Creation Date: {{ tour.date }}</h6>
                 <label for="tour_desc_input">Tour Desc:</label>
@@ -86,8 +86,8 @@
             </div>
         <!-- Add Tour Images -->
         </div>
-        <div class="col-6"> 
-            <button class="btn bg-primary" style="color: white;" >Modify Tour {{ tour.tour_id }}</button>
+        <div class="col-6 tour_button_container_{{ tour.id }}"> 
+            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('tour', {{ tour.id }})" >Modify Tour {{ tour.tour_id }}</button>
         </div>
     {% endfor %}
     </div>
@@ -106,7 +106,7 @@
             </div>
         </div>
         <div class="col-6">
-            <button class="btn bg-primary" style="color: white;" >Modify Ortho {{ ortho.ortho_id }}</button>
+            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('ortho', {{ ortho.ortho_id }})" >Modify Ortho {{ ortho.ortho_id }}</button>
         </div>
         {% endfor %}
     </div>
@@ -116,7 +116,7 @@
         {% for photo in admin_proj_view_obj.stills_obj %}
         <div class="col-6">
             <div class="card m-1" style="color: black;">
-                <h6>Image ID: {{ photo.still_id }}</h6>
+                <h6>Image ID: {{ photo.id }}</h6>
                 <h6>Image Project ID: {{ photo.project_id }}</h6>
                 <label for="image_url_input">Image URL:</label>
                 <input type="text" name="image_url_input" id="image_url_input" value="{{ photo.photo_url }}" readonly=true>
@@ -131,8 +131,8 @@
                 <input type="text" name="image_desc_input" id="image_desc_input" value="{{ photo.photo_desc }}" readonly=true>
             </div>
         </div>
-        <div class="col-6">
-            <button class="btn bg-primary" style="color: white;" >Modify Still {{ photo.still_id }}</button>
+        <div class="col-6 photo_button_container_{{ photo.id }}">
+            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('still', {{ photo.id }})" >Modify Still {{ photo.id }}</button>
         </div>
         {% endfor %}
     </div>
@@ -142,17 +142,49 @@
         {% for video in admin_proj_view_obj.videos_obj %}
         <div class="col-6">
             <div class="card m-1" style="color: black;">
-                <h6>Video ID: {{ video.video_id }}</h6>
+                <h6>Video ID: {{ video.id }}</h6>
                 <h6>Video Project ID: {{ video.project_id }}</h6>
                 <label for="video_desc_input">Video Desc:</label>
                 <input type="text" name="video_desc_input" id="video_desc_input" value="{{ video.video_desc }}" readonly=true>
             </div>
         </div>
-        <div class="col-6">
-            <button class="btn bg-primary" style="color: white;" >Modify Video {{ video.video_id }}</button>
+        <div class="col-6 video_button_container_{{ video.id }}">
+            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('video', {{ video.id }})" >Modify Video {{ video.video_id }}</button>
         </div>
+        {% endfor %}
    </div>
-    {% endfor %}
+   <!-- admin project view script-->
+   <script>
+       const asset_types = {
+           MODEL : 'model',
+           TOUR : 'tour',
+           ORTHO : 'ortho',
+           STILL : 'still',
+           VIDEO : 'video'
+       }
+       function modifyAsset(asset_type, asset_id) {
+           switch(asset_type) {
+               case "model":
+                   console.log("modify 3d model, asset ID: " + asset_id);
+                   // disable modify button
+                   // show save button once values are update 
+                   //cancel button
+                   break;
+                case "tour":
+                    console.log("modify virtual tour, asset ID: " + asset_id);
+                    break;
+                case "ortho":
+                    console.log("modify ortho, asset ID: " + asset_id);
+                    break;
+                case "still":
+                    console.log("modify still image, asset ID: " + asset_id);
+                    break;
+                case "video":
+                    console.log("modify video, asset ID: " + asset_id);
+                    break;
+           }
+       }
+   </script>
 
 </div>
 {% endblock %}

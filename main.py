@@ -561,7 +561,7 @@ def admin_project_view(project_id):
 
     admin_proj_view_obj = Admin_project_view_obj(current_project.client_id, client_username, current_project.creation_date, current_project.project_description, location, services_obj, model_3d_objs_list, all_project_tours, orthos_list, all_project_photos, all_project_videos)
 
-    print(admin_proj_view_obj.client_username)
+    print(admin_proj_view_obj.videos_obj[0])
 
     return render_template('admin_templates/admin_project_view.html', admin_proj_view_obj=admin_proj_view_obj)
 
