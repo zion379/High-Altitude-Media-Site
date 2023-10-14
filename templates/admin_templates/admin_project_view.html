@@ -62,11 +62,13 @@
                 <h6>Model ID: {{ model.model_id }}</h6>
                 <h6>Model Project ID: {{ model.project_id }}</h6>
                 <form class="form-floating">
-                    <input class="form-control" type="text" name="model_url_input_{{ model.project_id }}" id="model_url_input_{{ model.project_id }}" value="{{ model.model_url }}">
-                    <label id="model_url_label" for="model_url_input_{{ model.project_id }}"> Model URL:</label>
+                    <input class="form-control" type="text" name="model_url_input_{{ model.model_id }}" id="model_url_input_{{ model.project_id }}" value="{{ model.model_url }}">
+                    <label id="model_url_label_{{ model.model_id }}" for="model_url_input_{{ model.model_id }}"> Model URL:</label>
                 </form>
-                <label for="model_desc_input">Model Desc:</label>
-                <input type="text" name="model_desc_input" id="model_desc_input" value="{{ model.model_desc }}" readonly=true>
+                <form class="form-floating">
+                    <input class="form-control" type="text" name="model_desc_input_{{ model.id }}" id="model_desc_input_{{ model.model_id }}" value="{{ model.model_desc }}">
+                    <label id="model_desc_label_{{ model.model_id }}"for="model_desc_input_{{ model.model_id }}">Model Desc:</label>
+                </form>
             </div>
         </div>
         <div class="col-6" id="model_button_container_{{ model.model_id }}">
@@ -84,7 +86,7 @@
                 <h6>Virtual Tour Project ID: {{ tour.project_id }}</h6>
                 <h6>Tour Creation Date: {{ tour.date }}</h6>
                 <label for="tour_desc_input">Tour Desc:</label>
-                <input type="text" name="tour_desc_input" id="tour_desc_input" value="{{ tour.tour_desc }}" readonly=true>
+                <input type="text" name="tour_desc_input" id="tour_desc_input_{{ tour.id }}" value="{{ tour.tour_desc }}" readonly=true>
             </div>
         <!-- Add Tour Images -->
         </div>
@@ -184,31 +186,54 @@
                    
 
                     // Get all editable model asset attributes
+                    // get mode url
                     const model_url_field = document.getElementById('model_url_input_' + asset_id);
-                   // save previous value
+                   // save previous url value
                    previous_url_val = model_url_field.value;
-                   // clear text field
+                   // clear url text field
                    model_url_field.value = "";
                    model_url_field.placeholder = 'new URL...';
                    model_url_field.readOnly = false;
 
-                   // update label of previous value
-                   const model_url_label = document.getElementById('model_url_label');
+                   // update url label of previous value
+                   const model_url_label = document.getElementById('model_url_label_' + asset_id);
                    model_url_label.textContent = "Last URL: " + previous_url_val;
+
+                   const model_desc_field = document.getElementById('model_desc_input_' + asset_id);
+                   // save previous desc val
+                   previous_desc_val = model_desc_field.value;
+                   model_desc_field.value = "";
+                   model_desc_field.placeholder = 'New Desc...';
+                   model_desc_field.readOnly = false;
+
+                   //update desc label to previous value
+                   const model_desc_label = document.getElementById('model_desc_label_' + asset_id);
+                   model_desc_label.textContent = "Last Desc: " + previous_desc_val;
 
                    // create previous fields obj
                    const model_previous_field_vals_obj = {
-                       model_url: previous_url_val
+                       model_url: previous_url_val,
+                       model_desc: previous_desc_val,
+                       model_url_field_id: 'model_url_input_' + asset_id,
+                       mode_url_label_id: 'model_url_label_' + asset_id,
+                       model_desc_field_id: 'model_desc_input_' + asset_id,
+                       model_desc_label_id: 'model_desc_label_' + asset_id,
+                       cancel_button_id: 'model_cancel_button_' + asset_id,
+                       save_button_id: 'model_save_button_' + asset_id,
                    };
+
+                   
 
                    //create save/cancel btn and undsiable save button once values are updated via
                    // create save button
                    const save_button = document.createElement('button');
+                   save_button.id = 'model_save_button_' + asset_id;
                    save_button.disabled = true;
                    save_button.textContent = "Save";
                    save_button.classList.add('btn', 'bg-primary', 'ms-1');
                    // Create cancel button
                    const cancel_button = document.createElement('button');
+                   cancel_button.id = 'model_cancel_button_' + asset_id;
                    cancel_button.textContent = "Cancel";
                    cancel_button.classList.add('btn','bg-primary','ms-2');
                    cancel_button.onclick = function() {
@@ -241,7 +266,35 @@
        }
 
        function CancelModify(asset_type, asset_id, previous_field_vals_obj) {
-            console.log("asset_type: " + asset_type + " asset_id: " + asset_id + " previous_field_vals_obj: " + previous_field_vals_obj.model_url + "object size: " + Object.keys(previous_field_vals_obj).length );
+           // Left off here oct 13th
+           switch(asset_type) {
+               case 'model':
+                   // Reset Value Fields
+                  const model_url_field = document.getElementById(previous_field_vals_obj.model_url_field_id);
+                  const model_url_label = document.getElementById(previous_field_vals_obj.mode_url_label_id);
+                  const model_desc_field = document.getElementById(previous_field_vals_obj.model_desc_field_id);
+                  const model_desc_label = document.getElementById(previous_field_vals_obj.model_desc_label_id);
+
+                  model_url_field.value = previous_field_vals_obj.model_url;
+                  model_url_field.readOnly = true;
+                  model_url_label.textContent = 'Model URL:'
+
+                  model_desc_field.value = previous_field_vals_obj.model_desc;
+                  model_desc_field.readOnly = true;
+                  model_desc_label.textContent = 'Model Desc:'
+
+                  // remove save and cancel buttons and deactivate modify button
+                  const cancel_button = document.getElementById(previous_field_vals_obj.cancel_button_id);
+                  const save_button = document.getElementById(previous_field_vals_obj.save_button_id);
+                  cancel_button.remove();
+                  save_button.remove();
+
+                  //enable modify button
+                  const modify_button = document.getElementById('model_' + asset_id + '_button');
+                  modify_button.disabled = false;
+               break;
+           }
+           
         }
    </script>
 
