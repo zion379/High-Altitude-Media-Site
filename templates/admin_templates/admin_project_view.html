@@ -61,14 +61,16 @@
             <div class="card m-1" style="color: black;">
                 <h6>Model ID: {{ model.model_id }}</h6>
                 <h6>Model Project ID: {{ model.project_id }}</h6>
-                <label for="model_url_input"> Model URL:</label>
-                <input type="text" name="model_url_input" id="model_url_input" value="{{ model.model_url }}">
+                <form class="form-floating">
+                    <input class="form-control" type="text" name="model_url_input_{{ model.project_id }}" id="model_url_input_{{ model.project_id }}" value="{{ model.model_url }}">
+                    <label id="model_url_label" for="model_url_input_{{ model.project_id }}"> Model URL:</label>
+                </form>
                 <label for="model_desc_input">Model Desc:</label>
                 <input type="text" name="model_desc_input" id="model_desc_input" value="{{ model.model_desc }}" readonly=true>
             </div>
         </div>
-        <div class="col-6 tour_button_container_{{ model.model_id }}">
-            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('model', {{ model.model_id }})">Modify Model {{ model.model_id }}</button>
+        <div class="col-6" id="model_button_container_{{ model.model_id }}">
+            <button id="model_{{ model.model_id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('model', {{ model.model_id }})">Modify Model {{ model.model_id }}</button>
         </div>
     {% endfor %}
     </div>
@@ -86,8 +88,8 @@
             </div>
         <!-- Add Tour Images -->
         </div>
-        <div class="col-6 tour_button_container_{{ tour.id }}"> 
-            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('tour', {{ tour.id }})" >Modify Tour {{ tour.tour_id }}</button>
+        <div class="col-6" id="tour_button_container_{{ tour.id }}"> 
+            <button id="tour_{{ tour.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('tour', {{ tour.id }})" >Modify Tour {{ tour.tour_id }}</button>
         </div>
     {% endfor %}
     </div>
@@ -105,8 +107,8 @@
                 <input type="text" name="ortho_desc_input" id="ortho_desc_input" value="{{ ortho.ortho_desc }}" readonly=true>
             </div>
         </div>
-        <div class="col-6">
-            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('ortho', {{ ortho.ortho_id }})" >Modify Ortho {{ ortho.ortho_id }}</button>
+        <div class="col-6" id="ortho_button_container_{{ ortho.ortho_id }}">
+            <button id="ortho_{{ ortho.ortho_id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('ortho', {{ ortho.ortho_id }})" >Modify Ortho {{ ortho.ortho_id }}</button>
         </div>
         {% endfor %}
     </div>
@@ -131,8 +133,8 @@
                 <input type="text" name="image_desc_input" id="image_desc_input" value="{{ photo.photo_desc }}" readonly=true>
             </div>
         </div>
-        <div class="col-6 photo_button_container_{{ photo.id }}">
-            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('still', {{ photo.id }})" >Modify Still {{ photo.id }}</button>
+        <div class="col-6" id="photo_button_container_{{ photo.id }}">
+            <button id="photo_{{ photo.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('still', {{ photo.id }})" >Modify Still {{ photo.id }}</button>
         </div>
         {% endfor %}
     </div>
@@ -148,13 +150,23 @@
                 <input type="text" name="video_desc_input" id="video_desc_input" value="{{ video.video_desc }}" readonly=true>
             </div>
         </div>
-        <div class="col-6 video_button_container_{{ video.id }}">
-            <button class="btn bg-primary" style="color: white;" onclick="modifyAsset('video', {{ video.id }})" >Modify Video {{ video.video_id }}</button>
+        <div class="col-6" id="video_button_container_{{ video.id }}">
+            <button id="video_{{ video.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('video', {{ video.id }})" >Modify Video {{ video.video_id }}</button>
         </div>
         {% endfor %}
    </div>
    <!-- admin project view script-->
    <script>
+       function SetAllEditableAssetAttributes_Readonly() {
+           const all_input_fields = document.querySelectorAll('[id*="input"]');
+           
+
+           for (field_element of all_input_fields) {
+            field_element.readOnly = true;
+           }
+       }
+       SetAllEditableAssetAttributes_Readonly();
+
        const asset_types = {
            MODEL : 'model',
            TOUR : 'tour',
@@ -165,10 +177,53 @@
        function modifyAsset(asset_type, asset_id) {
            switch(asset_type) {
                case "model":
-                   console.log("modify 3d model, asset ID: " + asset_id);
                    // disable modify button
-                   // show save button once values are update 
-                   //cancel button
+                   let button = document.getElementById('model_' + asset_id + '_button');
+                   button.disabled = true
+
+                   
+
+                    // Get all editable model asset attributes
+                    const model_url_field = document.getElementById('model_url_input_' + asset_id);
+                   // save previous value
+                   previous_url_val = model_url_field.value;
+                   // clear text field
+                   model_url_field.value = "";
+                   model_url_field.placeholder = 'new URL...';
+                   model_url_field.readOnly = false;
+
+                   // update label of previous value
+                   const model_url_label = document.getElementById('model_url_label');
+                   model_url_label.textContent = "Last URL: " + previous_url_val;
+
+                   // create previous fields obj
+                   const model_previous_field_vals_obj = {
+                       model_url: previous_url_val
+                   };
+
+                   //create save/cancel btn and undsiable save button once values are updated via
+                   // create save button
+                   const save_button = document.createElement('button');
+                   save_button.disabled = true;
+                   save_button.textContent = "Save";
+                   save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                   // Create cancel button
+                   const cancel_button = document.createElement('button');
+                   cancel_button.textContent = "Cancel";
+                   cancel_button.classList.add('btn','bg-primary','ms-2');
+                   cancel_button.onclick = function() {
+                       CancelModify(asset_types.MODEL, asset_id,model_previous_field_vals_obj);
+                   }
+
+                   // Get button container
+                   const button_conatainer = document.getElementById('model_button_container_' + asset_id);
+
+                  
+                   
+                   // add buttons to container
+                   button_conatainer.appendChild(save_button);
+                   button_conatainer.appendChild(cancel_button);
+
                    break;
                 case "tour":
                     console.log("modify virtual tour, asset ID: " + asset_id);
@@ -184,6 +239,10 @@
                     break;
            }
        }
+
+       function CancelModify(asset_type, asset_id, previous_field_vals_obj) {
+            console.log("asset_type: " + asset_type + " asset_id: " + asset_id + " previous_field_vals_obj: " + previous_field_vals_obj.model_url + "object size: " + Object.keys(previous_field_vals_obj).length );
+        }
    </script>
 
 </div>
