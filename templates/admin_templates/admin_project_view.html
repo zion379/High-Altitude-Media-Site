@@ -62,11 +62,11 @@
                 <h6>Model ID: {{ model.model_id }}</h6>
                 <h6>Model Project ID: {{ model.project_id }}</h6>
                 <form class="form-floating">
-                    <input class="form-control" type="text" name="model_url_input_{{ model.model_id }}" id="model_url_input_{{ model.project_id }}" value="{{ model.model_url }}">
+                    <input oninput="EnableSaveButton('model_save_button_{{ model.model_id }}')" class="form-control" type="text" name="model_url_input_{{ model.model_id }}" id="model_url_input_{{ model.project_id }}" value="{{ model.model_url }}">
                     <label id="model_url_label_{{ model.model_id }}" for="model_url_input_{{ model.model_id }}"> Model URL:</label>
                 </form>
                 <form class="form-floating">
-                    <input class="form-control" type="text" name="model_desc_input_{{ model.id }}" id="model_desc_input_{{ model.model_id }}" value="{{ model.model_desc }}">
+                    <input oninput="EnableSaveButton('model_save_button_{{ model.model_id }}')" class="form-control" type="text" name="model_desc_input_{{ model.id }}" id="model_desc_input_{{ model.model_id }}" value="{{ model.model_desc }}">
                     <label id="model_desc_label_{{ model.model_id }}"for="model_desc_input_{{ model.model_id }}">Model Desc:</label>
                 </form>
             </div>
@@ -85,8 +85,10 @@
                 <h6>Virtual Tour ID: {{ tour.id }}</h6>
                 <h6>Virtual Tour Project ID: {{ tour.project_id }}</h6>
                 <h6>Tour Creation Date: {{ tour.date }}</h6>
-                <label for="tour_desc_input">Tour Desc:</label>
-                <input type="text" name="tour_desc_input" id="tour_desc_input_{{ tour.id }}" value="{{ tour.tour_desc }}" readonly=true>
+                <form class="form-floating">
+                    <input oninput="EnableSaveButton('tour_save_button_{{ tour.id }}')" class="form-control" type="text" name="tour_desc_input" id="tour_desc_input_{{ tour.id }}" value="{{ tour.tour_desc }}" readonly=true>
+                    <label id="tour_desc_label_{{ tour.id }}" for="tour_desc_input_{{ tour.id }}">Tour Desc:</label>
+                </form>
             </div>
         <!-- Add Tour Images -->
         </div>
@@ -103,10 +105,14 @@
             <div class="card m-1" style="color: black;">
                 <h6>Ortho ID: {{ ortho.ortho_id }}</h6>
                 <h6>Ortho Project ID: {{ ortho.project_id }}</h6>
-                <label for="ortho_url_input">Ortho URL:</label>
-                <input type="text" name="ortho_url_input" id="ortho_url_input" value="ortho.ortho_url" readonly=true>
-                <label for="ortho_desc_input">Ortho Desc:</label>
-                <input type="text" name="ortho_desc_input" id="ortho_desc_input" value="{{ ortho.ortho_desc }}" readonly=true>
+                <form class="form-floating">
+                    <input oninput="EnableSaveButton('ortho_save_button_{{ ortho.ortho_id }}')" class="form-control" type="text" name="ortho_url_input_{{ ortho.ortho_id }}" id="ortho_url_input_{{ ortho.ortho_id }}" value="ortho.ortho_url" readonly=true>
+                    <label id="ortho_url_label_{{ ortho.ortho_id }}" for="ortho_url_input_{{ ortho.ortho_id }}">Ortho URL:</label>
+                </form>
+                <form class="form-floating">
+                    <input oninput="EnableSaveButton('ortho_save_button_{{ ortho.ortho_id }}')" class="form-control" type="text" name="ortho_desc_input_{{ ortho.ortho_id }}" id="ortho_desc_input_{{ ortho.ortho_id }}" value="{{ ortho.ortho_desc }}" readonly=true>
+                    <label id="ortho_desc_label_{{ ortho.ortho_id }}" for="ortho_desc_input_{{ ortho.ortho_id }}">Ortho Desc:</label>
+                </form>
             </div>
         </div>
         <div class="col-6" id="ortho_button_container_{{ ortho.ortho_id }}">
@@ -122,17 +128,21 @@
             <div class="card m-1" style="color: black;">
                 <h6>Image ID: {{ photo.id }}</h6>
                 <h6>Image Project ID: {{ photo.project_id }}</h6>
-                <label for="image_url_input">Image URL:</label>
-                <input type="text" name="image_url_input" id="image_url_input" value="{{ photo.photo_url }}" readonly=true>
                 {% if photo.is_progression_photo %}
-                    <label for="progression_bool">Progression Image:</label>
-                    <input type="checkbox" name="progression_bool" id="progression_bool" value="progression" disabled=true checked>
+                    <label id="progression_bool_label_{{ photo.id }}" for="progression_bool_{{ photo.id }}">Progression Image:</label>
+                    <input type="checkbox" name="progression_bool_{{ photo.id }}" id="progression_bool_{{ photo.id }}" value="progression" disabled=true checked>
                 {% else %} 
-                    <label for="progression_bool">Progression Image:</label>
-                    <input type="checkbox" name="progression_bool" id="progression_bool" value="progression" disabled=true >
+                    <label id="progression_bool_label_{{ photo.id }}" for="progression_bool_{{ photo.id }}">Progression Image:</label>
+                    <input type="checkbox" name="progression_bool_{{ photo.id }}" id="progression_bool_{{ photo.id }}" value="progression" disabled=true >
                 {% endif %}
-                <label for="image_desc_input">Image Desc:</label>
-                <input type="text" name="image_desc_input" id="image_desc_input" value="{{ photo.photo_desc }}" readonly=true>
+                <form class="form-floating">
+                    <input oninput="EnableSaveButton('still_save_button_{{ photo.id }}')" class="form-control" type="text" name="image_url_input_{{ photo.id }}" id="image_url_input_{{ photo.id }}" value="{{ photo.photo_url }}" readonly=true>
+                    <label id="image_url_label_{{ photo.id }}" for="image_url_input_{{ photo.id }}">Image URL:</label>
+                </form>                
+                <form class="form-floating">
+                    <input oninput="EnableSaveButton('still_save_button_{{ photo.id }}')" class="form-control" type="text" name="image_desc_input_{{ photo.id }}" id="image_desc_input_{{ photo.id }}" value="{{ photo.photo_desc }}" readonly=true>
+                    <label id="image_desc_label_{{ photo.id }}" for="image_desc_input_{{ photo.id }}">Image Desc:</label>
+                </form>
             </div>
         </div>
         <div class="col-6" id="photo_button_container_{{ photo.id }}">
@@ -148,8 +158,14 @@
             <div class="card m-1" style="color: black;">
                 <h6>Video ID: {{ video.id }}</h6>
                 <h6>Video Project ID: {{ video.project_id }}</h6>
-                <label for="video_desc_input">Video Desc:</label>
-                <input type="text" name="video_desc_input" id="video_desc_input" value="{{ video.video_desc }}" readonly=true>
+                <form class="form-floating">
+                    <input oninput="EnableSaveButton('video_save_button_{{ video.id }}')" class="form-control" type="text" name="video_url_input_{{ video.id }}" id="video_url_input_{{ video.id }}" value="{{ video.video_url }}" readonly=true>
+                    <label id="video_url_label_{{ video.id }}" for="video_url_input_{{ video.id }}">Video URL:</label>
+                </form>
+                <form class="form-floating">
+                    <input oninput="EnableSaveButton('video_save_button_{{ video.id }}')" class="form-control" type="text" name="video_desc_input_{{ video.id }}" id="video_desc_input_{{ video.id }}" value="{{ video.video_desc }}" readonly=true>
+                    <label id="video_desc_label_{{ video.id }}" for="video_desc_input_{{ video.id }}">Video Desc:</label>
+                </form>
             </div>
         </div>
         <div class="col-6" id="video_button_container_{{ video.id }}">
@@ -176,6 +192,97 @@
            STILL : 'still',
            VIDEO : 'video'
        }
+
+       //Enable save button once user client on input field
+       function EnableSaveButton(save_button_id) {
+        let save_button = document.getElementById(save_button_id);
+           // Check if button is already enabled
+         if (save_button.disabled == true) {
+             save_button.disabled = false;
+         }
+       }
+
+       function UpdateAssetAttributes(update_vals_obj) {
+         console.log('Updating asset attributes...');
+         // send data to server
+         const json_data = JSON.stringify(update_vals_obj);
+         const url = '/update-asset-attributes';
+         const options = {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json'
+             },
+             body: JSON.stringify(json_data)
+         };
+
+         // send the POST request
+         fetch(url,options)
+            .then(response => {
+                if(!response.ok) {
+                    console.error('Request network response was not ok');
+                }
+                return response;
+            })
+            .then(data => {
+                console.log('recieved response data');
+                window.location.href = '/admin-project-view/' + update_vals_obj.asset_id;
+            })
+            .catch(error => {
+                console.log('There was a problem with the request: ' + error);
+            });
+       }
+
+       // Saving feature
+       function SaveAssetChanges(asset_type, asset_id, form_values_obj) {
+            switch(asset_type) {
+                case "model":
+                    //get field values
+                    const model_url_input = document.getElementById(form_values_obj.model_url_field_id);
+                    const model_desc_input = document.getElementById(form_values_obj.model_desc_field_id);
+                    //check if field values are empty and if they are equal to their pervious value
+                    // if not empty and not equal to previous value send request to server of updated values
+                    if(model_desc_input.value != '' && model_url_input.value != '') {
+                        let fields_update_obj = {
+                            type_asset: asset_type,
+                            new_model_url: model_url_input.value,
+                            new_model_desc: model_desc_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAssetAttributes(fields_update_obj);
+                        console.log('Model Field Values not empty ready to send to server! url: ' + fields_update_obj.new_model_url + ', desc: ' + fields_update_obj.new_model_desc);
+                    } else if (model_desc_input.value != '' && model_url_input.value == '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_model_desc: model_desc_input.value,
+                            asset_id: asset_id
+                        }
+                        UpdateAssetAttributes(field_update_obj);
+                        console.log('Only desc field is populated. new model desc: ' + field_update_obj.new_model_desc);
+                    } else if (model_desc_input.value == '' && model_url_input.value != '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_model_url: model_url_input.value,
+                            asset_id: asset_id
+                        }
+                        UpdateAssetAttributes(field_update_obj);
+                        console.log('Only URL field is populated. New Model URL: ' + field_update_obj.new_model_url);
+                    }
+                    break;
+                case "tour":
+                    console.log('save tour');
+                    break;
+                case "ortho":
+                    console.log('save ortho');
+                    break;
+                case "still":
+                    console.log('save still');
+                    break;
+                case "video":
+                    console.log('save video');
+                    break;
+            }
+        }
+
        function modifyAsset(asset_type, asset_id) {
            switch(asset_type) {
                case "model":
@@ -186,7 +293,7 @@
                    
 
                     // Get all editable model asset attributes
-                    // get mode url
+                    // get model url
                     const model_url_field = document.getElementById('model_url_input_' + asset_id);
                    // save previous url value
                    previous_url_val = model_url_field.value;
@@ -231,6 +338,9 @@
                    save_button.disabled = true;
                    save_button.textContent = "Save";
                    save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                   save_button.onclick = function() {
+                       SaveAssetChanges('model', asset_id, model_previous_field_vals_obj);
+                   }
                    // Create cancel button
                    const cancel_button = document.createElement('button');
                    cancel_button.id = 'model_cancel_button_' + asset_id;
@@ -251,22 +361,245 @@
 
                    break;
                 case "tour":
-                    console.log("modify virtual tour, asset ID: " + asset_id);
+                    // Disable Modify button
+                    let tour_button = document.getElementById('tour_' + asset_id + '_button');
+                    tour_button.disabled = true;
+                    // Get all editable model asset attributes
+                    // Get Tour Desc Field
+                    let desc_input_field = document.getElementById('tour_desc_input_' + asset_id);
+                    // Save previous tour Description
+                    let desc_value = desc_input_field.value;
+                    // Clear Desc Text Field
+                    desc_input_field.value = '';
+                    // Make Text Field Editable
+                    desc_input_field.readOnly = false;
+                    desc_input_field.placeholder = "New Desc";
+                    // update desc label of previous value
+                    let desc_label = document.getElementById('tour_desc_label_' + asset_id);
+                    desc_label.textContent = 'Old Desc: ' + desc_value;
+                    // Create tour previous fields object
+                    const tour_previous_fields_obj = {
+                        tour_desc: desc_value,
+                        tour_button_id: 'tour_' + asset_id + '_button',
+                        desc_input_id: 'tour_desc_input_' + asset_id,
+                        desc_label_id: 'tour_desc_label_' + asset_id,
+                        save_button_id: 'tour_save_button_' + asset_id,
+                        cancel_button_id: 'tour_cancel_button_' + asset_id
+                    };
+
+                    //create save/cancel btn and undsiable save button once values are updated via
+                   // create save button
+                   const tour_save_button = document.createElement('button');
+                   tour_save_button.id = 'tour_save_button_' + asset_id;
+                   tour_save_button.disabled = true;
+                   tour_save_button.textContent = "Save";
+                   tour_save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                   // Create cancel button
+                   const tour_cancel_button = document.createElement('button');
+                   tour_cancel_button.id = 'tour_cancel_button_' + asset_id;
+                   tour_cancel_button.textContent = "Cancel";
+                   tour_cancel_button.classList.add('btn','bg-primary','ms-2');
+                   tour_cancel_button.onclick = function() {
+                       CancelModify(asset_types.TOUR, asset_id,tour_previous_fields_obj);
+                   }
+
+                   // Get button container
+                   const tour_button_conatainer = document.getElementById('tour_button_container_' + asset_id);
+
+                   // add buttons to container
+                   tour_button_conatainer.appendChild(tour_save_button);
+                   tour_button_conatainer.appendChild(tour_cancel_button);
                     break;
                 case "ortho":
-                    console.log("modify ortho, asset ID: " + asset_id);
+                    // Disable Modify button
+                    const ortho_button = document.getElementById('ortho_'+ asset_id + '_button');
+                    ortho_button.disabled = true;
+                    // Get all editable model asset attributes
+                    // Get Ortho URL Field
+                    const ortho_url_input = document.getElementById('ortho_url_input_' + asset_id);
+                    // Get Ortho Desc Field
+                    const ortho_desc_input = document.getElementById('ortho_desc_input_' + asset_id);
+                    // Save previous Ortho URL, and Description values
+                    let ortho_url_val = ortho_url_input.value;
+                    let ortho_desc_val = ortho_desc_input.value;
+                    // Clear Desc / Ortho Text Field and Make Text Fields Editable
+                    ortho_url_input.value = '';
+                    ortho_url_input.placeholder = 'New Url...';
+                    ortho_url_input.readOnly = false;
+                    ortho_desc_input.value = '';
+                    ortho_desc_input.placeholder = 'New Desc...';
+                    ortho_desc_input.readOnly = false;
+
+                    // update url/desc label of previous value
+                    const ortho_url_label = document.getElementById('ortho_url_label_' + asset_id);
+                    const ortho_desc_label = document.getElementById('ortho_desc_label_' + asset_id);
+                    ortho_url_label.textContent = 'Old URL: ' + ortho_url_val;
+                    ortho_desc_label.textContent = 'Old Desc: ' + ortho_desc_val;
+
+                    // Create ortho previous fields object
+                    const ortho_previous_fields_obj = {
+                        ortho_url: ortho_url_val,
+                        ortho_desc: ortho_desc_val,
+                        ortho_button_id: 'ortho_'+ asset_id + '_button',
+                        ortho_url_input_id: 'ortho_url_input_' + asset_id,
+                        ortho_url_label_id: 'ortho_url_label_' + asset_id,
+                        ortho_desc_input_id:'ortho_desc_input_' + asset_id,
+                        ortho_desc_label_id: 'ortho_desc_label_' + asset_id,
+                        save_button_id: 'ortho_save_button_' + asset_id,
+                        cancel_button_id: 'tour_cancel_button_' + asset_id
+                    };
+
+                    //create save/cancel btn and undsiable save button once values are updated via
+                    // create save button
+                    const ortho_save_button = document.createElement('button');
+                    ortho_save_button.id = 'ortho_save_button_' + asset_id;
+                    ortho_save_button.disabled = true;
+                    ortho_save_button.textContent = "Save";
+                    ortho_save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                    // Create cancel button
+                    const ortho_cancel_button = document.createElement('button');
+                    ortho_cancel_button.id = 'tour_cancel_button_' + asset_id;
+                    ortho_cancel_button.textContent = "Cancel";
+                    ortho_cancel_button.classList.add('btn','bg-primary','ms-2');
+                    ortho_cancel_button.onclick = function() {
+                        CancelModify(asset_types.ORTHO, asset_id, ortho_previous_fields_obj);
+                    }
+
+                    // Get button container
+                    const ortho_button_conatainer = document.getElementById('ortho_button_container_' + asset_id);
+
+                    // add buttons to container
+                    ortho_button_conatainer.appendChild(ortho_save_button);
+                    ortho_button_conatainer.appendChild(ortho_cancel_button);
                     break;
                 case "still":
-                    console.log("modify still image, asset ID: " + asset_id);
+                    // Disable Modify button
+                    const still_button = document.getElementById('photo_' + asset_id + '_button');
+                    still_button.disabled = true;
+
+                    // Get all editable model asset attributes
+                    // Get Still URL Field
+                    const still_url_field = document.getElementById('image_url_input_' + asset_id);
+                    const still_url_label = document.getElementById('image_url_label_' + asset_id);
+                    const still_desc_field = document.getElementById('image_desc_input_' + asset_id);
+                    const still_desc_label = document.getElementById('image_desc_label_' + asset_id);
+                    // Get bool values
+
+                    // Save previous Still URL, and Description values
+                    let still_url_val = still_url_field.value;
+                    let still_desc_val = still_desc_field.value;
+
+                    // Clear URL / Desc Text Field and Make Text Fields Editable
+                    still_url_field.value = '';
+                    still_url_field.placeholder = 'New URL...';
+                    still_url_field.readOnly = false;
+                    still_desc_field.value = '';
+                    still_desc_field.placeholder = 'New Desc..';
+                    still_desc_field.readOnly = false;
+
+                    // update url/desc label of previous value
+                    still_url_label.textContent = 'Old URL: ' + still_url_val;
+                    still_desc_label.textContent = 'Old Desc: ' + still_desc_val;
+                    // Create still previous fields object
+                    still_previous_fields_obj = {
+                        still_url: still_url_val,
+                        still_desc: still_desc_val,
+                        url_label_id: 'image_url_label_' + asset_id,
+                        url_field_id: 'image_url_input_' + asset_id,
+                        desc_label_id: 'image_desc_label_' + asset_id,
+                        desc_field_id:  'image_desc_input_' + asset_id,
+                        save_button_id: 'still_save_button_' + asset_id,
+                        cancel_button_id: 'still_cancel_button_' + asset_id,
+                        still_button_id: 'photo_' + asset_id + '_button'
+                    };
+
+                    // create save/cancel btn and undsiable save button once values are updated via
+                    // create save button
+                    const still_save_button = document.createElement('button');
+                    still_save_button.id = 'still_save_button_' + asset_id;
+                    still_save_button.disabled = true;
+                    still_save_button.textContent = "Save";
+                    still_save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                    // Create cancel button
+                    const still_cancel_button = document.createElement('button');
+                    still_cancel_button.id = 'still_cancel_button_' + asset_id;
+                    still_cancel_button.textContent = "Cancel";
+                    still_cancel_button.classList.add('btn','bg-primary','ms-2');
+                    still_cancel_button.onclick = function() {
+                        CancelModify(asset_types.STILL, asset_id, still_previous_fields_obj);
+                    }
+
+                    // Get button container
+                    const still_button_container = document.getElementById('photo_button_container_' + asset_id);
+                    // add buttons to container
+                    still_button_container.appendChild(still_save_button);
+                    still_button_container.appendChild(still_cancel_button);
                     break;
                 case "video":
-                    console.log("modify video, asset ID: " + asset_id);
+                    // Disable Modify button
+                    const video_button = document.getElementById('video_' + asset_id + '_button');
+                    video_button.disabled = true;
+
+                    // Get all editable model asset attributes
+                    // Get Still URL Field
+                    const video_desc_field = document.getElementById('video_desc_input_' + asset_id);
+                    const video_url_field = document.getElementById('video_url_input_' + asset_id);
+                    const video_desc_label = document.getElementById('video_desc_label_' + asset_id);
+                    const video_url_label = document.getElementById('video_url_label_' + asset_id);
+
+                    // Save previous Video URL, and Description values
+                    let video_url_val = video_url_field.value;
+                    let video_desc_val = video_desc_field.value;
+
+                    // Clear URL / Desc Text Field and Make Text Fields Editable
+                    video_url_field.value = '';
+                    video_url_field.readOnly = false;
+                    video_desc_field.value = '';
+                    video_desc_field.readOnly = false;
+
+                    // update url/desc label of previous value
+                    video_url_label.textContent = 'Old URL: ' + video_url_val;
+                    video_desc_label.textContent = 'Old Desc: ' + video_desc_val;
+
+                    // Create video previous fields object
+                    const video_previous_fields_obj =  {
+                        video_url: video_url_val,
+                        video_desc: video_desc_val,
+                        url_field_id: 'video_url_input_' + asset_id,
+                        url_label_id: 'video_url_label_' + asset_id,
+                        desc_field_id: 'video_desc_input_' + asset_id,
+                        desc_label_id: 'video_desc_label_' + asset_id,
+                        save_button_id: 'video_save_button_' + asset_id,
+                        cancel_button_id: 'video_cancel_button_' + asset_id,
+                        video_button_id: 'video_' + asset_id + '_button'
+                    };
+
+                    // create save/cancel btn and undsiable save button once values are updated via
+                    // create save button
+                    const video_save_button = document.createElement('button');
+                    video_save_button.id = 'video_save_button_' + asset_id;
+                    video_save_button.disabled = true;
+                    video_save_button.textContent = "Save";
+                    video_save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                    // Create cancel button
+                    const video_cancel_button = document.createElement('button');
+                    video_cancel_button.id = 'video_cancel_button_' + asset_id;
+                    video_cancel_button.textContent = "Cancel";
+                    video_cancel_button.classList.add('btn','bg-primary','ms-2');
+                    video_cancel_button.onclick = function() {
+                        CancelModify(asset_types.VIDEO, asset_id, video_previous_fields_obj);
+                    }
+
+                    // Get button container
+                    const video_button_container = document.getElementById('video_button_container_' + asset_id);
+                    // add buttons to container
+                    video_button_container.appendChild(video_save_button);
+                    video_button_container.appendChild(video_cancel_button);
                     break;
            }
        }
 
        function CancelModify(asset_type, asset_id, previous_field_vals_obj) {
-           // Left off here oct 13th
            switch(asset_type) {
                case 'model':
                    // Reset Value Fields
@@ -274,7 +607,8 @@
                   const model_url_label = document.getElementById(previous_field_vals_obj.mode_url_label_id);
                   const model_desc_field = document.getElementById(previous_field_vals_obj.model_desc_field_id);
                   const model_desc_label = document.getElementById(previous_field_vals_obj.model_desc_label_id);
-
+                  
+                  // Reset Label and fields
                   model_url_field.value = previous_field_vals_obj.model_url;
                   model_url_field.readOnly = true;
                   model_url_label.textContent = 'Model URL:'
@@ -284,15 +618,110 @@
                   model_desc_label.textContent = 'Model Desc:'
 
                   // remove save and cancel buttons and deactivate modify button
-                  const cancel_button = document.getElementById(previous_field_vals_obj.cancel_button_id);
-                  const save_button = document.getElementById(previous_field_vals_obj.save_button_id);
+                  var cancel_button = document.getElementById(previous_field_vals_obj.cancel_button_id);
+                  var save_button = document.getElementById(previous_field_vals_obj.save_button_id);
                   cancel_button.remove();
                   save_button.remove();
 
                   //enable modify button
-                  const modify_button = document.getElementById('model_' + asset_id + '_button');
+                  var modify_button = document.getElementById('model_' + asset_id + '_button');
                   modify_button.disabled = false;
                break;
+               case 'tour':
+                   // Reset Field Values
+                   const tour_desc_field = document.getElementById(previous_field_vals_obj.desc_input_id);
+                   const tour_desc_label = document.getElementById(previous_field_vals_obj.desc_label_id);
+
+                   // Reset Label and fields
+                   tour_desc_field.value = previous_field_vals_obj.tour_desc;
+                   tour_desc_field.readOnly = true;
+                   tour_desc_label.textContent = 'Tour Desc:';
+                   
+                   // remove save and cancel buttons/ re-enable modify button
+                   var cancel_button = document.getElementById(previous_field_vals_obj.cancel_button_id);
+                   var save_button = document.getElementById(previous_field_vals_obj.save_button_id);
+                   cancel_button.remove();
+                   save_button.remove();
+
+                   // Re-enable modify button
+                   var modify_button = document.getElementById(previous_field_vals_obj.tour_button_id);
+                   modify_button.disabled = false;
+                  
+                   break;
+                case 'ortho':
+                    // Reset Field Values and Labels
+                    const ortho_url_field = document.getElementById(previous_field_vals_obj.ortho_url_input_id);
+                    const ortho_url_label = document.getElementById(previous_field_vals_obj.ortho_url_label_id);
+                    const ortho_desc_field = document.getElementById(previous_field_vals_obj.ortho_desc_input_id);
+                    const ortho_desc_label = document.getElementById(previous_field_vals_obj.ortho_desc_label_id);
+                    
+                    ortho_url_field.value = previous_field_vals_obj.ortho_url;
+                    ortho_url_field.readOnly = true;
+                    ortho_url_label.textContent = 'Ortho URL:';
+
+                    ortho_desc_field.value = previous_field_vals_obj.ortho_desc;
+                    ortho_desc_field.readOnly = true;
+                    ortho_desc_label.textContent = 'Ortho Desc:'
+
+                    // remove save and cancel buttons. re-enable modify button
+                    var cancel_button = document.getElementById(previous_field_vals_obj.cancel_button_id);
+                    var save_button = document.getElementById(previous_field_vals_obj.save_button_id);
+                    cancel_button.remove();
+                    save_button.remove();
+
+                    // Re-enable modify button
+                    var modify_button = document.getElementById(previous_field_vals_obj.ortho_button_id);
+                    modify_button.disabled = false;
+                    break;
+                case 'still':
+                    // Reset Field Values and Labels
+                    const still_url_field = document.getElementById(previous_field_vals_obj.url_field_id);
+                    const still_url_label = document.getElementById(previous_field_vals_obj.url_label_id);
+                    const still_desc_field = document.getElementById(previous_field_vals_obj.desc_field_id);
+                    const still_desc_label = document.getElementById(previous_field_vals_obj.desc_label_id);
+
+                    still_url_field.value = previous_field_vals_obj.still_url;
+                    still_url_field.readOnly = true;
+                    still_url_label.textContent = 'Still URL:';
+
+                    still_desc_field.value = previous_field_vals_obj.still_desc;
+                    still_desc_field.readOnly = true;
+                    still_desc_label.textContent = 'Still Desc:';
+
+                    // Remove save and cancel buttons. re-enable modify button
+                    var cancel_button = document.getElementById(previous_field_vals_obj.cancel_button_id);
+                    var save_button = document.getElementById(previous_field_vals_obj.save_button_id);
+                    cancel_button.remove();
+                    save_button.remove();
+
+                    // Re-enable modify button
+                    var modify_button = document.getElementById(previous_field_vals_obj.still_button_id);
+                    modify_button.disabled = false;
+                    break;
+                case 'video':
+                    // Reset Field Values and Labels
+                    const video_url_field = document.getElementById(previous_field_vals_obj.url_field_id);
+                    const video_url_label = document.getElementById(previous_field_vals_obj.url_label_id);
+                    const video_desc_field = document.getElementById(previous_field_vals_obj.desc_field_id);
+                    const video_desc_label = document.getElementById(previous_field_vals_obj.desc_label_id);
+
+                    video_url_field.value = previous_field_vals_obj.video_url;
+                    video_url_field.readOnly = true;
+                    video_url_label.textContent = 'Video URL:';
+                    video_desc_field.value = previous_field_vals_obj.video_desc;
+                    video_desc_field.readOnly = true;
+                    video_desc_label.textContent =  'Video Desc:';
+
+                    // Remove save and cancel buttons. re-enable modify button
+                    var cancel_button = document.getElementById(previous_field_vals_obj.cancel_button_id);
+                    var save_button = document.getElementById(previous_field_vals_obj.save_button_id);
+                    cancel_button.remove();
+                    save_button.remove();
+
+                    // Re-enable modify button
+                    var modify_button = document.getElementById(previous_field_vals_obj.video_button_id);
+                    modify_button.disabled = false;
+                    break;
            }
            
         }

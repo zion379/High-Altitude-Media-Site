@@ -492,7 +492,7 @@ class Admin_project_view_obj:
         self.stills_obj: list[Admin_still_image_obj] = stills_obj
         self.videos_obj: list[Admin_video_obj] = videos_obj
 
-@app.route('/admin-project-view/<int:project_id>')
+@app.route('/admin-project-view/<int:project_id>', methods=['GET'])
 @login_required
 def admin_project_view(project_id):
     # Create Asset Object Models
@@ -560,8 +560,59 @@ def admin_project_view(project_id):
         location = current_project.project_tax_parcel
 
     admin_proj_view_obj = Admin_project_view_obj(current_project.client_id, client_username, current_project.creation_date, current_project.project_description, location, services_obj, model_3d_objs_list, all_project_tours, orthos_list, all_project_photos, all_project_videos)
+        
 
     return render_template('admin_templates/admin_project_view.html', admin_proj_view_obj=admin_proj_view_obj)
+
+@app.route('/update-asset-attributes', methods=['POST'])
+def update_asset_attributes():
+    json_data = request.json
+    json_object = json.loads(json_data)
+    print(json_object) # testing
+
+    #check the type of asset to handle data
+    if json_object['type_asset'] == 'model':
+        try:
+            if json_object['new_model_url']:
+                #save new value to db
+                #get asset id
+                asset_id = json_object['asset_id']
+                # Query the database to retrieve the record
+                model_record = Models_3d.query.get(asset_id)
+                # Check if record exists
+                if model_record:
+                    # Update url col if record exists
+                    model_record.model_url = str(json_object['new_model_url'])
+
+                    # Commit the changes to the database
+                    db.session.commit()
+
+                    print('saved url modificaion to model record.')
+                else:
+                    # Handle the case where the record does not exist
+                    print('model record not found')
+        except KeyError:
+            print('new_model_url object key not included')
+
+        try:
+            if json_object['new_model_desc']:
+                # get asset id
+                asset_id = json_object['asset_id']
+                # Query record
+                model_record = Models_3d.query.get(asset_id)
+                #check if record exists
+                if model_record:
+                    #Update desc col if record exists
+                    model_record.model_desc = str(json_object['new_model_desc'])
+
+                    #Commit the changes to the database
+                    db.session.commit()
+                print('new desc: ' + json_object['new_model_desc'])
+
+        except KeyError:
+            print('new_model_desc object key not included')
+    
+    return jsonify(message="Saved Model Record to DB")
 
 #SQL Database Setup
 
