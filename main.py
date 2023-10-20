@@ -611,8 +611,61 @@ def update_asset_attributes():
 
         except KeyError:
             print('new_model_desc object key not included')
-    
-    return jsonify(message="Saved Model Record to DB")
+
+    #check for asset of type tour
+    if json_object['type_asset'] == 'tour':
+        try:
+            if json_object['new_tour_desc']:
+                # save new tour desc to db.
+                asset_id = json_object['asset_id']
+                # Query record
+                tour_record = Virtual_tour_projects.query.get(asset_id)
+                # check if record exist
+                if tour_record:
+                    #Update desc col if record exists
+                    tour_record.tour_desc = str(json_object['new_tour_desc'])
+                    #Commit changes to db
+                    db.session.commit()
+                    print('saved new tour desc ' + json_object['new_tour_desc'])
+        except KeyError:
+            print('new_tour_desc object key not included')
+
+    # check for asset type of type ortho
+    if json_object['type_asset'] == 'ortho':
+        try:
+            if json_object['new_ortho_url']:
+                # save new ortho url to db
+                asset_id = json_object['asset_id']
+                # Query record
+                ortho_record = Orthomosaics_2D.query.get(asset_id)
+                #check if record exist
+                if ortho_record:
+                    #Update url col 
+                    ortho_record.ortho_url = str(json_object['new_ortho_url'])
+                    #Commit Changes to db
+                    db.session.commit()
+                    print('saved new ortho url ' + json_object['new_ortho_url'])
+        except KeyError:
+            print('new_ortho_url object key not included')
+        
+        try:
+            if json_object['new_ortho_desc']:
+                # save new ortho desc to db
+                asset_id = json_object['asset_id']
+                # Query record
+                ortho_record = Orthomosaics_2D.query.get(asset_id)
+                # check if record exist
+                if ortho_record:
+                    # Update desc col
+                    ortho_record.ortho_desc = str(json_object['new_ortho_desc'])
+                    #Commit Changes to db
+                    db.session.commit()
+                    print('saved new ortho desc ' +  json_object['new_ortho_desc'])
+        except KeyError:
+            print('new_ortho_desc object key not included')
+
+
+    return jsonify(message="Saved Model Record to DB") # update this to a dynamic message
 
 #SQL Database Setup
 

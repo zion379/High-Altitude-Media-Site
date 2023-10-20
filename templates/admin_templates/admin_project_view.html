@@ -106,7 +106,7 @@
                 <h6>Ortho ID: {{ ortho.ortho_id }}</h6>
                 <h6>Ortho Project ID: {{ ortho.project_id }}</h6>
                 <form class="form-floating">
-                    <input oninput="EnableSaveButton('ortho_save_button_{{ ortho.ortho_id }}')" class="form-control" type="text" name="ortho_url_input_{{ ortho.ortho_id }}" id="ortho_url_input_{{ ortho.ortho_id }}" value="ortho.ortho_url" readonly=true>
+                    <input oninput="EnableSaveButton('ortho_save_button_{{ ortho.ortho_id }}')" class="form-control" type="text" name="ortho_url_input_{{ ortho.ortho_id }}" id="ortho_url_input_{{ ortho.ortho_id }}" value="{{ ortho.ortho_url }}" readonly=true>
                     <label id="ortho_url_label_{{ ortho.ortho_id }}" for="ortho_url_input_{{ ortho.ortho_id }}">Ortho URL:</label>
                 </form>
                 <form class="form-floating">
@@ -269,9 +269,50 @@
                     }
                     break;
                 case "tour":
-                    console.log('save tour');
+
+                //get field values
+                const tour_desc_input = document.getElementById('tour_desc_input_' + asset_id);
+
+                // check if field values are empty
+                if (tour_desc_input.value != '' ) {
+                    let field_update_obj = {
+                        type_asset: asset_type,
+                        new_tour_desc: tour_desc_input.value,
+                        asset_id: asset_id
+                    };
+                    UpdateAssetAttributes(field_update_obj);
+                    console.log('Updating Tour description');
+                }
                     break;
                 case "ortho":
+                    // Get field values
+                    const ortho_url_input = document.getElementById('ortho_url_input_' + asset_id)
+                    const ortho_desc_input = document.getElementById('ortho_desc_input_' + asset_id)
+
+                    // check if field values are empty
+                    if (ortho_desc_input.value != '' && ortho_url_input.value != '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_ortho_url: ortho_url_input.value,
+                            new_ortho_desc: ortho_desc_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAssetAttributes(field_update_obj);
+                    } else if (ortho_desc_input.value == '' && ortho_url_input.value != '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_ortho_url: ortho_url_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAssetAttributes(field_update_obj);
+                    } else if (ortho_desc_input.value != ''  && ortho_url_input == '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_ortho_desc: ortho_desc_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAsssetAttributes(field_update_obj);
+                    }
                     console.log('save ortho');
                     break;
                 case "still":
@@ -394,6 +435,9 @@
                    tour_save_button.disabled = true;
                    tour_save_button.textContent = "Save";
                    tour_save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                   tour_save_button.onclick = function() {
+                       SaveAssetChanges('tour', asset_id, tour_previous_fields_obj);
+                   }
                    // Create cancel button
                    const tour_cancel_button = document.createElement('button');
                    tour_cancel_button.id = 'tour_cancel_button_' + asset_id;
@@ -456,6 +500,9 @@
                     ortho_save_button.disabled = true;
                     ortho_save_button.textContent = "Save";
                     ortho_save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                    ortho_save_button.onclick = function() {
+                       SaveAssetChanges('ortho', asset_id, ortho_previous_fields_obj);
+                   }
                     // Create cancel button
                     const ortho_cancel_button = document.createElement('button');
                     ortho_cancel_button.id = 'tour_cancel_button_' + asset_id;
