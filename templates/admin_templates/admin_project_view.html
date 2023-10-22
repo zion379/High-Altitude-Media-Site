@@ -53,6 +53,28 @@
         </tbody>
     </table>
     <!-- Project Workflow State -->
+    <!-- Project Assets -->
+    <div class="row">
+        <div class="col-12">
+            <h3 style="color: white; text-align: center;">Project Assets</h3>
+            <button class="btn btn-primary" style="color: white; float:right;" onclick="CreateNewAsset()" data-bs-toggle="modal" data-bs-target='#asset_creation_menu'>Create New Asset</button>
+        </div>
+        <!-- Full screen asset creation menu -->
+        <div class="modal" id="asset_creation_menu" aria-labelledby="CreateAssetModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-fullscreen" >
+                <div class="modal-content" style="background-color: rgb(70, 69, 69);">
+                    <div class="modal-header">
+                        <h1 class="modal-title">Create New Asset</h1>
+                        <button type="button" class="btn-close me-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">...</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Project Models 3D -->
     <div class="row">
         <h4>Project 3D Models</h4>
@@ -72,7 +94,7 @@
             </div>
         </div>
         <div class="col-6" id="model_button_container_{{ model.model_id }}">
-            <button id="model_{{ model.model_id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('model', {{ model.model_id }})">Modify Model {{ model.model_id }}</button>
+            <button id="model_{{ model.model_id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('model', {{ model.model_id }}, {{ model.project_id }})">Modify Model {{ model.model_id }}</button>
         </div>
     {% endfor %}
     </div>
@@ -93,7 +115,7 @@
         <!-- Add Tour Images -->
         </div>
         <div class="col-6" id="tour_button_container_{{ tour.id }}"> 
-            <button id="tour_{{ tour.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('tour', {{ tour.id }})" >Modify Tour {{ tour.tour_id }}</button>
+            <button id="tour_{{ tour.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('tour', {{ tour.id }}, {{ tour.project_id }})" >Modify Tour {{ tour.tour_id }}</button>
         </div>
     {% endfor %}
     </div>
@@ -116,7 +138,7 @@
             </div>
         </div>
         <div class="col-6" id="ortho_button_container_{{ ortho.ortho_id }}">
-            <button id="ortho_{{ ortho.ortho_id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('ortho', {{ ortho.ortho_id }})" >Modify Ortho {{ ortho.ortho_id }}</button>
+            <button id="ortho_{{ ortho.ortho_id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('ortho', {{ ortho.ortho_id }}, {{ ortho.project_id }})" >Modify Ortho {{ ortho.ortho_id }}</button>
         </div>
         {% endfor %}
     </div>
@@ -146,7 +168,7 @@
             </div>
         </div>
         <div class="col-6" id="photo_button_container_{{ photo.id }}">
-            <button id="photo_{{ photo.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('still', {{ photo.id }})" >Modify Still {{ photo.id }}</button>
+            <button id="photo_{{ photo.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('still', {{ photo.id }}, {{ photo.project_id }})" >Modify Still {{ photo.id }}</button>
         </div>
         {% endfor %}
     </div>
@@ -169,7 +191,7 @@
             </div>
         </div>
         <div class="col-6" id="video_button_container_{{ video.id }}">
-            <button id="video_{{ video.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('video', {{ video.id }})" >Modify Video {{ video.video_id }}</button>
+            <button id="video_{{ video.id }}_button" class="btn bg-primary" style="color: white;" onclick="modifyAsset('video', {{ video.id }}, {{ video.project_id }})" >Modify Video {{ video.video_id }}</button>
         </div>
         {% endfor %}
    </div>
@@ -202,7 +224,7 @@
          }
        }
 
-       function UpdateAssetAttributes(update_vals_obj) {
+       function UpdateAssetAttributes(update_vals_obj, project_id) {
          console.log('Updating asset attributes...');
          // send data to server
          const json_data = JSON.stringify(update_vals_obj);
@@ -225,7 +247,7 @@
             })
             .then(data => {
                 console.log('recieved response data');
-                window.location.href = '/admin-project-view/' + update_vals_obj.asset_id;
+                window.location.href = '/admin-project-view/' + project_id;
             })
             .catch(error => {
                 console.log('There was a problem with the request: ' + error);
@@ -248,7 +270,7 @@
                             new_model_desc: model_desc_input.value,
                             asset_id: asset_id
                         };
-                        UpdateAssetAttributes(fields_update_obj);
+                        UpdateAssetAttributes(fields_update_obj, form_values_obj.project_id);
                         console.log('Model Field Values not empty ready to send to server! url: ' + fields_update_obj.new_model_url + ', desc: ' + fields_update_obj.new_model_desc);
                     } else if (model_desc_input.value != '' && model_url_input.value == '') {
                         let field_update_obj = {
@@ -256,7 +278,7 @@
                             new_model_desc: model_desc_input.value,
                             asset_id: asset_id
                         }
-                        UpdateAssetAttributes(field_update_obj);
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
                         console.log('Only desc field is populated. new model desc: ' + field_update_obj.new_model_desc);
                     } else if (model_desc_input.value == '' && model_url_input.value != '') {
                         let field_update_obj = {
@@ -264,12 +286,11 @@
                             new_model_url: model_url_input.value,
                             asset_id: asset_id
                         }
-                        UpdateAssetAttributes(field_update_obj);
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
                         console.log('Only URL field is populated. New Model URL: ' + field_update_obj.new_model_url);
                     }
                     break;
                 case "tour":
-
                 //get field values
                 const tour_desc_input = document.getElementById('tour_desc_input_' + asset_id);
 
@@ -280,7 +301,7 @@
                         new_tour_desc: tour_desc_input.value,
                         asset_id: asset_id
                     };
-                    UpdateAssetAttributes(field_update_obj);
+                    UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
                     console.log('Updating Tour description');
                 }
                     break;
@@ -297,34 +318,88 @@
                             new_ortho_desc: ortho_desc_input.value,
                             asset_id: asset_id
                         };
-                        UpdateAssetAttributes(field_update_obj);
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
                     } else if (ortho_desc_input.value == '' && ortho_url_input.value != '') {
                         let field_update_obj = {
                             type_asset: asset_type,
                             new_ortho_url: ortho_url_input.value,
                             asset_id: asset_id
                         };
-                        UpdateAssetAttributes(field_update_obj);
-                    } else if (ortho_desc_input.value != ''  && ortho_url_input == '') {
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
+                    } else if (ortho_desc_input.value != ''  && ortho_url_input.value == '') {
                         let field_update_obj = {
                             type_asset: asset_type,
                             new_ortho_desc: ortho_desc_input.value,
                             asset_id: asset_id
                         };
-                        UpdateAsssetAttributes(field_update_obj);
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
                     }
-                    console.log('save ortho');
                     break;
                 case "still":
-                    console.log('save still');
+                    // get field values
+                    let still_url_input = document.getElementById('image_url_input_' + asset_id);
+                    let still_desc_input = document.getElementById('image_desc_input_' + asset_id);
+
+                    // Check if input fields are empty.
+                    if(still_url_input.value !=  '' && still_desc_input.value != '') {
+                        let field_update_obj =  {
+                            type_asset: asset_type,
+                            new_still_url: still_url_input.value,
+                            new_still_desc: still_desc_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
+                    } else if (still_url_input.value != '' && still_desc_input.value == '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_still_url: still_url_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
+                    } else if (still_url_input.value == '' && still_desc_input.value != '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_still_desc: still_desc_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
+                    }
                     break;
                 case "video":
+                    // get field values
+                    let video_url_input = document.getElementById('video_url_input_' + asset_id);
+                    let video_desc_input = document.getElementById('video_desc_input_' + asset_id);
+                    
+                    // Check if input fields are empty
+                    if (video_url_input.value != '' && video_desc_input != '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_video_url: video_url_input.value,
+                            new_video_desc: video_desc_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
+                    } else if (video_url_input.value != '' && video_desc_input.value == '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_video_url:  video_url_input.value,
+                            asset_id: asset_id
+                        };
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
+                    } else if (video_url_input.value == '' && video_desc_input.value != '') {
+                        let field_update_obj = {
+                            type_asset: asset_type,
+                            new_video_desc: video_desc_input.value,
+                            asset_id: asset_id
+                        }
+                        UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
+                    }
                     console.log('save video');
                     break;
             }
         }
 
-       function modifyAsset(asset_type, asset_id) {
+       function modifyAsset(asset_type, asset_id, project_id) {
            switch(asset_type) {
                case "model":
                    // disable modify button
@@ -368,6 +443,7 @@
                        model_desc_label_id: 'model_desc_label_' + asset_id,
                        cancel_button_id: 'model_cancel_button_' + asset_id,
                        save_button_id: 'model_save_button_' + asset_id,
+                       project_id: project_id
                    };
 
                    
@@ -425,7 +501,8 @@
                         desc_input_id: 'tour_desc_input_' + asset_id,
                         desc_label_id: 'tour_desc_label_' + asset_id,
                         save_button_id: 'tour_save_button_' + asset_id,
-                        cancel_button_id: 'tour_cancel_button_' + asset_id
+                        cancel_button_id: 'tour_cancel_button_' + asset_id,
+                        project_id: project_id
                     };
 
                     //create save/cancel btn and undsiable save button once values are updated via
@@ -490,7 +567,8 @@
                         ortho_desc_input_id:'ortho_desc_input_' + asset_id,
                         ortho_desc_label_id: 'ortho_desc_label_' + asset_id,
                         save_button_id: 'ortho_save_button_' + asset_id,
-                        cancel_button_id: 'tour_cancel_button_' + asset_id
+                        cancel_button_id: 'tour_cancel_button_' + asset_id,
+                        project_id: project_id
                     };
 
                     //create save/cancel btn and undsiable save button once values are updated via
@@ -557,7 +635,8 @@
                         desc_field_id:  'image_desc_input_' + asset_id,
                         save_button_id: 'still_save_button_' + asset_id,
                         cancel_button_id: 'still_cancel_button_' + asset_id,
-                        still_button_id: 'photo_' + asset_id + '_button'
+                        still_button_id: 'photo_' + asset_id + '_button',
+                        project_id: project_id
                     };
 
                     // create save/cancel btn and undsiable save button once values are updated via
@@ -567,6 +646,9 @@
                     still_save_button.disabled = true;
                     still_save_button.textContent = "Save";
                     still_save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                    still_save_button.onclick = function() {
+                       SaveAssetChanges('still', asset_id, still_previous_fields_obj);
+                   }
                     // Create cancel button
                     const still_cancel_button = document.createElement('button');
                     still_cancel_button.id = 'still_cancel_button_' + asset_id;
@@ -618,7 +700,8 @@
                         desc_label_id: 'video_desc_label_' + asset_id,
                         save_button_id: 'video_save_button_' + asset_id,
                         cancel_button_id: 'video_cancel_button_' + asset_id,
-                        video_button_id: 'video_' + asset_id + '_button'
+                        video_button_id: 'video_' + asset_id + '_button',
+                        project_id: project_id
                     };
 
                     // create save/cancel btn and undsiable save button once values are updated via
@@ -628,6 +711,9 @@
                     video_save_button.disabled = true;
                     video_save_button.textContent = "Save";
                     video_save_button.classList.add('btn', 'bg-primary', 'ms-1');
+                    video_save_button.onclick = function() {
+                       SaveAssetChanges('video', asset_id, video_previous_fields_obj);
+                   }
                     // Create cancel button
                     const video_cancel_button = document.createElement('button');
                     video_cancel_button.id = 'video_cancel_button_' + asset_id;
@@ -771,6 +857,11 @@
                     break;
            }
            
+        }
+
+        // Create New Asset
+        function CreateNewAsset() {
+            console.log('create new asset');
         }
    </script>
 

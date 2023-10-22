@@ -660,11 +660,72 @@ def update_asset_attributes():
                     ortho_record.ortho_desc = str(json_object['new_ortho_desc'])
                     #Commit Changes to db
                     db.session.commit()
-                    print('saved new ortho desc ' +  json_object['new_ortho_desc'])
         except KeyError:
             print('new_ortho_desc object key not included')
 
+    # check for asset type of type still
+    if json_object['type_asset'] == 'still':
+        try:
+            if json_object['new_still_url']:
+                # save new still url to db
+                asset_id = json_object['asset_id']
+                # Query record
+                still_record = Still_photos.query.get(asset_id)
+                # check if record exist
+                if still_record:
+                    # Update url col
+                    still_record.photo_url = str(json_object['new_still_url'])
+                    # Commit Changes to db
+                    db.session.commit()
+        except KeyError:
+            print('new_still_url object key not included')
 
+        try:
+            if json_object['new_still_desc']:
+                # save new still desc to db
+                asset_id = json_object['asset_id']
+                # Query record
+                still_record = Still_photos.query.get(asset_id)
+                # check if record exist
+                if still_record:
+                    # Update desc col
+                    still_record.photo_desc = str(json_object['new_still_desc'])
+                    # Commit Changes to db
+                    db.session.commit()
+        except KeyError:
+            print('new_still_desc object key not included')
+    
+    # check for asset type of video
+    if json_object['type_asset'] == 'video':
+        try:
+            if json_object['new_video_url']:
+                # save new video url to db
+                asset_id = json_object['asset_id']
+                # Query record
+                video_record = Videos.query.get(asset_id)
+                # check if record exist
+                if video_record:
+                    # Update url col
+                    video_record.video_url = str(json_object['new_video_url'])
+                    # Commit Changes to db
+                    db.session.commit()
+        except KeyError:
+            print('new_video_url object key not included')
+        try:
+            if json_object['new_video_desc']:
+                # save new video desc to db
+                asset_id = json_object['asset_id']
+                # Query record
+                video_record = Videos.query.get(asset_id)
+                # check if record exist
+                if video_record:
+                    # Update desc col
+                    video_record.video_desc = str(json_object['new_video_desc'])
+                    # Commit Changes to db
+                    db.session.commit()
+        except KeyError:
+            print('new_video_desc object key not included')
+            
     return jsonify(message="Saved Model Record to DB") # update this to a dynamic message
 
 #SQL Database Setup
