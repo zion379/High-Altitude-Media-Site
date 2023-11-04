@@ -25,7 +25,7 @@ if dev_testing_mode==True:
 #user login
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY') # change this and add it to an enviorment variable
 digital_ocean_db_URI = os.getenv('DATABASE_URI')
-local_dev_db= os.getenv('DEV_DATABASE_URI')
+#local_dev_db = os.getenv('DEV_DATABASE_URI')
 app.config['SQLALCHEMY_DATABASE_URI'] = digital_ocean_db_URI # Create Database and change name if needed
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -360,9 +360,11 @@ def admin_login():
         if admin and admin.password == password:
             #login
             login_user(admin)
-
+            print('Admin Logged in')
             #redirect to admin dashboard
             return redirect('/admin-dashboard')
+        
+        print('Admin wrong password')
 
     return render_template('/admin_templates/admin_login.html')
 
