@@ -6,6 +6,7 @@
 
 {% block body %}
 <h3 style="text-align: center;">Admin Project View</h3>
+<!--Return Button-->
 <div class="row">
     <div class="col-12">
         <a href="/admin-dashboard">
@@ -59,7 +60,27 @@
             <h3 style="color: white; text-align: center;">Project Assets</h3>
             <button class="btn btn-primary" style="color: white; float:right;" onclick="CreateNewAsset()" data-bs-toggle="modal" data-bs-target='#asset_creation_menu'>Create New Asset</button>
         </div>
-        <!-- Full screen asset creation menu -->
+         <!-- Pop Up Confirm modal -->
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content"  style="background-color: rgb(70, 69, 69);">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit New Asset</h1>
+                            <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p style="color: white; text-align: center;">Are you sure you want to create this asset?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-target="#asset_creation_menu" data-bs-toggle="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="submit_new_asset({{ project_id }})">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Full Screen Asset Creation Menu -->
         <div class="modal" id="asset_creation_menu" aria-labelledby="CreateAssetModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-fullscreen" >
                 <div class="modal-content" style="background-color: rgb(70, 69, 69);">
@@ -67,14 +88,241 @@
                         <h1 class="modal-title">Create New Asset</h1>
                         <button type="button" class="btn-close me-2" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">...</div>
+                    <div class="modal-body" style="text-align: center;">
+                        <div id="section1">
+                            <h2>New Asset Type</h2>
+                            <label for="new_asset_type" style="color: white;">Asset Type:</label>
+                            <select name="new_asset_type" id="new_asset_type">
+                                <option value="none">Choose an asset type</option>
+                                <option value="model">3D Model</option>
+                                <option value="tour">Virtual Tour</option>
+                                <option value="ortho">Orthomosaic</option>
+                                <option value="still">Still Image</option>
+                                <option value="video">Video</option>
+                            </select>
+                        </div>
+                        <div id="section2">
+                            <h2>New Asset Details</h2>
+                            <!-- Show Selected Asset Type -->
+                            <!-- Asset URL -->
+                            <label for="new_asset_url" style="color: white;">New Asset URL:</label>
+                            <input type="url" name="new_asset_url" id="new_asset_url">
+                            <!-- Asset Desc -->
+                            <label for="new_asset_desc" style="color: white;">New Asset Desc:</label>
+                            <input type="text" name="new_asset_desc" id="new_asset_desc">
+                        </div>
+                        <div id="section3">
+                            <h2>Review New Asset Details And Confirm</h2>
+                            <!-- Display Inputed Values-->
+                            <div class="row">
+                                <div id="review_content_container">
+
+                                </div>
+                                <div class="col-12" style="justify-content: center; display: flex;">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="confirm_btn">Confirm and Create</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Menu Navigation-->
+                    <div class="col-12">
+                        <!--Previous button-->
+                        <button onclick="previous()" class="mb-2 ms-2" id="previous_btn" style="float: left;">
+                            <span class="material-symbols-outlined">
+                                navigate_before
+                            </span>
+                        </button>
+                        <!--Next button-->
+                        <button onclick="next()" class="mb-2 me-4" id="next_btn" style="float: right;">
+                            <span class="material-symbols-outlined">
+                                navigate_next
+                            </span>
+                        </button>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
                     </div>
+                    <!-- Asset Creation Menu Script -->
+                    <script>
+                        sectionIndex = 1;
+                        totalSections = getAllSections();
+
+                        function getAllSections() {
+                            const sections = document.querySelectorAll('div[id^="section"]');
+                            return sections.length;
+                        }
+
+                        function showSection(sectionId) {
+                            //Hide all sections and display the selected one
+                            const sections = document.querySelectorAll('div[id^="section"]');
+                            sections.forEach(section => {
+                                section.style.display = 'none';
+                            });
+                            document.getElementById('section' + sectionIndex).style.display = 'block';
+                        }
+
+                        // Initially set first set of question to be displayed
+                        showSection(sectionIndex);
+
+                        function next() {
+                            if (sectionIndex <= totalSections) {
+                                sectionIndex += 1;
+                                // Update View
+                                showSection(sectionIndex);
+                                Update_btn_hide();
+                                display_form_review();
+                            }
+                            console.log('next');
+                        }
+
+                        function previous() {
+                            if (sectionIndex >= 1) {
+                                sectionIndex -= 1;
+                                // Update View
+                                showSection(sectionIndex);
+                                Update_btn_hide();
+                            }
+                            console.log('previous');
+                        }
+
+                        // disable and show, next and previous button depending on current section
+                        function Update_btn_hide() {
+                            const next_btn = document.getElementById('next_btn');
+                            const previous_btn = document.getElementById('previous_btn');
+                            const confirm_btn = document.getElementById('confirm_btn');
+
+                            // show previous button when not on first section
+                            if(sectionIndex > 1) {
+                                previous_btn.style.display = 'block';
+                            } else if (sectionIndex == 1) {
+                                // hide previous button if on first section
+                                previous_btn.style.display = 'none';
+                            }
+
+                            if (sectionIndex == totalSections) {
+                                // Hide next button
+                                next_btn.style.display = 'none';
+                                // show submit button
+                                confirm_btn.style.display = 'block';
+                            } else if (sectionIndex < totalSections) {
+                                // Show next button
+                                next_btn.style.display = 'block';
+                                confirm_btn.style.display = 'none';
+                            }
+                        }
+
+                        Update_btn_hide();
+
+                        function display_form_review() {
+                            // get all input element values
+                            const new_url_field = document.getElementById('new_asset_url');
+                            const new_desc_field = document.getElementById('new_asset_desc');
+                            const asset_type_field = document.getElementById('new_asset_type');
+
+                            // check if elements has already been created
+                            type_el = document.getElementById('type_review_element');
+                            url_el = document.getElementById('url_review_element');
+                            desc_el = document.getElementById('desc_review_element');
+
+                            // check if elements exist before appending elements to container
+                            if ((!type_el && !url_el) || (!type_el && !desc_el)) {
+                                // check if we are on the last section
+                                if (sectionIndex == getAllSections()) {
+
+                                    // get review content container
+                                    const review_content_container = document.getElementById('review_content_container');
+
+                                    // URL Review
+                                    const url_review_element = document.createElement('p');
+                                    url_review_element.textContent = 'Asset URL : ' + new_url_field.value;
+
+                                    // Desc Review
+                                    const desc_review_element = document.createElement('p');
+                                    desc_review_element.textContent = 'Asset Desc : ' + new_desc_field.value;
+
+                                    // Asset Type Review
+                                    const type_review_element = document.createElement('p');
+                                    type_review_element.textContent = 'Asset Type : ' + asset_type_field.value;
+                                    
+                                    // add elements to container
+                                    review_content_container.appendChild(type_review_element);
+                                    review_content_container.appendChild(url_review_element);
+                                    review_content_container.appendChild(desc_review_element);
+
+                                    // center text and change color
+                                    desc_review_element.style.textAlign = 'center';
+                                    type_review_element.style.textAlign = 'center';
+                                    url_review_element.style.textAlign =  'center';
+
+                                    // set review elements id
+                                    desc_review_element.id =  "desc_review_element";
+                                    type_review_element.id = "type_review_element";
+                                    url_review_element.id = "url_review_element";
+
+                                }
+                            } else {
+                                // elements exist, update values.
+                                type_el.textContent = 'Asset Type : ' + asset_type_field.value;
+                                url_el.textContent = 'Asset URL : ' + new_url_field.value;
+                                desc_el.textContent = 'Asset Desc : ' + new_desc_field.value;
+                            }
+                        }
+
+                        function submit_new_asset(current_project_id) {
+                            // get all input element values
+                            const new_url_field = document.getElementById('new_asset_url');
+                            const new_desc_field = document.getElementById('new_asset_desc');
+                            const asset_type_field = document.getElementById('new_asset_type');
+
+                            // populate new data object and send new asset object to server.
+                            // Create Data Object for new asset attributes
+                            const newAssetObj = {
+                                project_id: current_project_id,
+                                asset_type: asset_type_field.value,
+                                asset_url: new_url_field.value,
+                                asset_desc: new_desc_field.value,
+                            };
+
+                            send_asset_object(newAssetObj);
+                        }
+
+                        function confirm_new_asset() {
+                            // show pop up to user to verify creation of the new asset.
+
+                        }
+
+                        function send_asset_object(asset_obj) {
+                            //Configure the request
+                            const url = '/create-new-asset'; // come back to this refer to other post request
+                            const options = {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body:  JSON.stringify(asset_obj), // convert object to json
+                            };
+
+                            // Send the POST request
+                            fetch(url, options)
+                                .then(response => {
+                                    if(!response.ok) {
+                                        console.error('Request network response was not ok');
+                                    }
+                                    return response;
+                                })
+                                .then(data => {
+                                    console.log('recieved response data ' + asset_obj.project_id);
+                                    // reload window
+                                    window.location.href = '/admin-project-view/' + String(asset_obj.project_id);
+                                });
+                        }
+
+                    </script>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Project Models 3D -->
     <div class="row">
         <h4>Project 3D Models</h4>
@@ -84,7 +332,7 @@
                 <h6>Model ID: {{ model.model_id }}</h6>
                 <h6>Model Project ID: {{ model.project_id }}</h6>
                 <form class="form-floating">
-                    <input oninput="EnableSaveButton('model_save_button_{{ model.model_id }}')" class="form-control" type="text" name="model_url_input_{{ model.model_id }}" id="model_url_input_{{ model.project_id }}" value="{{ model.model_url }}">
+                    <input oninput="EnableSaveButton('model_save_button_{{ model.model_id }}')" class="form-control" type="text" name="model_url_input_{{ model.model_id }}" id="model_url_input_{{ model.model_id }}" value="{{ model.model_url }}">
                     <label id="model_url_label_{{ model.model_id }}" for="model_url_input_{{ model.model_id }}"> Model URL:</label>
                 </form>
                 <form class="form-floating">
@@ -226,7 +474,7 @@
 
        function UpdateAssetAttributes(update_vals_obj, project_id) {
          console.log('Updating asset attributes...');
-         // send data to server
+         // send data to server and configure request
          const json_data = JSON.stringify(update_vals_obj);
          const url = '/update-asset-attributes';
          const options = {

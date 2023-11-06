@@ -564,7 +564,7 @@ def admin_project_view(project_id):
     admin_proj_view_obj = Admin_project_view_obj(current_project.client_id, client_username, current_project.creation_date, current_project.project_description, location, services_obj, model_3d_objs_list, all_project_tours, orthos_list, all_project_photos, all_project_videos)
         
 
-    return render_template('admin_templates/admin_project_view.html', admin_proj_view_obj=admin_proj_view_obj)
+    return render_template('admin_templates/admin_project_view.html', admin_proj_view_obj=admin_proj_view_obj, project_id=project_id)
 
 @app.route('/update-asset-attributes', methods=['POST'])
 def update_asset_attributes():
@@ -729,6 +729,63 @@ def update_asset_attributes():
             print('new_video_desc object key not included')
             
     return jsonify(message="Saved Model Record to DB") # update this to a dynamic message
+
+#
+@app.route('/create-new-asset', methods=['POST'])
+def create_new_asset():
+    # get new asset json object
+    json_data = request.json
+
+    asset_project_id = json_data['project_id']
+    asset_type = json_data['asset_type']
+    asset_url = json_data['asset_url']
+    asset_desc = json_data['asset_desc']
+
+    # check what type the new asset is
+    if asset_type == 'model':
+        #create new model instance
+        new_model_asset = Models_3d(project_id=asset_project_id, model_url=asset_url, model_desc=asset_desc)
+        #Add Asset Record to db session
+        db.session.add(new_model_asset)
+        # Commit the sesion to save data
+        db.session.commit()
+        print('Created new Model Asset')
+
+    elif asset_type == 'tour':
+        current_date = datetime.now().date()
+        #create new tour instance
+        new_tour_asset = Virtual_tour_projects(creation_date=current_date,tour_desc=asset_desc, project_id=asset_project_id)
+        #Add Asset Record to db session
+        db.session.add(new_tour_asset)
+        # Commit session
+        db.session.commit()
+        print('Created new Model Asset')
+    elif asset_type == 'ortho':
+        #create new ortho instance
+        new_ortho_asset = Orthomosaics_2D(project_id=asset_project_id, ortho_url=asset_url, ortho_desc=asset_desc)
+        #Add asset record to db session
+        db.session.add(new_ortho_asset)
+        #Commit session
+        db.session.commit()
+        print('Created new Ortho Asset')
+    elif asset_type == 'still':
+        #create new still instance
+        new_still_asset = Still_photos(project_id=asset_project_id, photo_url=asset_url, photo_desc=asset_desc)
+        #Add asset record to db session
+        db.session.add(new_still_asset)
+        #Commit session
+        db.session.commit()
+        print('Created new Still Image Asset')
+    elif asset_type == 'video':
+        # create new video instance
+        new_video_asset = Videos(project_id=asset_project_id, video_url=asset_url, video_desc=asset_desc)
+        #Add asset record to db session
+        db.session.add(new_video_asset)
+        #Commit session
+        db.session.commit()
+        print('Created new Video Asset')
+
+    return jsonify(message="Saved New Asset Record to DB")
 
 #SQL Database Setup
 
