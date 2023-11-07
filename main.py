@@ -787,6 +787,67 @@ def create_new_asset():
 
     return jsonify(message="Saved New Asset Record to DB")
 
+@app.route('/delete-project-asset', methods=['POST'])
+def delete_project_asset():
+    #Get asset to delete data object
+    json_data = request.json
+
+    project_id = json_data['project_id']
+    asset_type = json_data['asset_type']
+    asset_id = json_data['asset_id']
+
+    if asset_type == 'model':
+        # delete model asset
+        model_record = Models_3d.query.get(asset_id)
+
+        #check if record exist
+        if model_record:
+            db.session.delete(model_record)
+            db.session.commit()
+
+        print('delete model asset ')
+    elif asset_type == 'tour':
+        #delete tour asset
+        tour_record = Virtual_tour_projects.query.get(asset_id)
+
+        #check if record exist
+        if tour_record:
+            db.session.delete(tour_record)
+            db.session.commit()
+
+        print('delete tour asset ')
+    elif asset_type == 'ortho':
+        #delete ortho asset
+        ortho_record = Orthomosaics_2D.query.get(asset_id)
+
+        #check if record exist
+        if ortho_record:
+            db.session.delete(ortho_record)
+            db.session.commit()
+
+        print('delete ortho asset ' + json_data)
+    elif asset_type == 'still':
+        #delete still asset
+        still_record = Still_photos.query.get(asset_id)
+
+        #check if record exist
+        if still_record:
+            db.session.delete(still_record)
+            db.session.commit()
+
+        print('delete still asset ' + json_data)
+    elif asset_type == 'video':
+        #delete video asset
+        video_record = Videos.query.get(asset_id)
+
+        #check if record exist
+        if video_record:
+            db.session.delete(video_record)
+            db.session.commit()
+            
+        print('delete video asset ' + json_data)
+        
+    return jsonify(message="Deleted Asset")
 #SQL Database Setup
 
 digital_ocean_cors_config = {
