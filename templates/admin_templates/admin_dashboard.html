@@ -27,6 +27,229 @@
                 <p>Admin can modify client project info, upload assets to projects, and update the status of a project.</p>
             </div>
             <div class="col-12">
+                <!-- New Project Modal Pop up - confim -->
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" style="background-color: rgb(70, 69, 69);">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Create new client project</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="reset_client_project_form()"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to create a new client project?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-target="#new_project_modal" data-bs-toggle="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="create_new_client_project()" data-bs-target="#staticBackdrop" data-bs-dismiss="modal">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- New Project Modal -->
+                <div class="modal" id="new_project_modal" tabindex="-1" aria-labelledby="new_project_modal_label" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+                        <div class="modal-content" style="background-color: rgb(70, 69, 69);">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="new_project_modal_label">New Client Project</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="reset_client_project_form()"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="section1">
+                                    <h2>Project Location</h2>
+                                    <p>Select Address Type and Fill in Address.</p>
+                                    <!-- Project Location Type -->
+                                    <label for="project_address_type" style="color: white;">Address Format:</label>
+                                    <select name="project_address_type" id="project_address_type">
+                                        <option value="none"> Select an address format.</option>
+                                        <option value="tax_parcel">Tax Parcel Number</option>
+                                        <option value="street">Street Address</option>
+                                    </select>
+                                    <!-- Project location input -->
+                                    <label for="project_location_input" style="color: white;">Project Location:</label>
+                                    <input type="text" name="project_location_input" id="project_location_input">
+                                </div>
+                                <div id="section2">
+                                    <!-- Project Description -->
+                                    <h2>Project Description</h2>
+                                    <label for="desc_input" style="color: white;">Project Description:</label>
+                                    <input type="text" name="desc_input" id="desc_input">
+                                </div>
+                                <div id="section3">
+                                    <!-- Allow user to select client for project -->
+                                    <label for="project_client_input" style="color: white;">Select client for project</label>
+                                    <select name="project_client_select_input" id="project_client_select_input">
+                                        <option value="none" id="client_select_default">Select a Client</option>
+                                        {% for client_obj in all_clients%}
+                                            <option value="{{ client_obj.user_id }}"> {{ client_obj.username }} - {{ client_obj.email }} </option>
+                                        {% endfor %} 
+                                    </select>
+                                </div>
+
+                                <!-- New Client Project Menu Nav -->
+                                <div class="col-12">
+                                    <!-- previous button -->
+                                    <button onclick="previous()" class="mb-2 ms-2" id="previous_btn" style="float: left;">
+                                        <span class="material-symbols-outlined">
+                                            navigate_before
+                                        </span>
+                                    </button>
+                                    <!--next button-->
+                                    <button onclick="next()" class="mb-2 me-4" id="next_btn" style="float: right;">
+                                        <span class="material-symbols-outlined">
+                                            navigate_next
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-target="#new_project_modal" data-bs-dismiss="modal" onclick="reset_client_project_form()">Cancel</button>
+                                <button type="button" class="btn btn-primary"  data-bs-target="#staticBackdrop" data-bs-toggle="modal" id="create_btn">Create Project</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- New Project button -->
+                <button class="btn bg-secondary" style="float: right;" data-bs-toggle="modal" data-bs-target="#new_project_modal"> New Project </button>
+                <!-- New Project Script -->
+                <script>
+                    sectionIndex = 1;
+                    totalSections = getAllSections();
+
+                    function getAllSections() {
+                        const sections = document.querySelectorAll('div[id^="section"]');
+                        return sections.length;
+                    }
+
+                    function showSection(sectionId) {
+                        // Hide all sections and display only the current one
+                        const sections = document.querySelectorAll('div[id^="section"]');
+                        sections.forEach(section => {
+                            section.style.display = 'none';
+                        });
+                        document.getElementById('section' + sectionIndex).style.display = 'block';
+                    }
+
+                    // first set of questions to be shown
+                    showSection(sectionIndex);
+
+                    function next() {
+                        if(sectionIndex <= totalSections) {
+                            sectionIndex += 1;
+                            // Update View
+                            showSection(sectionIndex);
+                            Update_btn_hide();
+                        }
+                        console.log('next');
+                    }
+
+                    function previous() {
+                        if (sectionIndex >= 1) {
+                            sectionIndex -= 1;
+                            //Update View
+                            showSection(sectionIndex);
+                            Update_btn_hide();
+                        }
+                        console.log('previous');
+                    }
+
+                    // disable and show next/prev button depending on current section index
+                    function Update_btn_hide() {
+                        const next_btn = document.getElementById('next_btn');
+                        const previous_btn = document.getElementById('previous_btn');
+                        const create_btn = document.getElementById('create_btn');
+
+                        // show previous button except for the first section
+                        if(sectionIndex > 1) {
+                            previous_btn.style.display = 'block';
+                        } else if (sectionIndex == 1) {
+                            // hide previous button
+                            previous_btn.style.display = 'none';
+                        }
+
+                        // show next button exvept for the last section
+                        if (sectionIndex == totalSections) {
+                            // Hide next Button
+                            next_btn.style.display = 'none';
+                            // show Create Project Button
+                            create_btn.style.display = 'block';
+                        } else if (sectionIndex < totalSections) {
+                            // show next button
+                            next_btn.style.display = 'block';
+                            // Hide create button
+                            create_btn.style.display = 'none';
+                        }
+                    }
+
+                    Update_btn_hide();
+
+                    // Create New Client Project
+                    // Get All Data Field Values
+                    address_type_input = document.getElementById('project_address_type');
+                    address_location_input = document.getElementById('project_location_input');
+                    proj_desc_input = document.getElementById('desc_input');
+                    client_id_input = document.getElementById('project_client_select_input');
+
+                    function create_new_client_project() {
+                        // Create new project obj
+                        const new_client_proj_obj = {
+                            client_id: client_id_input.value,
+                            address_type: address_type_input.value,
+                            location: address_location_input.value,
+                            proj_desc: proj_desc_input.value
+                        };
+
+                        // Config Post Request
+                        const url = '/admin-create-new-project';
+                        const options = {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(new_client_proj_obj),
+                        }
+
+                        // Send Post Request
+                        fetch(url, options)
+                            .then(response => {
+                                if(!response.ok) {
+                                    console.log('Request network response error was not ok. While attempting to create new client project.');
+                                }
+                                return response;
+                            })
+                            .then(data => {
+                                console.log('recieved response data');
+                                // reload window
+                                window.location.href = '/admin-dashboard';
+                            });
+
+                        reset_client_project_form()
+                    }
+
+                    // Reset Client Project Form
+                    function reset_client_project_form() {
+                        //Reset View Index
+                        sectionIndex = 1;
+                        showSection(sectionIndex);
+
+                        //Reset navigation buttons
+                        Update_btn_hide();
+
+                        // Get default options
+                        client_select = document.querySelector("#project_client_select_input option[value='none']");
+                        location_type_select = document.querySelector("#project_address_type option[value='none']");
+                        // Add the "selected" attribute
+                        client_select.setAttribute('selected','selected');
+                        location_type_select.setAttribute('selected','selected');
+
+                        // Reset other inputs
+                        address_location_input.value = '';
+                        proj_desc_input.value = '';
+                    }
+
+                </script>
+            </div>
+            <div class="col-12">
                 <!-- Table of all clients -->
                 <table class="table">
                     <thead>

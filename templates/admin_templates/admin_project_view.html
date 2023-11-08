@@ -61,24 +61,24 @@
             <button class="btn btn-primary" style="color: white; float:right;" onclick="CreateNewAsset()" data-bs-toggle="modal" data-bs-target='#asset_creation_menu'>Create New Asset</button>
         </div>
          <!-- Pop Up Confirm modal -->
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content"  style="background-color: rgb(70, 69, 69);">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit New Asset</h1>
-                            <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p style="color: white; text-align: center;">Are you sure you want to create this asset?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-target="#asset_creation_menu" data-bs-toggle="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary" onclick="submit_new_asset({{ project_id }})">Create</button>
-                        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content"  style="background-color: rgb(70, 69, 69);">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit New Asset</h1>
+                        <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="color: white; text-align: center;">Are you sure you want to create this asset?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-target="#asset_creation_menu" data-bs-toggle="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="submit_new_asset({{ project_id }})">Create</button>
                     </div>
                 </div>
             </div>
+        </div>
 
         <!-- Full Screen Asset Creation Menu -->
         <div class="modal" id="asset_creation_menu" aria-labelledby="CreateAssetModalLabel" aria-hidden="true">
@@ -115,9 +115,7 @@
                             <h2>Review New Asset Details And Confirm</h2>
                             <!-- Display Inputed Values-->
                             <div class="row">
-                                <div id="review_content_container">
-
-                                </div>
+                                <div id="review_content_container"></div>
                                 <div class="col-12" style="justify-content: center; display: flex;">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="confirm_btn">Confirm and Create</button>
                                 </div>

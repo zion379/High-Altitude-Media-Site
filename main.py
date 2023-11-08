@@ -384,6 +384,13 @@ class Client_Project_obj:
         self.client_id = client_id
         self.client_username = client_username
 
+#Admin Dashboard Clients obj
+class Admin_Client_obj:
+    def __init__(self, username, email, user_id):
+        self.username = username
+        self.email = email
+        self.user_id = user_id
+
 @app.route('/admin-dashboard', methods=['GET'])
 @login_required
 def admin_dashboard():
@@ -395,6 +402,7 @@ def admin_dashboard():
 
     #Check if any projects exist
     if total_projects != 0 :
+        #display all client projects
         for client_project in all_client_projects:
             project_id = all_client_projects[project_index].id
             creation_date = all_client_projects[project_index].creation_date
@@ -418,7 +426,18 @@ def admin_dashboard():
 
             project_index += 1
 
-    return render_template('admin_templates/admin_dashboard.html', username=current_user.username, projects=projects_data_objects)
+    #Get all clients for Project Creation Data Field
+    all_clients = Clients.query.all()
+    admin_clients_obj = []
+
+    #Check if there are any clients
+    if len(all_clients) != 0:
+        for client_record in all_clients:
+            #Create client object and append it to array
+            client = Admin_Client_obj(client_record.username, client_record.email, client_record.id) # return to this, delete this comment
+            admin_clients_obj.append(client)
+
+    return render_template('admin_templates/admin_dashboard.html', username=current_user.username, projects=projects_data_objects,  all_clients=admin_clients_obj)
 
 # Admin Project View Objects
 
@@ -844,10 +863,34 @@ def delete_project_asset():
         if video_record:
             db.session.delete(video_record)
             db.session.commit()
-            
+
         print('delete video asset ' + json_data)
         
     return jsonify(message="Deleted Asset")
+
+@app.route('/admin-create-new-project', methods=['POST'])
+def admin_create_project():
+    # Get Data Object
+    json_data = request.json
+
+    # Get attributes
+    client_id = json_data['client_id']
+    address_type = json_data['address_type']
+    location = json_data['location']
+    proj_desc = json_data['proj_desc']
+
+    # create new project instance
+    if address_type == 'tax_parcel':
+        new_client_project = Projects(client_id=client_id, project_tax_parcel=location, project_description=proj_desc)
+        db.session.add(new_client_project)
+        db.session.commit()
+    else:
+        new_client_project = Projects(client_id=client_id, project_address=location, project_description=proj_desc)
+        db.session.add(new_client_project)
+        db.session.commit()
+
+    return jsonify(message=f"Created New Client Project {json_data}")
+
 #SQL Database Setup
 
 digital_ocean_cors_config = {
