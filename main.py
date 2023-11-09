@@ -878,14 +878,15 @@ def admin_create_project():
     address_type = json_data['address_type']
     location = json_data['location']
     proj_desc = json_data['proj_desc']
+    creation_date = datetime.now().date()
 
     # create new project instance
     if address_type == 'tax_parcel':
-        new_client_project = Projects(client_id=client_id, project_tax_parcel=location, project_description=proj_desc)
+        new_client_project = Projects(client_id=client_id, project_tax_parcel=location, project_description=proj_desc, creation_date=creation_date)
         db.session.add(new_client_project)
         db.session.commit()
     else:
-        new_client_project = Projects(client_id=client_id, project_address=location, project_description=proj_desc)
+        new_client_project = Projects(client_id=client_id, project_address=location, project_description=proj_desc, creation_date=creation_date)
         db.session.add(new_client_project)
         db.session.commit()
 
