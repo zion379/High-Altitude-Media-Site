@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-12">
         <a href="/admin-dashboard">
-            <button>
+            <button class="btn">
                 <span class="material-symbols-outlined">
                     arrow_left_alt
                 </span>
@@ -20,39 +20,106 @@
 </div>
 
 <div class="container" style="color: white;">
-    <!-- Client Username  -->
-    <h5>Client: {{ admin_proj_view_obj.client_username }}</h5>
-    <!-- Client ID -->
-    <h6>Client ID: {{ admin_proj_view_obj.client_id }}</h6>
-    <!-- Project Creation Date -->
-    <h6>Project Creation: {{ admin_proj_view_obj.date }}</h6>
-    <!-- project_location -->
-    <h6>Location: {{ admin_proj_view_obj.project_location }}</h6>
-    <!-- project_description -->
-    <p>Description: {{ admin_proj_view_obj.project_desc }}</p>
-    
-    <!-- Selected Services, add ability to add services -->
-    <h4>Project Services</h4>
-    <table class="table">
-        <thead>
-            <tr style="color: white;">
-                <th scope="col">still imagary service</th>
-                <th scope="col">Videography Service</th>
-                <th scope="col">3D Model Service</th>
-                <th scope="col">Orthomosaic Service</th>
-                <th scope="col">Virtual Tour Service</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr style="color: rgb(89, 216, 233);">
-                <td>{{ admin_proj_view_obj.services_obj.stills_service }}</td>
-                <td>{{ admin_proj_view_obj.services_obj.video_service }}</td>
-                <td>{{ admin_proj_view_obj.services_obj.model_service }}</td>
-                <td>{{ admin_proj_view_obj.services_obj.ortho_service }}</td>
-                <td>{{ admin_proj_view_obj.services_obj.tour_service }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-8">
+             <!-- Client Username  -->
+            <h5>Client: {{ admin_proj_view_obj.client_username }}</h5>
+            <!-- Client ID -->
+            <h6>Client ID: {{ admin_proj_view_obj.client_id }}</h6>
+            <!-- Project Creation Date -->
+            <h6>Project Creation: {{ admin_proj_view_obj.date }}</h6>
+            <!-- project_location -->
+            <h6>Location: {{ admin_proj_view_obj.project_location }}</h6>
+            <!-- project_description -->
+            <p>Description: {{ admin_proj_view_obj.project_desc }}</p>
+        </div>
+        <div class="col-4">
+            <button class="btn" style="float: right; color: rgb(236, 70, 70)" data-bs-target="#delete_project_modal" data-bs-toggle="modal">Delete Project</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <!-- Selected Services, add ability to add services -->
+            <h4>Project Services</h4>
+            <table class="table">
+                <thead>
+                    <tr style="color: white;">
+                        <th scope="col">still imagary service</th>
+                        <th scope="col">Videography Service</th>
+                        <th scope="col">3D Model Service</th>
+                        <th scope="col">Orthomosaic Service</th>
+                        <th scope="col">Virtual Tour Service</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="color: rgb(89, 216, 233);">
+                        <td>{{ admin_proj_view_obj.services_obj.stills_service }}</td>
+                        <td>{{ admin_proj_view_obj.services_obj.video_service }}</td>
+                        <td>{{ admin_proj_view_obj.services_obj.model_service }}</td>
+                        <td>{{ admin_proj_view_obj.services_obj.ortho_service }}</td>
+                        <td>{{ admin_proj_view_obj.services_obj.tour_service }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Delete Project Modal -->
+    <div class="modal fade" id="delete_project_modal" tabindex="-1" aria-labelledby="delete_project_modal_label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: rgb(70, 69, 69);">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="delete_project_modal_label">Delete Project</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color: white; font-weight:bold">Are you sure you want to delete this project?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn bg-danger bg-graident" onclick="delete_client_project({{ project_id }})" data-bs-dismiss="modal">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function delete_client_project(project_id) {
+            console.log('Deleting Client project with the id of ' + project_id);
+
+            // Create Delete Obj
+            project_to_del_obj = {
+                project_id: project_id
+            }
+
+            //Send post request to delete project
+            // Config Post Request
+            const url = '/admin-delete-project';
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(project_to_del_obj), // add object to send
+            }
+
+            // Send Post Request
+            fetch(url, options) 
+                .then(response => {
+                    if(!response.ok) {
+                        console.log('Request network error was not ok. While attempting to delete client project');
+                    }
+
+                    return response;
+                }).then( data => {
+                    console.log('recieved response data');
+                    // reload window
+                    window.location.href = '/admin-dashboard';
+                });
+        }
+    </script>
+
     <!-- Project Workflow State -->
     <!-- Project Assets -->
     <div class="row">

@@ -891,6 +891,68 @@ def admin_create_project():
 
     return jsonify(message=f"Created New Client Project {json_data}")
 
+@app.route('/admin-delete-project', methods=['POST'])
+def admin_delete_project():
+    # Get Data Object
+    json_data = request.json
+    project_id = json_data['project_id']
+
+    # delete all project assets: project, stills, videos, orthos, models, virtual tours,  tour-360s
+    proj_stills = Still_photos.query.filter_by(project_id=project_id).all()
+
+    #Check if stills is null
+    if proj_stills:
+        for img in proj_stills:
+            #delete image record
+            db.session.delete(img)
+
+    proj_videos = Videos.query.filter_by(project_id=project_id).all()
+
+    #Check if there are any videos
+    if proj_videos:
+        for video in proj_videos:
+            #delete video record
+            db.session.delete(video)
+
+    proj_orthos = Orthomosaics_2D.query.filter_by(project_id=project_id).all()
+
+    if proj_orthos:
+        for ortho in proj_orthos:
+            # delete ortho record
+            db.session.delete(ortho)
+
+    proj_models = Models_3d.query.filter_by(project_id=project_id).all()
+
+    if proj_models:
+        for model in proj_models:
+            # delete model record
+            db.session.delete(model)
+
+    proj_tours = Virtual_tour_projects.query.filter_by(project_id=project_id).all()
+
+    if proj_tours:
+        for tour in proj_tours:
+            # delete all tour photos
+            tour_360_imgs = Virtual_tour_photos.query.filter_by(tour_id=tour.id)
+
+            #check if there are any imgs
+            if tour_360_imgs:
+                for img_360 in tour_360_imgs:
+                    # delete image
+                    db.session.delete(img_360)
+
+            # delete tour
+            db.session.delete(tour)
+            print(tour.tour_desc)
+
+    # Delete Project
+    current_proj = Projects.query.filter_by(id=project_id).first()
+    db.session.delete(current_proj)
+    
+    db.session.commit()
+
+    return jsonify(message="Deleted Client Project")
+
 #SQL Database Setup
 
 digital_ocean_cors_config = {
