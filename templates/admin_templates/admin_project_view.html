@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-
+    <script src="{{ url_for('static', filename='js_scripts/validation.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -289,6 +289,17 @@
                             url_el = document.getElementById('url_review_element');
                             desc_el = document.getElementById('desc_review_element');
 
+                            // Validate input fields
+                            // check if we are on the last section
+                            if (sectionIndex == getAllSections()) {
+                                // get input labels
+                                const url_label = document.querySelector('[for="new_asset_url"]');
+                                console.log('validate Text: ' + validateText(new_url_field,url_label, 4, 100));
+                                const desc_label = document.querySelector('[for="new_asset_desc"]');
+                                validateText(new_desc_field, desc_label, 2, 100); // add this as a condition
+                                // left off here... testing validation
+                            }
+
                             // check if elements exist before appending elements to container
                             if ((!type_el && !url_el) || (!type_el && !desc_el)) {
                                 // check if we are on the last section
@@ -333,6 +344,7 @@
                             }
                         }
 
+
                         function submit_new_asset(current_project_id) {
                             // get all input element values
                             const new_url_field = document.getElementById('new_asset_url');
@@ -349,11 +361,6 @@
                             };
 
                             send_asset_object(newAssetObj);
-                        }
-
-                        function confirm_new_asset() {
-                            // show pop up to user to verify creation of the new asset.
-
                         }
 
                         function send_asset_object(asset_obj) {
