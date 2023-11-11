@@ -12,8 +12,22 @@ function validateText(inputField, inputLabel, minLength, maxLength) {
     return true;
 }
 
+// regex expression for checking email formats = /^[^\s@]+@[^\s@]+\.[^\s@]+$/s
 // Create Functions for validating emails, and urls
+function validateEmail(inputField, inputLabel) {
+    var inputValue = inputField.value.trim();
 
+    var emailRegex = /[^\s]+@[^\s]+\.[^\s]+/g;
+
+    // Check if the email matches the regular expression
+    if (emailRegex.test(inputValue)) {
+        console.log('Email in correct format');
+    }
+    else {
+        console.log('Email not in the correct format : ' + inputValue);
+    }
+    // Left off here...
+}
 /* 
     Idea: thinking of creating a function that takes in a group of fields for a form. this group will be passed into the func
     as an array of objects that contain the element and a input type attribute. using the input type to determine how to validate a given input field.
