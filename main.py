@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from flask_mail import Mail, Message
-import requests
 from flask_cors import CORS, cross_origin
 import stripe
-import boto3
 import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
@@ -12,6 +10,7 @@ from sqlalchemy.orm import relationship
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import json
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -148,9 +147,15 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+
         print(f'Username: {username}, Password: {password}')
         user = Clients.query.filter_by(username=username).first()
-        if user and user.password == password:
+
+        #read hashed password
+        #print('Check Hashed pass to entered password : ' + str(check_password_hash(hashed_password, password)))
+
+        #read hashed password
+        if user and check_password_hash(user.password, password) :
             login_user(user)
             return redirect('/dashboard')
         else:
@@ -176,8 +181,12 @@ def signup():
         # do conditinal testing for existing email and password if both vars return none continue with signup process
         if existing_username_test == None and existing_email_test == None:
             print(f'Saving email and username to database')
+            #hash passwords
+            hashed_password = generate_password_hash(password, method='scrypt')
+            print('Password : ' +  password + ' Hashed Password : ' + hashed_password)
+
             # Create a new user
-            new_user = Clients(username=username, email=email, password=password)
+            new_user = Clients(username=username, email=email, password=hashed_password)
             #Add the new user to the session
             db.session.add(new_user)
             # Commit the session to save the data
@@ -202,6 +211,8 @@ def signup():
 def logout():
     logout_user()
     return redirect('/login')
+
+# Create Reset Password.
 
 # dashboard helper objects
 class Project:
@@ -357,7 +368,7 @@ def admin_login():
         
         # Check if user exist
         admin = Site_admin.query.filter_by(username=username).first()
-        if admin and admin.password == password:
+        if admin and check_password_hash(admin.password, password) :
             #login
             login_user(admin)
             print('Admin Logged in')
