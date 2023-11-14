@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
+    <script src="{{ url_for('static', filename='js_scripts/validation.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -26,4 +27,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // get fields
+        const username_field = document.getElementById('username');
+        const password_field = document.getElementById('password');
+
+        const username_label = document.querySelector('[for="username"]');
+        const password_label = document.querySelector('[for="password"]');
+
+        username_field.addEventListener('focusout', function() {
+            validateText(username_field, username_label, 3, 80);
+        });
+       
+        password_field.addEventListener('focusout', function() {
+            validateText(password_field, password_label, 3, 80);
+        });
+    </script>
 {% endblock %}

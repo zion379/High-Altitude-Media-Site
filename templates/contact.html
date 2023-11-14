@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
-{% block head %}{% endblock %}
+{% block head %}
+    <script src="{{ url_for('static', filename='js_scripts/validation.js') }}" defer></script>
+{% endblock %}
 
 {% block body %}
     
@@ -33,7 +35,7 @@
                                     <!-- Phone Number -->
                                     <div class="mb-3 ms-3 me-3 mt-3 contact-form-input-section">
                                         <label for="client-phone-number" class="form-label contact-form-text">Contact Phone Number:</label>
-                                        <input type="text" name="client-phone-number" id="client-phone-number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="xxx-xxx-xxxx" class="form-control contact-input bg-gradient">
+                                        <input type="text" name="client-phone-number" id="client-phone-number" placeholder="xxx-xxx-xxxx" class="form-control contact-input bg-gradient">
                                     </div>
                                 </div>
                             </div>
@@ -102,4 +104,53 @@
                 </div>
             </div>
 
+            <script>
+                // get all fields
+                const client_name_field = document.getElementById('client-name');
+                const client_email_field = document.getElementById('client-email');
+                const client_number_field = document.getElementById('client-phone-number');
+                const project_location_field = document.getElementById('property-location');
+                const project_info_field = document.getElementById('project-info-text-area');
+
+                // get all labels
+                const client_name_label = document.querySelector('[for="client-name"]');
+                const client_email_label = document.querySelector('[for="client-email"]');
+                const client_number_label = document.querySelector('[for="client-phone-number"]');
+                const project_location_label = document.querySelector('[for="project-info-text-area"]');
+                const project_info_label = document.querySelector('[for="project-info-text-area"]');
+
+               client_name_field.addEventListener('focusout', function() {
+                    validateText(client_name_field, client_name_label, 3, 30);
+                });
+
+                client_email_field.addEventListener('focusout', function() {
+                    validateEmail(client_email_field, client_email_label);
+                });
+
+                project_location_field.addEventListener('focusout', function() {
+                    validateText(project_location_field, project_location_label, 5, 80);
+                });
+
+                project_info_field.addEventListener('focusout', function() {
+                    validateText(project_info_field, project_info_label, 0, 200);
+                });
+
+                // Phone input
+                client_number_field.addEventListener('input', function() {
+                    formatPhoneNumber(this);
+                });
+
+                function formatPhoneNumber(input) {
+                    // Remove non-digit characters
+                    let phoneNumber = input.value.replace(/\D/g, '');
+
+                    // Apply the desired format
+                    if (phoneNumber.length == 10) {
+                        phoneNumber = `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
+                    }
+
+                    //Update the input value
+                    input.value = phoneNumber;
+                }
+            </script>
 {% endblock %}

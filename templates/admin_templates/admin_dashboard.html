@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
-{% block head %}{% endblock %}
+{% block head %} 
+    <script src="{{ url_for('static', filename='js_scripts/validation.js') }}" defer></script>
+{% endblock %}
 
 {% block body %}
     <div class="row">
@@ -77,7 +79,7 @@
                                 </div>
                                 <div id="section3">
                                     <!-- Allow user to select client for project -->
-                                    <label for="project_client_input" style="color: white;">Select client for project</label>
+                                    <label for="project_client_select_input" style="color: white;">Select client for project</label>
                                     <select name="project_client_select_input" id="project_client_select_input">
                                         <option value="none" id="client_select_default">Select a Client</option>
                                         {% for client_obj in all_clients%}
@@ -104,13 +106,13 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-target="#new_project_modal" data-bs-dismiss="modal" onclick="reset_client_project_form()">Cancel</button>
-                                <button type="button" class="btn btn-primary"  data-bs-target="#staticBackdrop" data-bs-toggle="modal" id="create_btn">Create Project</button>
+                                <button type="button" class="btn btn-primary" id="create_btn" onclick="validate_new_project()">Create Project</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- New Project button -->
-                <button class="btn bg-secondary" style="float: right;" data-bs-toggle="modal" data-bs-target="#new_project_modal"> New Project </button>
+                <button class="btn bg-secondary" style="float: right;" onclick="show_new_proj_menu()"> New Project </button>
                 <!-- New Project Script -->
                 <script>
                     sectionIndex = 1;
@@ -140,6 +142,23 @@
                             showSection(sectionIndex);
                             Update_btn_hide();
                         }
+
+                        // check if we are on the last index
+                        /*
+                        if(sectionIndex == getAllSections()) {
+                            console.log('Working Z. out : ' + validate_new_project());
+                            // call local validate form and test if true show review section
+                            const create_btn = document.getElementById('create_btn');
+                            if(validate_new_project()) {
+                                // undisable confirm
+                                create_btn.disabled = false;
+                            } else {
+                                // enable confirm
+                                create_btn.disabled = true;
+                            }
+                        }
+                        */
+
                         console.log('next');
                     }
 
@@ -183,13 +202,52 @@
 
                     Update_btn_hide();
 
-                    // Create New Client Project
                     // Get All Data Field Values
                     address_type_input = document.getElementById('project_address_type');
                     address_location_input = document.getElementById('project_location_input');
                     proj_desc_input = document.getElementById('desc_input');
                     client_id_input = document.getElementById('project_client_select_input');
 
+                    function validate_new_project() {
+                        // get all input labels
+                        address_type_label = document.querySelector('[for="project_address_type"]');
+                        address_location_label = document.querySelector('[for="project_location_input"]');
+                        proj_desc_label = document.querySelector('[for="desc_input"]');
+                        client_id_label = document.querySelector('[for="project_client_select_input"]');
+
+                        const address_type_obj = new Input_field_obj(address_type_input, address_location_label, 'select');
+                        const location_field_obj =  new Input_field_obj(address_location_input, address_location_label,'text', 5, 80);
+                        const proj_desc_obj = new  Input_field_obj(proj_desc_input, proj_desc_label,'text', 0, 200);
+                        const client_id_obj = new Input_field_obj(client_id_input, client_id_label, 'select');
+
+                        const form_fields = [address_type_obj,location_field_obj,proj_desc_obj, client_id_obj]
+
+                        if(validateForm(form_fields)) {
+                            hide_new_proj_menu();
+                        }
+
+                    }
+
+                    // show confirm modal and close create new project model
+                    
+                    const create_proj_modal = new bootstrap.Modal(document.getElementById('new_project_modal'));
+
+                    function show_new_proj_menu() {
+                        create_proj_modal.show();
+                    }
+
+                    function hide_new_proj_menu() {
+                        const new_proj_confirm_modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+                        new_proj_confirm_modal.toggle();
+
+                        create_proj_modal.hide();
+                    }
+
+                    function close_new_proj_menu() {
+                        create_proj_modal.dispose();
+                    }
+
+                    // Create New Client Project
                     function create_new_client_project() {
                         // Create new project obj
                         const new_client_proj_obj = {

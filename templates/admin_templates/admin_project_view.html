@@ -232,10 +232,23 @@
                         function next() {
                             if (sectionIndex <= totalSections) {
                                 sectionIndex += 1;
+                                
+                                
+                                // check if were on the last section and if the form is valid if not return to current view-section.
+                                if (sectionIndex == getAllSections()) {
+                                    // display review view after from validation
+                                    if(validate_form()) {
+                                        display_form_review();
+                                    }
+                                    else {
+                                        sectionIndex -= 1; // subtract section index
+                                    }
+                                }
+
                                 // Update View
                                 showSection(sectionIndex);
                                 Update_btn_hide();
-                                display_form_review();
+                                
                             }
                             console.log('next');
                         }
@@ -278,6 +291,34 @@
 
                         Update_btn_hide();
 
+                        function validate_form() {
+                            // get all input element values
+                            const new_url_field = document.getElementById('new_asset_url');
+                            const new_desc_field = document.getElementById('new_asset_desc');
+                            const asset_type_field = document.getElementById('new_asset_type');
+
+                            // get input labels
+                            const url_label = document.querySelector('[for="new_asset_url"]');
+                            const desc_label = document.querySelector('[for="new_asset_desc"]');
+                            const asset_type_label = document.querySelector('[for="new_asset_type"]');
+                            /*
+                            console.log('validate Text: ' + validateText(new_url_field,url_label, 4, 100));
+                            validateText(new_desc_field, desc_label, 2, 100); // add this as a condition
+                            // left off here... testing validation
+                            
+                            validateEmail(new_url_field,  url_label); // testing
+                            */
+
+                            //more testing
+                            const validate_email = new Input_field_obj(new_url_field,url_label, 'text', 2, 10);
+                            const validate_text = new Input_field_obj(new_desc_field, desc_label, 'text', 2, 15);
+                            const validate_type = new Input_field_obj(asset_type_field, asset_type_label, 'select');
+
+                            const form_feilds = [validate_email, validate_text, validate_type];
+
+                            return validateForm(form_feilds);
+                        }
+
                         function display_form_review() {
                             // get all input element values
                             const new_url_field = document.getElementById('new_asset_url');
@@ -291,15 +332,6 @@
 
                             // Validate input fields
                             // check if we are on the last section
-                            if (sectionIndex == getAllSections()) {
-                                // get input labels
-                                const url_label = document.querySelector('[for="new_asset_url"]');
-                                console.log('validate Text: ' + validateText(new_url_field,url_label, 4, 100));
-                                const desc_label = document.querySelector('[for="new_asset_desc"]');
-                                validateText(new_desc_field, desc_label, 2, 100); // add this as a condition
-                                // left off here... testing validation
-                                validateEmail(new_url_field,  url_label); // testing
-                            }
 
                             // check if elements exist before appending elements to container
                             if ((!type_el && !url_el) || (!type_el && !desc_el)) {
@@ -653,7 +685,7 @@
                     //get field values
                     const model_url_input = document.getElementById(form_values_obj.model_url_field_id);
                     const model_desc_input = document.getElementById(form_values_obj.model_desc_field_id);
-                    //check if field values are empty and if they are equal to their pervious value
+
                     // if not empty and not equal to previous value send request to server of updated values
                     if(model_desc_input.value != '' && model_url_input.value != '') {
                         let fields_update_obj = {

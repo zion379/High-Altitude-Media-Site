@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block head %}
+    <script src="{{ url_for('static', filename='js_scripts/validation.js') }}" defer></script>  
 {% endblock %}
+
 {% block body %}
 <div class="container">
     <div class="row">
@@ -33,4 +35,35 @@
         </div>
     </div>
 </div>
+
+<script>
+    // get all fields
+    const username_field = document.getElementById('username');
+    const email_field = document.getElementById('email');
+    const pass_field = document.getElementById('password');
+    const confirm_pass_field = document.getElementById('re-typed-password');
+
+    // get all labels
+    const username_label = document.querySelector('[for="username"]');
+    const email_label = document.querySelector('[for="email"]');
+    const pass_label = document.querySelector('[for="password"]');
+    const confirm_pass_label = document.querySelector('[for="re-typed-password"]');
+
+    username_field.addEventListener('focusout', function() {
+        validateText(username_field, username_label, 3, 80);
+    });
+
+    email_field.addEventListener('focusout', function() {
+        validateEmail(email_field, email_label);
+    });
+
+    pass_field.addEventListener('focusout', function() {
+        validateText(pass_field, pass_label, 3, 80);
+    });
+
+    confirm_pass_field.addEventListener('focusout', function() {
+        validateText(confirm_pass_field, confirm_pass_label, 3, 80);
+    });
+
+</script>
 {% endblock %}
