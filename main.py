@@ -11,6 +11,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 import json
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import URLSafeSerializer
 
 app = Flask(__name__)
 
@@ -178,6 +179,7 @@ def signup():
         existing_email_test = Clients.query.filter_by(email=email).first()
 
         print(f'Existing User Name: {existing_username_test}\nExisting Email:{existing_email_test}')
+
         # do conditinal testing for existing email and password if both vars return none continue with signup process
         if existing_username_test == None and existing_email_test == None:
             print(f'Saving email and username to database')
@@ -194,12 +196,10 @@ def signup():
             # show message
             status_notification = 'successfully created account!'
 
-            #log in user
-            user = Clients.query.filter_by(username=username).first() 
-            login_user(user)
-
-            # redirect to dashboard
-            return redirect('/dashboard')
+            #send email confirmation to clients email
+            generate_confirmation_token(email)
+            # redirect to confirm email.
+            return redirect(f'/confirm_email/{email}')
         else:
             print(f'Username and or email already exist {username}, {email}')
             status_notification=f'Username and or email already exist {username}, {email}'
@@ -983,6 +983,50 @@ app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 app.config['MAIL_USE_SSL'] = True
 
 mail = Mail(app)
+
+# Email Confirmation
+serializer = URLSafeSerializer(os.getenv('SECRET_KEY'))
+
+
+def generate_confirmation_token(email_to):
+    print(f'email to : {email_to}')   
+    #send confirm token to user email
+    #email_to = 'zspynet22@icloud.com'
+    subject = 'High Altitude Media - Email Confirmation Token.'
+
+     #generate confirm token
+    token = serializer.dumps(email_to, salt='email-confirm-key')
+    print(f'token: {token}')
+
+    msg = Message(
+        subject,
+        recipients=[email_to],
+        html=f'<h3 style="color: white; text-align:center; font-weight: bold;" >Token Key : {token}</h3>',
+        sender=app.config['MAIL_USERNAME']
+    )
+    mail.send(msg)
+
+@app.route('/confirm_email/<string:email_to>', methods=["GET","POST"])
+def confirm_email(email_to):
+    message = ''
+    if request.method == 'POST':
+        token = request.form["token_key_input"]
+        # Confirm Token then log in user if success
+        try:
+            email = serializer.loads(token, salt="email-confirm-key", max_age=3600)
+            print(f'user entered token: {request.form["token_key_input"]}  email: { email }')
+            #log in user
+            user = Clients.query.filter_by(email=email).first() 
+            login_user(user)
+            return redirect('/dashboard')
+        except:
+            print(f'Invalid confirmation Token')
+            message=f'Invalid confirmation Token: {token}'
+        
+
+    return render_template('authenication/confirm_email.html', email=email_to, notification=message)
+
+#create request feature to update email, password/reset, and username
 
 #stripe setup
 stripe.api_key = os.getenv('STRIPE_API_KEY') # Secret key create enviorment variable

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="col-12">
+        <div class="row">
+            <!-- navigation -->
+            <a href="/signup">
+                <button>
+                    <span class="material-symbols-outlined">
+                        arrow_left_alt
+                    </span>
+                </button>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-2" style="text-align: center; color: white;">
+            <h1>Confirm Account Email Address</h1>
+            <p>Please Enter The Token Sent to the email {{ email }}.</p>
+        </div>
+        <div class="row">
+            <div class="col-12" style="justify-content:center; display:flex">
+                <form method="post">
+                    <label for="token_key_input" style="color: white;">Token Key :</label>
+                    <input type="text" name="token_key_input" id="token_key_input" required>
+                    <button type="submit" class="btn bg-primary bg-graident" style="color: white;">Confirm Email</button>
+                </form>
+            </div>
+            <div class="col-12" style="justify-content: center; display:flex">
+                <button class="btn mt-3 bg-secondary bg-graident" style="color: white;" onclick="resend_token()"> Resend Token </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function resend_token() {
+        // Will add this functionality very soon.
+        console.log('resend token...');
+    }
+</script>
+{% endblock %}
