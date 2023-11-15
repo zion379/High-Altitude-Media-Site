@@ -10,4 +10,6 @@ venv/
 
 #Ignore Dev Database log file and instance directory
 logfile
-instance/
+
+#Ignore cache
+__pycache__/
