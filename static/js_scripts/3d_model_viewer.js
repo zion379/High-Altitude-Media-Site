@@ -54,8 +54,6 @@ var model_url;
 var controls;
 
 function Init() {
-  
-
   renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
 
   camera.position.z = 4;
@@ -70,7 +68,6 @@ function Init() {
   console.log(model_url);
 
   // Load and add the GLB model
-
   const loader = new GLTFLoader();
   loader.load(model_url, function (gltf) {
       property_model = gltf.scene;
@@ -101,6 +98,38 @@ function Init() {
 }
 
 Init();
+
+//load new model
+export function load_new_model(url) {
+  Get_div_dimensions();
+  Create_scene();
+
+  renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
+
+  camera.position.z = 4;
+  camera.position.y = 4;
+  camera.position.x = 4;
+
+  property_model = new THREE.Mesh();
+
+  // Load and add the GLB model
+  const loader = new GLTFLoader();
+  loader.load(url, function (gltf) {
+      property_model = gltf.scene;
+    scene.add(property_model);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+
+  // Add directional light
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+  directionalLight.position.set(1, 1, 1);
+  directionalLight.rotation.y = 180
+  scene.add(directionalLight);
+
+  // Create OrbitControls
+  controls = new OrbitControls(camera, canvas);
+}
 
 function onWindowResize() {
   //camera.aspect = window.innerWidth / window.innerHeight;
