@@ -30,7 +30,7 @@
                     <button id="tour_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('tour360')">Virtual Tour</button>
                     <button id="model3d_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('model3D','{{ project_view_data.project_model_objs[0].model_url }}')">3D Model</button>
                     <button id="ortho_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('ortho2D', '{{ project_view_data.project_ortho_objs[0].ortho_url }}')">2D Orthomosaic</button>
-                    <button id="video_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('video', '{{ project_view_data.project_video_objs[1].video_url }}')">Video</button>
+                    <button id="video_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('video', '{{ project_view_data.project_video_objs[0].video_url }}')">Video</button>
                     <button id="image_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('stills')">Still Images</button>
                 </div>
                 <div class="row">
