@@ -28,9 +28,9 @@
             <div class="col-12">
                 <div class="col-12 rounded-top" style="text-align: center; background-color: rgb(216, 188, 105);">
                     <button id="tour_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('tour360')">Virtual Tour</button>
-                    <button id="model3d_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('model3D')">3D Model</button>
-                    <button id="ortho_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('ortho2D')">2D Orthomosaic</button>
-                    <button id="video_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('video')">Video</button>
+                    <button id="model3d_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('model3D','{{ project_view_data.project_model_objs[0].model_url }}')">3D Model</button>
+                    <button id="ortho_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('ortho2D', '{{ project_view_data.project_ortho_objs[0].ortho_url }}')">2D Orthomosaic</button>
+                    <button id="video_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('video', '{{ project_view_data.project_video_objs[1].video_url }}')">Video</button>
                     <button id="image_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('stills')">Still Images</button>
                 </div>
                 <div class="row">
@@ -44,6 +44,162 @@
                 </div>
             </div>
         </div>
+
+        <!-- Assets section list  -->
+        <div class="row">
+            <div class="col-12">
+                <div id="section_assets_tour" style="white-space: nowrap; background-color: rgb(37, 37, 37); display: none;">
+                    {% for tour in  project_view_data.virtual_tour_objs %}
+                        <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                            <div class="card-body">
+                                <h5 class="card-title">{{tour.creation_date}}</h5>
+                                <p style="color: black;">{{tour.tour_desc}}</p>
+                            </div>
+                            <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_tour()">View Tour</a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div id="section_assets_model" style="white-space: nowrap; background-color: rgb(37, 37, 37); display: none;">
+                    {% for model in  project_view_data.project_model_objs %}
+                    <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                        <div class="card-body">
+                            <h5 class="card-title">{{model.model_desc}}</h5>
+                        </div>
+                        <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_model('{{ model.model_url }}')">View Model</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="section_assets_ortho" style="white-space: nowrap; background-color: rgb(37, 37, 37); display: none;">
+                    {% for ortho in  project_view_data.project_ortho_objs %}
+                    <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ortho.ortho_desc}}</h5>
+                        </div>
+                        <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_ortho('{{ ortho.ortho_url }}')">View Ortho</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="section_assets_video" style="white-space: nowrap; background-color: rgb(37, 37, 37); display: none;">
+                    {% for video in  project_view_data.project_video_objs %}
+                    <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                        <div class="card-body">
+                            <h5 class="card-title">{{video.video_desc}}</h5>
+                        </div>
+                        <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_video('{{ video.video_url }}')">View Video</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="section_assets_still" style="white-space: nowrap; background-color: rgb(37, 37, 37);">
+                    {% for still in  project_view_data.project_still_objs %}
+                    <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                        <div class="card-body">
+                            <h5 class="card-title">{{still.photo_desc}}</h5>
+                        </div>
+                        <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_still('{{ still.photo_url }}')">View Still</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- load project data script -->
+        <script>
+            
+
+            function hide_menus() {
+                // Hide all menus
+                const all_menus = document.querySelectorAll('div[id^="section_assets_"]')
+                console.log(all_menus);
+
+                all_menus.forEach(function(menu) {
+                    // hide menu
+                    menu.style.display = 'none';
+                });
+            }
+
+            function show_current_asset_selection_menu(asset_type) {
+                hide_menus()
+                reset_asset_buttons();
+                switch(asset_type) {
+                    case 'tour':
+                        menu = document.getElementById('section_assets_tour');
+                        menu.style.display = 'block';
+                    break;
+                    case 'model':
+                        menu = document.getElementById('section_assets_model');
+                        menu.style.display = 'block';
+                        console.log('show model menu');
+                    break;
+                    case 'ortho':
+                        menu = document.getElementById('section_assets_ortho');
+                        menu.style.display = 'block';
+                        console.log('show ortho menu');
+                    break;
+                    case 'video':
+                        menu = document.getElementById('section_assets_video');
+                        menu.style.display = 'block';
+                        console.log('show video menu');
+                    break;
+                    case 'still':
+                        menu = document.getElementById('section_assets_still');
+                        menu.style.display = 'block';
+                        console.log('show stills menu');
+                    break;
+                }
+            }
+            // load virtual tour assets
+            function load_tour() {
+                reset_asset_buttons();
+                var asset_button = this; //button element
+                asset_button.disabled = true;
+                switchViewer('tour')
+                console.log('load new tour');
+            }
+            //import { load_new_model } from './static/js_scripts/3d_model_viewer.js';
+            // load 3d model assets
+            function load_model(asset_url) {
+                reset_asset_buttons();
+                var asset_button = this;
+                asset_button.disabled = true;
+                //load_new_model(asset_url); // function from 3d model viewer
+                //reloadViewerScript(asset_url); // reload 3d model script
+                console.log('load new model ' +  asset_url);
+            }
+            // load 2D Orthomosaics assets
+            function load_ortho(asset_url) {
+                reset_asset_buttons();
+                var asset_button = this;
+                asset_button.disabled = true;
+                switchViewer('ortho', asset_url)
+                console.log('load new ortho ' + asset_url);
+            }
+            //load video asset
+            function load_video(asset_url) {
+                reset_asset_buttons();
+                var asset_button = this;
+                asset_button.disabled = true;
+                switchViewer('video ', asset_url)
+                console.log('load new video ' + asset_url);
+            }
+
+            // load still image assets
+            function load_still(asset_url) {
+                reset_asset_buttons();
+                var asset_button = this;
+                asset_button.disabled= true;
+                switchViewer('video ', asset_url)
+                console.log('load new still' + asset_url);
+            }
+            // near future create function for progression imgs
+
+            function reset_asset_buttons() {
+                asset_buttons = Array.from(document.getElementsByClassName('asset-button'));
+                asset_buttons.forEach(function(button) {
+                    // hide menu
+                    button.disabled = false;
+                });
+            }
+        </script>
+
       <!-- Project View Script -->
       <script>
           const container = document.getElementById('viewer_container');
@@ -56,7 +212,7 @@
           image_script_loaded = false;
 
           // Switch Content display type
-          function switchViewer(viewerType) {
+          function switchViewer(viewerType, asset_url) {
               switch (viewerType) {
                 case 'tour360':
                     container.innerHTML = ''; //Clear previous content
@@ -75,6 +231,8 @@
                     button.disabled = true;
 
                     load360TourViewer(container);
+                    // show menu
+                    show_current_asset_selection_menu('tour')
                     break;
                 case 'model3D':
                     container.innerHTML = ''; //Clear previous content
@@ -89,9 +247,17 @@
 
                     // display model view button as disabled.
                     var button = document.getElementById('model3d_button');
-                    button.disabled = true; // left off here oct 3rd 2023
+                    button.disabled = true;
 
-                    load3DModelViewer(container);
+                    if (asset_url !== undefined) {
+                        load3DModelViewer(container, asset_url);
+                    } else {
+                        load3DModelViewer(container);
+                    }
+                    
+
+                    // show menu
+                    show_current_asset_selection_menu('model')
                     break;
                 case 'ortho2D':
                     container.innerHTML = ''; //Clear previous content
@@ -108,7 +274,13 @@
                     var button = document.getElementById('ortho_btn');
                     button.disabled = true;
 
-                    loadOrtho2DViewer(container);
+                    if (asset_url !== undefined) {
+                        loadOrtho2DViewer(container, asset_url);
+                    } else {
+                        loadOrtho2DViewer(container);
+                    }
+                    // show menu
+                    show_current_asset_selection_menu('ortho')
                     break;
                 case 'video':
                     container.innerHTML = ''; //Clear previous content
@@ -126,7 +298,14 @@
                     var button = document.getElementById('video_btn');
                     button.disabled = true;
 
-                    loadVideoViewer(container);
+                    if (asset_url !== undefined) {
+                        loadVideoViewer(container, asset_url);
+                    } else {
+                        loadVideoViewer(container);
+                    }
+
+                    // show menu
+                    show_current_asset_selection_menu('video')
                     break;
                 case 'stills':
                     container.innerHTML = ''; //Clear previous content
@@ -140,10 +319,14 @@
                     // Reset Disabled buttons
                     resetViewButtons();
 
-                    //display Video view button as disabled
+                    //display Image view button as disabled
                     var button = document.getElementById('image_btn');
                     button.disabled = true;
 
+                    // Create function to display photos
+
+                    // show menu
+                    show_current_asset_selection_menu('still')
                     break;
 
               }
@@ -164,12 +347,11 @@
           }
 
           //3D Model Helper Functions
-          function loadScript_model3d(src, callback) {
+          function loadScript_model3d(src, asset_url ,callback) {
               const script = document.createElement('script');
               script.src = src;
               script.type = 'module'
-              model_url = '{{ project_view_data.model3d_url }}'
-              script.setAttribute('model_url',model_url); // dynamically load project url from database
+              script.setAttribute('model_url',asset_url); // dynamically load project url from database
               script.id = 'model_3d_script';
               script.defer = true;
               document.head.appendChild(script);
@@ -194,7 +376,7 @@
            // Other Model Helper functions
 
            // Reload 3D Model Viewer Script
-           function reloadViewerScript() {
+           function reloadViewerScript(asset_url) {
                var oldScript_async = document.getElementById("model_3d_async_script");
                var parent = oldScript_async.parentElement;
                parent.removeChild(oldScript_async);
@@ -222,13 +404,13 @@
 
                 addImportMap_model_3d(importMapContent);
 
-               loadScript_model3d('/static/js_scripts/3d_model_viewer.js', function() {
+               loadScript_model3d('/static/js_scripts/3d_model_viewer.js',asset_url,function() {
                 console.log('3D Model Viewer Script Loaded');
                 });
            }
 
           // Create View Loaders
-          function load3DModelViewer(container_) {
+          function load3DModelViewer(container_, asset_url) {
               console.log(model3d_script_loaded);
               if (model3d_script_loaded === false) {
                 // Load Scripts and styles for 3D Model Viewer
@@ -245,7 +427,7 @@
 
                 addImportMap_model_3d(importMapContent);
 
-                loadScript_model3d('/static/js_scripts/3d_model_viewer.js', function() {
+                loadScript_model3d('/static/js_scripts/3d_model_viewer.js',asset_url,function() {
                     console.log('3D Model Viewer Script Loaded');
                 });
               }
@@ -319,7 +501,7 @@
               // Create functionality to load panos from database
           }
 
-          function loadOrtho2DViewer(container_) {
+          function loadOrtho2DViewer(container_, asset_url) {
               // Load Scripts and styles for 2D ortho Viewer
               const ortho_div = document.createElement('div');
               ortho_div.style.justifyContent = 'center';
@@ -327,7 +509,7 @@
               ortho_div.style.padding = '0';
 
               const ortho_image = document.createElement('img');
-              ortho_image.src  = 'https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/orthomosaic_photos/Ridge_Wood_orthophoto.png';
+              ortho_image.src  = asset_url;
 
               // Resize ortho to fit in container
               const ratio = 1 / 2;
@@ -346,7 +528,7 @@
               // Render 2D ortho
           }
 
-          function loadVideoViewer(container_) {
+          function loadVideoViewer(container_, asset_url) {
             // Load Scripts and styles for Video Viewer
             // create video div
             const video_div = document.createElement('div');
@@ -366,7 +548,7 @@
 
             // Create source Element
             const source_element = document.createElement('source');
-            source_element.src = 'https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Website-Assets/Videography/Ridge_Wood_School_Property.mp4';
+            source_element.src = asset_url;
             source_element.type = 'video/mp4';
 
             // add source element to video element

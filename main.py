@@ -16,7 +16,7 @@ from itsdangerous import URLSafeSerializer
 app = Flask(__name__)
 
 #site dev testing Mode varible for testing
-dev_testing_mode = False
+dev_testing_mode = True
 
 #Load Enviorment Variables for testing
 if dev_testing_mode==True:
@@ -58,6 +58,7 @@ class Projects(UserMixin, db.Model):
     intial_site_visit = db.Column(db.Boolean, default=False)
     flight_plan_created = db.Column(db.Boolean, default=False)
     data_collected = db.Column(db.Boolean, default=False)
+    data_processed = db.Column(db.Boolean, default=False)
     deliverables_uploaded = db.Column(db.Boolean, default=False)
 
     # Create a many-to-one relation ship to clients
@@ -252,20 +253,85 @@ def dashboard():
 
     return render_template('/user_templates/dashboard.html', username=current_user.username,project_objects=project_objects )
 
+#Client_Virtual_Tours
+class Client_Virtual_Tour_Obj:
+    def __init__(self, tour_id, creation_date, tour_desc, tour_imgs):
+        self.tour_id = tour_id
+        self.creation_date = creation_date
+        self.tour_desc = tour_desc
+        self.tour_imgs = tour_imgs
+
+#Client Tour Still Images Data Obj
+class Client_Proj_Tour_Still_Obj:
+    def __init__(self, tour_proj_id, tour_img_id, photo_url):
+        self.tour_proj_id = tour_proj_id
+        self.tour_img_id = tour_img_id
+        self.photo_url = photo_url
+
+#Client Model Asset Obj
+class Client_Model_Asset_Obj:
+    def __init__(self, model_id: int, model_url: str, model_desc: str):
+        self.id = model_id
+        self.model_url = model_url
+        self. model_desc = model_desc
+#Client Ortho Asset Obj
+class Client_Ortho_Asset_Obj:
+    def __init__(self, ortho_id: int, ortho_url: str, ortho_desc: str):
+        self.ortho_id = ortho_id
+        self.ortho_url = ortho_url
+        self.ortho_desc = ortho_desc
+
+#Client Video Asset Obj
+class Client_Video_Asset_Obj:
+    def __init__(self, video_id: int, video_url: str, video_desc: str):
+        self.video_id = video_id
+        self.video_url = video_url
+        self.video_desc = video_desc
+
+#Client Still Asset Obj
+class Client_Still_Asset_Obj:
+    def __init__(self, still_id: int, still_url: str, is_progression: bool, photo_desc: str):
+        self.still_id = still_id
+        self.still_url = still_url
+        self.is_progression = is_progression
+        self.photo_desc = photo_desc
+
+# Services Offerings obj
+class Client_Choosen_Services_obj:
+    def __init__(self, stills_serv: bool, video_serv: bool, model_serv: bool, ortho_serv: bool, tour_serv: bool):
+        self.stills_serv = stills_serv
+        self.video_serv = video_serv
+        self.model_serv = model_serv
+        self.ortho_serv = ortho_serv
+        self.tour_serv = tour_serv
+
+# Project Progress obj
+class Client_Project_Status_obj:
+    def __init__(self, airspace_auth: bool, init_sight_vist: bool, flight_plan_created: bool, data_collected: bool, data_processed: bool, deliverables_uploaded: bool):
+        self.airspace_auth = airspace_auth
+        self.init_sight_vist = init_sight_vist
+        self.flight_plan_created = flight_plan_created
+        self.data_collected = data_collected
+        self.data_processed = data_processed
+        self.deliverables_uploaded = deliverables_uploaded
+
 #Project View Data Object
 class Project_View:
-    def __init__(self,description, date, project_location, model3d_url):
+    def __init__(self,description:str, date:str, project_location: str, virtual_tour_objs: list, project_model_objs: list, project_ortho_objs: list, project_video_objs: list, project_still_objs: list, client_services_obj:Client_Choosen_Services_obj, project_status_obj:Client_Project_Status_obj):
         self.description = description
         self.date = date
         self.project_location = project_location
-        self.model3d_url = model3d_url
+        self.virtual_tour_objs = virtual_tour_objs
+        self.project_model_objs = project_model_objs
+        self.project_ortho_objs = project_ortho_objs
+        self.project_video_objs = project_video_objs
+        self.project_still_objs = project_still_objs
 
 @app.route('/project-view/<int:project_id>', methods=['GET'])
 @login_required
 def project_view(project_id):
 
     #task: validate user access by checking project client id and current logged in user id.
-
     current_project = Projects.query.filter_by(id=project_id).first()
 
     #Get Project Data
@@ -276,6 +342,8 @@ def project_view(project_id):
     project_tax_parcel = str(current_project.project_tax_parcel)
 
     # Do additional checks for project services and gather data for client assets ids.
+    project_services_obj = Client_Choosen_Services_obj(current_project.still_image_service,current_project.videography_service, current_project.model_3d_service, current_project.ortho_service, current_project.virtual_tour_service)
+    project_status_obj = Client_Project_Status_obj(current_project.airspace_authorization, current_project.intial_site_visit, current_project.flight_plan_created, current_project.data_collected, current_project.data_processed, current_project.deliverables_uploaded)
 
     #Get address type and set project location var
     if len(project_address) == 0 and len(project_tax_parcel) == 0:
@@ -286,14 +354,62 @@ def project_view(project_id):
         project_location = project_address
         print(f'project location: {project_location}')
 
-    #Get 3D Model File URL
-    #model3d_url = 'https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/example-property/small_format_property.glb'
-    # Testing 3D Model Viewer with loading a different model
-    model3d_url = 'https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/example-property/skull.glb'
+    
 
+    #Get All Project Assets
+    project_models = Models_3d.query.filter_by(project_id=project_id).all()
+    project_videos = Videos.query.filter_by(project_id=project_id).all()
+    project_stills = Still_photos.query.filter_by(project_id=project_id).all()
+    project_orthos = Orthomosaics_2D.query.filter_by(project_id=project_id).all()
+    project_tour_projects = Virtual_tour_projects.query.filter_by(project_id=project_id).all()
 
-    #Create data object
-    project_view_data = Project_View(description,date, project_location, model3d_url)
+    #Virtual tour Objects List
+    virtual_tour_objs = []
+    project_model_objs = []
+    project_ortho_objs = []
+    project_video_objs = []
+    project_still_objs = []
+
+    # get all  tour images  and virtual tour
+    # array of objects contains Virtual_Tour_Proj id, tour_img_id, photos_url
+    for tour_project in project_tour_projects:
+        #get photos
+        tour_photos = Virtual_tour_photos.query.filter_by(tour_id=tour_project.id).all()
+        tour_photo_objs = [] # holds all the photo objs for given tour
+        #print('Tour Project ID : ' + str(tour_project.id) + ' Photos in tour: ' +  str(len(tour_photos)))
+        for photo in tour_photos:
+            #Create Still Photo OBJ
+            tour_photo_obj = Client_Proj_Tour_Still_Obj(photo.tour_id, photo.id, photo.photo_url)
+            tour_photo_objs.append(tour_photo_obj)
+            #print(f'Photo ID: {photo.id} Photo URL: {photo.photo_url}')
+
+        # Create Tour Project Obj - contains virtual tour info and an array of tour photo objs. Add this to the Client_Proj_View Obj
+        tour_proj_obj = Client_Virtual_Tour_Obj(tour_project.id,tour_project.creation_date, tour_project.tour_desc, tour_photo_objs)
+        virtual_tour_objs.append(tour_proj_obj)
+
+    # Get all 3D Model Assets and create OBJs
+    for model in project_models:
+        #Create Model Obj and append to project models list 
+        model_obj = Client_Model_Asset_Obj(model.id, model.model_url, model.model_desc)
+        project_model_objs.append(model_obj)
+
+    # Get all Ortho Assets
+    for ortho in project_orthos:
+        ortho_obj = Client_Ortho_Asset_Obj(ortho.id,ortho.ortho_url,ortho.ortho_desc)
+        project_ortho_objs.append(ortho_obj)
+
+    # Get all Video Assets
+    for video in project_videos:
+        video_obj = Client_Video_Asset_Obj(video.id, video.video_url, video.video_desc)
+        project_video_objs.append(video_obj)
+
+    # Get all Still Assets
+    for still in project_stills:
+        still_obj = Client_Still_Asset_Obj(still.id, still.photo_url, still.is_progression_photo, still.photo_desc)
+        project_still_objs.append(still_obj)
+
+    #Create Project data object
+    project_view_data = Project_View(description,date, project_location,virtual_tour_objs, project_model_objs,project_ortho_objs,project_video_objs,project_still_objs,project_services_obj, project_status_obj)
 
     return render_template('/user_templates/project_view.html', username=current_user.username, project_view_data=project_view_data)
 
