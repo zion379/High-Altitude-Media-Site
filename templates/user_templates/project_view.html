@@ -103,7 +103,89 @@
         </div>
         <!-- load project data script -->
         <script>
+            //load project data
+            const client_services = {
+                model_serv: '{{ project_view_data.client_services_obj.model_serv }}',
+                tour_serv: '{{ project_view_data.client_services_obj.tour_serv }}',
+                ortho_serv: '{{ project_view_data.client_services_obj.ortho_serv }}',
+                video_serv: '{{ project_view_data.client_services_obj.video_serv }}',
+                still_serv: '{{ project_view_data.client_services_obj.stills_serv }}'
+            };
+
+            const poroject_status = {
+                airspace_auth: '{{ project_view_data.project_status_obj.airspace_auth }}',
+                init_site_visit: '{{ project_view_data.project_status_obj.init_site_vist }}',
+                flight_plan_created: '{{ project_view_data.project_status_obj.flight_plan_created }}',
+                data_collected: '{{ project_view_data.project_status_obj.data_collected }}',
+                data_processed: '{{ project_view_data.project_status_obj.data_processed }}',
+                deliverables_uploaded: '{{ project_view_data.project_status_obj.deliverables_uploaded }}'
+            }
             
+            // May throw errors in code editor ignore... jinja2 format, code is safe to run.
+            const project_tours = [
+                {% for tour in project_view_data.virtual_tour_objs %}
+                    { 
+                        tour_id: '{{ tour.tour_id }}',
+                        creation_date: '{{ tour.creation_date }}',
+                        tour_desc: '{{ tour.tour_desc }}',
+                        tour_imgs: [
+                            {% for tour_img in tour.tour_imgs %}
+                                {
+                                    tour_proj_id: '{{ tour_img.tour_proj_id }}',
+                                    tour_img_id: '{{ tour_img.tour_img_id }}',
+                                    photo_url: '{{ tour_img.photo_url }}'
+                                },
+                            {% endfor %}
+                        ] 
+                    },
+                {% endfor %}
+            ];
+
+            const project_models = [
+                {% for model in project_view_data.project_model_objs %}
+                    {
+                        model_id: '{{ model.id }}',
+                        model_url: '{{ model.model_url }}',
+                        model_desc: '{{ model.model_desc }}'
+                    },
+                {% endfor %}
+            ];
+
+            const project_orthos = [
+                {% for ortho in project_view_data.project_ortho_objs %}
+                    {
+                        ortho_id: '{{ ortho.ortho_id }}',
+                        ortho_url: '{{ ortho.ortho_url }}',
+                        ortho_desc: '{{ ortho.ortho_desc }}'
+                    },
+                {% endfor %}
+            ];
+
+            const project_videos = [
+                {% for video in project_view_data.project_video_objs %}
+                    {
+                        video_id: '{{ video.video_id }}',
+                        video_url: '{{ video.video_url }}',
+                        video_desc: '{{ video.video_desc }}'
+                    },
+                {% endfor %}
+            ];
+
+            const project_stills = [
+                {% for still in project_view_data.project_still_objs %}
+                    {
+                        still_id: '{{ still.still_id }}',
+                        still_url: '{{ still.still_url }}',
+                        is_progression: '{{ still.is_progression }}',
+                        photo_desc: '{{ still.photo_desc }}'
+                    },
+                {% endfor %}
+            ];
+
+
+            console.log(project_stills); // Left off here
+
+            // Create current asset manager for all assets to load all correct data from db.
 
             function hide_menus() {
                 // Hide all menus

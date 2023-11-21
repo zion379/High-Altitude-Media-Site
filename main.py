@@ -16,7 +16,7 @@ from itsdangerous import URLSafeSerializer
 app = Flask(__name__)
 
 #site dev testing Mode varible for testing
-dev_testing_mode = False
+dev_testing_mode = True
 
 #Load Enviorment Variables for testing
 if dev_testing_mode==True:
@@ -307,9 +307,9 @@ class Client_Choosen_Services_obj:
 
 # Project Progress obj
 class Client_Project_Status_obj:
-    def __init__(self, airspace_auth: bool, init_sight_vist: bool, flight_plan_created: bool, data_collected: bool, data_processed: bool, deliverables_uploaded: bool):
+    def __init__(self, airspace_auth: bool, init_site_vist: bool, flight_plan_created: bool, data_collected: bool, data_processed: bool, deliverables_uploaded: bool):
         self.airspace_auth = airspace_auth
-        self.init_sight_vist = init_sight_vist
+        self.init_site_vist = init_site_vist
         self.flight_plan_created = flight_plan_created
         self.data_collected = data_collected
         self.data_processed = data_processed
@@ -326,6 +326,8 @@ class Project_View:
         self.project_ortho_objs = project_ortho_objs
         self.project_video_objs = project_video_objs
         self.project_still_objs = project_still_objs
+        self.client_services_obj = client_services_obj
+        self.project_status_obj = project_status_obj
 
 @app.route('/project-view/<int:project_id>', methods=['GET'])
 @login_required
