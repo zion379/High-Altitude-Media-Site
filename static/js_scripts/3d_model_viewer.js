@@ -32,7 +32,7 @@ function Create_scene() {
 }
 Create_scene();
 
-//Test Update canvas
+//Update viewer canvas
 export function updateCanvas() {
   console.log('Updating Canvas');
   canvas = document.querySelector('#Model-Viewer2');
@@ -42,10 +42,6 @@ export function updateCanvas() {
 }
 
 window.updateCanvas = updateCanvas;
-
-
-//testing diffrent viewing option
-//renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor, true)
 
 var renderer_height_multiplier = 4
 var property_model;
@@ -104,7 +100,7 @@ export function load_new_model(url) {
   Get_div_dimensions();
   Create_scene();
 
-  renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
+  renderer.setSize(divWidth, divHeight);
 
   camera.position.z = 4;
   camera.position.y = 4;
@@ -131,15 +127,18 @@ export function load_new_model(url) {
   controls = new OrbitControls(camera, canvas);
 }
 
+window.load_new_model = load_new_model;
+
 function onWindowResize() {
+  Get_div_dimensions();
   //camera.aspect = window.innerWidth / window.innerHeight;
-  camera.aspect = divWidth / (divHeight * renderer_height_multiplier);
+  camera.aspect = divWidth / (divHeight);
   camera.updateProjectionMatrix();
   //renderer.setSize(window.innerWidth/canvas_scale_factor, window.innerHeight/canvas_scale_factor);
-  renderer.setSize(divWidth, divHeight * renderer_height_multiplier);
+  renderer.setSize(divWidth, divHeight);
 }
 
-window.addEventListener('resize', onWindowResize, false);
+window.addEventListener('resize', onWindowResize);
 
 // Render the scene
 function animate() {
