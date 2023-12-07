@@ -16,7 +16,7 @@ from itsdangerous import URLSafeSerializer
 app = Flask(__name__)
 
 #site dev testing Mode varible for testing
-dev_testing_mode = True
+dev_testing_mode = False
 
 #Load Enviorment Variables for testing
 if dev_testing_mode==True:
