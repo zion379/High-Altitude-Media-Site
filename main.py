@@ -1,19 +1,17 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from flask_mail import Mail, Message
 from flask_cors import CORS, cross_origin
-import stripe
 import os
 from dotenv import load_dotenv
-from modules.db_schemas import db, Clients, Projects, Site_admin, Models_3d, Virtual_tour_projects, Virtual_tour_photos, Orthomosaics_2D, Still_photos, Videos
+from modules.db_schemas import db, Clients, Site_admin
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import json
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeSerializer
-from modules.client_data_objs import Project, Client_Virtual_Tour_Obj, Client_Proj_Tour_Still_Obj, Client_Model_Asset_Obj, Client_Ortho_Asset_Obj, Client_Video_Asset_Obj, Client_Still_Asset_Obj, Client_Choosen_Services_obj, Client_Project_Status_obj, Project_View 
-from modules.admin_data_objs import Client_Project_obj, Admin_Client_obj, Admin_project_services_obj, Admin_3dModel_obj, Admin_virtual_tour_obj, Admin_virtual_tour_img_obj, Admin_ortho_obj, Admin_still_image_obj, Admin_video_obj, Admin_project_view_obj
-from modules.client_utils import get_client_project_data, create_client_project
+from modules.client_utils import get_client_project_data, create_client_project, get_client_dashboard_data
 from modules.admin_utils import get_admin_project_view_data, admin_update_asset_attributes, admin_create_new_asset, admin_del_project_asset, admin_create_new_project, admin_delete_proj, get_admin_dash_projects
+from modules.payment_processor_utils import handle_create_checkout_session
 
 app = Flask(__name__)
 
@@ -117,31 +115,7 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    # load projects
-    current_user_projects = Projects.query.filter_by(client_id=current_user.id).all()
-    project_count = len(current_user_projects)
-
-    project_index = 0
-
-    project_objects = []
-
-    #Check if there are any projects for client
-    if project_count != 0:
-        for project in current_user_projects:
-            if project_index >= (project_count):
-                project_index = 0
-            
-            # get Project Attributes
-            project_id = str(current_user_projects[project_index].id)
-            description = str(current_user_projects[project_index].project_description)
-            date = str(current_user_projects[project_index].creation_date)
-            project_url = f'/project-view/{project_id}'
-            
-            #create data object and add it to project_objects list
-            project_obj = Project(project_id,description,date, project_url)
-            project_objects.append(project_obj)
-            project_index += 1
-
+    project_objects = get_client_dashboard_data(current_user).projects
     return render_template('/user_templates/dashboard.html', username=current_user.username,project_objects=project_objects )
 
 
@@ -155,13 +129,10 @@ def project_view(project_id):
 @app.route('/profile-settings', methods=['GET','PUT'])
 @login_required
 def profile_settings():
-    #Create routes and pages to update individual fields
-    username = current_user.username
-    email = current_user.email
-    phone_number = current_user.phone_number
-    company = current_user.company
-   
-    return render_template('/user_templates/profile_settings.html', username=username, email=email, phone_number=phone_number, company=company)
+    
+    
+    project_data = get_client_dashboard_data(current_user)
+    return render_template('/user_templates/profile_settings.html', username=project_data.username, email=project_data.email, phone_number=project_data.phone_number, company=project_data.company)
 
 @app.route('/start-project', methods=['GET', 'POST'])
 @login_required
@@ -271,9 +242,6 @@ digital_ocean_cors_config = {
     "origins": ["https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com"]
 }
 
-
-cors= CORS(app, resources={r"/deliverables": {"origins": "https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com"}})
-
 #Mail Setup
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -327,9 +295,6 @@ def confirm_email(email_to):
     return render_template('authenication/confirm_email.html', email=email_to, notification=message)
 
 #create request feature to update email, password/reset, and username
-
-#stripe setup
-stripe.api_key = os.getenv('STRIPE_API_KEY') # Secret key create enviorment variable
 
 @app.route('/')
 def home():
@@ -400,11 +365,6 @@ def client_deliverables():
     return render_template('client-deliverables-base.html')
 
 # get 3d model data
-
-@app.route('/get_model_data', methods=['GET'])
-def get_data():
-    return 'Hello'
-
 @app.route('/construction-services')
 def construction_services():
     return render_template('construction-services.html')
@@ -421,56 +381,13 @@ def data_formats_provided():
 def portfolio():
     return render_template('/portfolio.html')
 
-# Payment Processor
-'''
-#Testing Stripe API
-@app.route('/payment', methods=['GET'])
-def Payment():
-    #Get customers and print them out.
-    customers = stripe.Customer.list()
-    #emails = [Customer['email'] for customer in customers]
-    #emails = stripe.Customer.data
-    
-    return jsonify(customers['data'][0]['email']), 200
-'''
 
 # Need to create a debug mode for backend testing
 # this route takes in a query Paramerter for product ex. /page?product='product ID'
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-	# make condition if there is not a product ID
-	productID = request.args.get('product')
-	paymentMode = request.args.get('mode') # mode can only be subcription
-
-	domain = 'www.high-altitude-media.com'
-
-	if dev_testing_mode == True:
-		domain = 'http://10.0.0.218:5000'
-
-	url_success = domain + '/payment-success'
-	url_cancel = domain + '/payment-cancled'
-
-
-	print(paymentMode)
-	try:
-		session = stripe.checkout.Session.create(
-			line_items=[
-				{
-				# provide Price ID (ex. pr_1234) of the product i want to sell
-				"price": productID,
-				"quantity": 1,
-				},
-			],
-			mode= f'{paymentMode}',
-			success_url= url_success,
-			cancel_url= url_cancel,
-			automatic_tax={'enabled': False},
-		)
-
-	except Exception as e:
-		return str(e)
-		
-	return redirect(session.url, code=303)
+    session_url = handle_create_checkout_session(request, dev_testing_mode)
+    return redirect(session_url, code=303)
 
 # Payment Success Endpoint
 @app.route('/payment-success', methods=['GET'])
@@ -487,8 +404,6 @@ def payment_cancled():
 def service_checkout():
     return render_template('/payment_processing/checkout.html')
 
-# comment this line out before pushing code to server.
-#app.run(debug=True)
 
 #Run in debug mode while testing
 if dev_testing_mode==True:

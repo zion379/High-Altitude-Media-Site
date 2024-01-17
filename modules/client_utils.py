@@ -1,6 +1,53 @@
 from modules.client_data_objs import Project, Client_Virtual_Tour_Obj, Client_Proj_Tour_Still_Obj, Client_Model_Asset_Obj, Client_Ortho_Asset_Obj, Client_Video_Asset_Obj, Client_Still_Asset_Obj, Client_Choosen_Services_obj, Client_Project_Status_obj, Project_View
 from modules.db_schemas import db, Clients, Projects, Site_admin, Models_3d, Virtual_tour_projects, Virtual_tour_photos, Orthomosaics_2D, Still_photos, Videos
-import json
+
+
+#dash board data obj
+class dash_board_data_obj:
+    def __init__(self, projects: list[Project] ,username: str, email: str, phone_number: str, company: str):
+        self.projects: list[Project] = projects
+        self.username: str = username
+        self.email: str = email
+        self.phone_number: str = phone_number
+        self.company: str = company
+        
+
+# Client Dashboard
+def get_client_dashboard_data(current_user) -> dash_board_data_obj :
+    #Create routes and pages to update individual fields
+    username = current_user.username
+    email = current_user.email
+    phone_number = current_user.phone_number
+    company = current_user.company
+
+    # load projects
+    current_user_projects = Projects.query.filter_by(client_id=current_user.id).all()
+    project_count = len(current_user_projects)
+
+    project_index: int = 0
+
+    project_objects: list[Project] = []
+
+    #Check if there are any projects for client
+    if project_count != 0:
+        for project in current_user_projects:
+            if project_index >= (project_count):
+                project_index = 0
+            
+            # get Project Attributes
+            project_id = str(current_user_projects[project_index].id)
+            description = str(current_user_projects[project_index].project_description)
+            date = str(current_user_projects[project_index].creation_date)
+            project_url = f'/project-view/{project_id}'
+            
+            #create data object and add it to project_objects list
+            project_obj = Project(project_id,description,date, project_url)
+            project_objects.append(project_obj)
+            project_index += 1
+
+    dash_board_data = dash_board_data_obj(project_objects, username, email, phone_number, company)
+    return dash_board_data
+
 
 # Client Project View
 def get_client_project_data(project_id) -> Project_View:
