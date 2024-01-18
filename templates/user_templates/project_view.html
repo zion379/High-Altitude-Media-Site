@@ -3,10 +3,10 @@
 {% block head %}{% endblock %}
 
 <!-- Variable for keeping track if project is empty -->
-{% if project_view_data.virtual_tour_objs|length == 0  and project_view_data.project_model_objs|length == 0 and project_view_data.project_ortho_objs|length == 0 and  project_view_data.project_video_objs|length == 0  and project_view_data.project_still_objs|length == 0 %}
-    {% set no_project_assets = True %}
+{% if project_view_data.virtual_tour_objs|length == 0 and project_view_data.project_model_objs|length == 0 and project_view_data.project_ortho_objs|length == 0 and  project_view_data.project_video_objs|length == 0  and project_view_data.project_still_objs|length == 0 %}
+    {% set no_project_assets = true %}
 {% else %}
-    {% set no_project_assets = False %}
+    {% set no_project_assets = false %}
 {% endif %}
 
 
@@ -743,7 +743,7 @@
           // Set Default Viewer
           window.onload = function() {
             // check if assets exist
-            if(!no_proj_assets) {
+            if('{{no_project_assets}}' == 'False') {
                 switchViewer('tour360'); // do a check to see which assets exist and show the first one that exist
             }
           }
@@ -754,7 +754,7 @@
                 <button id="download_assets_btn" class="btn m-3" style="color: white; background-color: rgb(58, 119, 84);">Download All Assets</button>
             </div>
             <script>
-                if(no_proj_assets) {
+                if('{{no_project_assets}}' == 'True') {
                     document.getElementById('download_assets_btn').disabled = true;
                 }
             </script>
