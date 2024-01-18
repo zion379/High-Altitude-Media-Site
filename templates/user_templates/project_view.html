@@ -2,6 +2,14 @@
 
 {% block head %}{% endblock %}
 
+<!-- Variable for keeping track if project is empty -->
+{% if project_view_data.virtual_tour_objs|length == 0  and project_view_data.project_model_objs|length == 0 and project_view_data.project_ortho_objs|length == 0 and  project_view_data.project_video_objs|length == 0  and project_view_data.project_still_objs|length == 0 %}
+    {% set no_project_assets = True %}
+{% else %}
+    {% set no_project_assets = False %}
+{% endif %}
+
+
 {% block body %}
     <div class="container">
         <div class="row">
@@ -27,15 +35,29 @@
         <div class="row">
             <div class="col-12">
                 <div class="col-12 rounded-top" style="text-align: center; background-color: rgb(216, 188, 105);">
-                    <button id="tour_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('tour360')">Virtual Tour</button>
-                    <button id="model3d_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('model3D','{{ project_view_data.project_model_objs[0].model_url }}')">3D Model</button>
-                    <button id="ortho_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('ortho2D', '{{ project_view_data.project_ortho_objs[0].ortho_url }}')">2D Orthomosaic</button>
-                    <button id="video_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('video', '{{ project_view_data.project_video_objs[0].video_url }}')">Video</button>
-                    <button id="image_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('stills')">Still Images</button>
+                    {% if no_project_assets == False %}
+                        <button id="tour_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('tour360')">Virtual Tour</button>
+                    {% endif %}
+
+                    {% if  no_project_assets == False %}
+                        <button id="model3d_button" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('model3D','{{ project_view_data.project_model_objs[0].model_url }}')">3D Model</button>
+                    {% endif %}
+
+                    {% if no_project_assets == False %}
+                        <button id="ortho_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('ortho2D', '{{ project_view_data.project_ortho_objs[0].ortho_url }}')">2D Orthomosaic</button>
+                    {% endif %}
+
+                    {% if no_project_assets == False %}
+                        <button id="video_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('video', '{{ project_view_data.project_video_objs[0].video_url }}')">Video</button>
+                    {% endif %}
+
+                    {% if no_project_assets == False %}
+                        <button id="image_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('stills')">Still Images</button>
+                    {% endif %}
                 </div>
                 <div class="row">
                     <div class="col-12" id="viewer_container" style="background-color: slategray; padding: 0;">
-                        <p>Viewer type:</p>
+                        <p style="text-align: center; color:white; font-weight:bold">No Assets in project yet.</p>
                         <!-- Virtual Tour -->
                         <!-- 3D Model -->
                         <!-- 2D Orthomosaic -->
@@ -49,60 +71,74 @@
         <div class="row">
             <div class="col-12">
                 <div id="section_assets_tour" style="white-space: nowrap; background-color: rgb(37, 37, 37); display: none;">
-                    {% for tour in  project_view_data.virtual_tour_objs %}
-                        <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
-                            <div class="card-body">
-                                <h5 class="card-title">{{tour.creation_date}}</h5>
-                                <p style="color: black;">{{tour.tour_desc}}</p>
+                    {% if project_view_data.virtual_tour_objs|length != 0%}
+                        {% for tour in  project_view_data.virtual_tour_objs %}
+                            <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{tour.creation_date}}</h5>
+                                    <p style="color: black;">{{tour.tour_desc}}</p>
+                                </div>
+                                <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('tour','{{ tour.tour_id }}', this)" role="button">View Tour</a>
                             </div>
-                            <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('tour','{{ tour.tour_id }}', this)" role="button">View Tour</a>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div id="section_assets_model" style="white-space: nowrap; background-color: rgb(37, 37, 37); display: none;">
-                    {% for model in  project_view_data.project_model_objs %}
-                    <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
-                        <div class="card-body">
-                            <h5 class="card-title">{{model.model_desc}}</h5>
+                    {% if project_view_data.project_model_objs|length != 0%}
+                        {% for model in  project_view_data.project_model_objs %}
+                        <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                            <div class="card-body">
+                                <h5 class="card-title">{{model.model_desc}}</h5>
+                            </div>
+                            <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('model','{{ model.id }}', this)" role="button">View Model</a>
                         </div>
-                        <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('model','{{ model.id }}', this)" role="button">View Model</a>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div id="section_assets_ortho" style="white-space: nowrap; background-color: rgb(37, 37, 37); display: none;">
-                    {% for ortho in  project_view_data.project_ortho_objs %}
-                    <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ortho.ortho_desc}}</h5>
+                    {% if project_view_data.project_ortho_objs|length != 0 %}
+                        {% for ortho in  project_view_data.project_ortho_objs %}
+                        <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ortho.ortho_desc}}</h5>
+                            </div>
+                            <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('ortho','{{ ortho.ortho_id }}', this)" role="button">View Ortho</a>
                         </div>
-                        <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('ortho','{{ ortho.ortho_id }}', this)" role="button">View Ortho</a>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div id="section_assets_video" style="white-space: nowrap; background-color: rgb(37, 37, 37); display: none;">
-                    {% for video in  project_view_data.project_video_objs %}
-                    <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
-                        <div class="card-body">
-                            <h5 class="card-title">{{video.video_desc}}</h5>
+                    {% if project_view_data.project_video_objs %}
+                        {% for video in  project_view_data.project_video_objs %}
+                        <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                            <div class="card-body">
+                                <h5 class="card-title">{{video.video_desc}}</h5>
+                            </div>
+                            <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('video','{{ video.video_id }}', this)" role="button">View Video</a>
                         </div>
-                        <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('video','{{ video.video_id }}', this)" role="button">View Video</a>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div id="section_assets_still" style="white-space: nowrap; background-color: rgb(37, 37, 37);">
-                    {% for still in  project_view_data.project_still_objs %}
-                    <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
-                        <div class="card-body">
-                            <h5 class="card-title">{{still.photo_desc}}</h5>
+                    {% if project_view_data.project_still_objs %}
+                        {% for still in  project_view_data.project_still_objs %}
+                        <div class="card m-2" style="width: 18rem; display: inline-block; text-align:center; background-color: rgb(171, 210, 113);">
+                            <div class="card-body">
+                                <h5 class="card-title">{{still.photo_desc}}</h5>
+                            </div>
+                            <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('still','{{ still.still_id }}', this)" role="button">View Still</a>
                         </div>
-                        <a class="btn btn-primary col-6 mb-1 asset-button" onclick="load_active_asset('still','{{ still.still_id }}', this)" role="button">View Still</a>
-                    </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>
         <!-- load project data script -->
         <script>
+            let no_proj_assets_str = '{{no_project_assets}}'
+            let no_proj_assets = Boolean(no_proj_assets_str)
+
+
             //load project data
             const client_services = {
                 model_serv: '{{ project_view_data.client_services_obj.model_serv }}',
@@ -123,63 +159,73 @@
             
             // May throw errors in code editor ignore... jinja2 format, code is safe to run.
             const project_tours = [
-                {% for tour in project_view_data.virtual_tour_objs %}
-                    { 
-                        tour_id: '{{ tour.tour_id }}',
-                        creation_date: '{{ tour.creation_date }}',
-                        tour_desc: '{{ tour.tour_desc }}',
-                        tour_imgs: [
-                            {% for tour_img in tour.tour_imgs %}
-                                {
-                                    tour_proj_id: '{{ tour_img.tour_proj_id }}',
-                                    tour_img_id: '{{ tour_img.tour_img_id }}',
-                                    photo_url: '{{ tour_img.photo_url }}'
-                                },
-                            {% endfor %}
-                        ] 
-                    },
-                {% endfor %}
+                {% if  project_view_data.virtual_tour_objs|length != 0 %}
+                    {% for tour in project_view_data.virtual_tour_objs %}
+                        { 
+                            tour_id: '{{ tour.tour_id }}',
+                            creation_date: '{{ tour.creation_date }}',
+                            tour_desc: '{{ tour.tour_desc }}',
+                            tour_imgs: [
+                                {% for tour_img in tour.tour_imgs %}
+                                    {
+                                        tour_proj_id: '{{ tour_img.tour_proj_id }}',
+                                        tour_img_id: '{{ tour_img.tour_img_id }}',
+                                        photo_url: '{{ tour_img.photo_url }}'
+                                    },
+                                {% endfor %}
+                            ] 
+                        },
+                    {% endfor %}
+                {% endif %}
             ];
 
             const project_models = [
-                {% for model in project_view_data.project_model_objs %}
-                    {
-                        model_id: '{{ model.id }}',
-                        model_url: '{{ model.model_url }}',
-                        model_desc: '{{ model.model_desc }}'
-                    },
-                {% endfor %}
+                {% if  project_view_data.project_model_objs|length != 0 %}
+                    {% for model in project_view_data.project_model_objs %}
+                        {
+                            model_id: '{{ model.id }}',
+                            model_url: '{{ model.model_url }}',
+                            model_desc: '{{ model.model_desc }}'
+                        },
+                    {% endfor %}
+                {% endif %}
             ];
 
             const project_orthos = [
-                {% for ortho in project_view_data.project_ortho_objs %}
-                    {
-                        ortho_id: '{{ ortho.ortho_id }}',
-                        ortho_url: '{{ ortho.ortho_url }}',
-                        ortho_desc: '{{ ortho.ortho_desc }}'
-                    },
-                {% endfor %}
+                {% if project_view_data.project_ortho_objs|length != 0 %}
+                    {% for ortho in project_view_data.project_ortho_objs %}
+                        {
+                            ortho_id: '{{ ortho.ortho_id }}',
+                            ortho_url: '{{ ortho.ortho_url }}',
+                            ortho_desc: '{{ ortho.ortho_desc }}'
+                        },
+                    {% endfor %}
+                {% endif %}
             ];
 
             const project_videos = [
-                {% for video in project_view_data.project_video_objs %}
-                    {
-                        video_id: '{{ video.video_id }}',
-                        video_url: '{{ video.video_url }}',
-                        video_desc: '{{ video.video_desc }}'
-                    },
-                {% endfor %}
+                {% if project_view_data.project_video_objs|length != 0 %}
+                    {% for video in project_view_data.project_video_objs %}
+                        {
+                            video_id: '{{ video.video_id }}',
+                            video_url: '{{ video.video_url }}',
+                            video_desc: '{{ video.video_desc }}'
+                        },
+                    {% endfor %}
+                {% endif %}
             ];
 
             const project_stills = [
-                {% for still in project_view_data.project_still_objs %}
-                    {
-                        still_id: '{{ still.still_id }}',
-                        still_url: '{{ still.still_url }}',
-                        is_progression: '{{ still.is_progression }}',
-                        photo_desc: '{{ still.photo_desc }}'
-                    },
-                {% endfor %}
+                {% if project_view_data.project_still_objs|length != 0 %}
+                    {% for still in project_view_data.project_still_objs %}
+                        {
+                            still_id: '{{ still.still_id }}',
+                            still_url: '{{ still.still_url }}',
+                            is_progression: '{{ still.is_progression }}',
+                            photo_desc: '{{ still.photo_desc }}'
+                        },
+                    {% endfor %}
+                {% endif %}
             ];
 
             function hide_menus() {
@@ -696,14 +742,22 @@
 
           // Set Default Viewer
           window.onload = function() {
-            switchViewer('tour360');
+            // check if assets exist
+            if(!no_proj_assets) {
+                switchViewer('tour360'); // do a check to see which assets exist and show the first one that exist
+            }
           }
 
       </script> 
         <div class="row">
             <div class="col-12" style="text-align: center;">
-                <button class="btn m-3" style="color: white; background-color: rgb(58, 119, 84);">Download All Assets</button>
+                <button id="download_assets_btn" class="btn m-3" style="color: white; background-color: rgb(58, 119, 84);">Download All Assets</button>
             </div>
+            <script>
+                if(no_proj_assets) {
+                    document.getElementById('download_assets_btn').disabled = true;
+                }
+            </script>
         </div>
     </div>
 {% endblock %}
