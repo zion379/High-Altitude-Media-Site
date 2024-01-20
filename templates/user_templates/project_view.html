@@ -52,7 +52,7 @@
                     {% endif %}
 
                     {% if no_project_assets == False %}
-                        <button id="image_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('stills')">Still Images</button>
+                        <button id="image_btn" class="btn bg-dark m-2" style="color: white;" onclick="switchViewer('stills', '{{project_view_data.project_still_objs[0].still_url}}')">Still Images</button>
                     {% endif %}
                 </div>
                 <div class="row">
@@ -288,12 +288,11 @@
                 console.log('load new video ' + asset_url);
             }
 
-            // load still image assets
+            // load still image assets -- keeping this func
             function load_still(asset_url) {
                 reset_asset_buttons();
-                var asset_button = this;
-                asset_button.disabled= true;
-                switchViewer('video ', asset_url);
+                still_img_viewer = document.getElementById('still_img_viewer');
+                still_img_viewer.src = asset_url;
                 console.log('load new still' + asset_url);
             }
             // near future create function for progression imgs
@@ -425,6 +424,14 @@
 
                     container.appendChild(para);
 
+                    var still_img_viewer = document.createElement('img');
+                    still_img_viewer.id = 'still_img_viewer';
+                    still_img_viewer.style.maxWidth = '100%';
+
+                    container.appendChild(still_img_viewer);
+
+                    console.log('Helloz: ' + '{{project_view_data.project_still_objs[0].still_url}}');
+                    
                     // Reset Disabled buttons
                     resetViewButtons();
 
@@ -433,6 +440,7 @@
                     button.disabled = true;
 
                     // Create function to display photos
+                    load_still(asset_url);
 
                     // show menu
                     show_current_asset_selection_menu('still')
@@ -529,6 +537,14 @@
                 case 'still':
                     reset_asset_buttons();
                     button_element.classList.add('disabled');
+                    project_stills.forEach( still => {
+                        //load asset
+                        if (still.still_id == asset_id) {
+                            // get img el
+                            still_img_viewer = document.getElementById('still_img_viewer');
+                            still_img_viewer.src = still.still_url;
+                        }
+                    });
                     console.log('Load new still Img');
             }
         }
