@@ -502,15 +502,18 @@
                 case 'ortho':
                     reset_asset_buttons();
                     button_element.classList.add('disabled');
-
+                    var ortho_el = document.getElementById('ortho_viewer');
+                    ortho_el.style.display = 'none';
+                    
                     project_orthos.forEach( ortho => {
                         // load asset
-                        console.log(ortho);
+                        //console.log(ortho);
                         if (ortho.ortho_id == asset_id) {
                             //update project view
                             load_new_ortho(ortho.ortho_url);
                         }
                     });
+                    ortho_el.style.display = 'block';
                 break;
                 case 'video':
                     reset_asset_buttons();
@@ -780,7 +783,7 @@
             // create image element
             var ortho_image = document.getElementById('ortho_viewer');
             ortho_image.src = ortho_url;
-            console.log(ortho_image);
+            //console.log(ortho_image);
           }
 
           function loadVideoViewer(container_, asset_url) {
