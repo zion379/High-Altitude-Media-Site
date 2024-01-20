@@ -86,7 +86,7 @@ def get_admin_project_view_data(project_id) -> Admin_project_view_obj:
     all_project_tours = Virtual_tour_projects.query.filter_by(project_id=project_id).all()
 
     for tour in all_project_tours:
-        virtual_tour_obj = Admin_virtual_tour_obj(tour.id, tour.project_id, tour.creation_date, tour.tour_desc)
+        virtual_tour_obj = Admin_virtual_tour_obj(tour.id, tour.project_id, tour.creation_date, tour.tour_desc, tour.tour_url)
         virtual_tours_list.append(virtual_tour_obj)
 
     #Retreive Virtual Tour Images
@@ -167,8 +167,8 @@ def admin_update_asset_attributes(json_object: dict):
 
     #check for asset of type tour
     if json_object['type_asset'] == 'tour':
-        try:
-            if json_object['new_tour_desc']:
+        try: # check for tour desc
+            if json_object['new_tour_desc']: 
                 # save new tour desc to db.
                 asset_id = json_object['asset_id']
                 # Query record
@@ -182,6 +182,21 @@ def admin_update_asset_attributes(json_object: dict):
                     print('saved new tour desc ' + json_object['new_tour_desc'])
         except KeyError:
             print('new_tour_desc object key not included')
+
+        try: # check for tour url
+            if json_object['new_tour_url']:
+                # save new tour url to db
+                asset_id = json_object['asset_id']
+                #query record
+                tour_record = Virtual_tour_projects.query.get(asset_id)
+                # check if record exist
+                if tour_record: #Update url col if record exists
+                    tour_record.tour_url = str(json_object['new_tour_url'])
+                    #Commit changes to db
+                    db.session.commit()
+                    print('saved new tour url ' + json_object['new_tour_url'])
+        except KeyError:
+            print('new_tour_url object key not included')
 
     # check for asset type of type ortho
     if json_object['type_asset'] == 'ortho':

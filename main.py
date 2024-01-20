@@ -30,6 +30,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = digital_ocean_db_URI # Create Database a
 db.init_app(app)
 login_manager = LoginManager(app)
 
+digital_ocean_cors_config = {
+    "origins": ["https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com", ""]
+}
+
+cors= CORS(app, resources={r"/deliverables": {"origins": "https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com"}})
+
+
 #load user details
 @login_manager.user_loader
 def load_user(user_id):
@@ -238,9 +245,7 @@ def admin_delete_project():
 
 #SQL Database Setup
 
-digital_ocean_cors_config = {
-    "origins": ["https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com"]
-}
+
 
 #Mail Setup
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'

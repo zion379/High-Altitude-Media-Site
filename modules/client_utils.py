@@ -93,18 +93,18 @@ def get_client_project_data(project_id) -> Project_View:
     # get all  tour images  and virtual tour
     # array of objects contains Virtual_Tour_Proj id, tour_img_id, photos_url
     for tour_project in project_tour_projects:
-        #get photos
-        tour_photos = Virtual_tour_photos.query.filter_by(tour_id=tour_project.id).all()
-        tour_photo_objs = [] # holds all the photo objs for given tour
+        #get tour project
+        tour_projs = Virtual_tour_projects.query.filter_by(project_id=project_id).all()
+        tour_objs = [] # holds all the tour objs for given tour
         #print('Tour Project ID : ' + str(tour_project.id) + ' Photos in tour: ' +  str(len(tour_photos)))
-        for photo in tour_photos:
-            #Create Still Photo OBJ
-            tour_photo_obj = Client_Proj_Tour_Still_Obj(photo.tour_id, photo.id, photo.photo_url)
-            tour_photo_objs.append(tour_photo_obj)
-            #print(f'Photo ID: {photo.id} Photo URL: {photo.photo_url}')
+        # for tour in tour_projs:
+        #     #Create Still Photo OBJ
+        #     tour_obj = Client_Proj_Tour_Still_Obj(photo.tour_id, photo.id, photo.photo_url)
+        #     tour_objs.append(tour_obj)
+        #     #print(f'Photo ID: {photo.id} Photo URL: {photo.photo_url}')
 
         # Create Tour Project Obj - contains virtual tour info and an array of tour photo objs. Add this to the Client_Proj_View Obj
-        tour_proj_obj = Client_Virtual_Tour_Obj(tour_project.id,tour_project.creation_date, tour_project.tour_desc, tour_photo_objs)
+        tour_proj_obj = Client_Virtual_Tour_Obj(tour_project.id,tour_project.creation_date, tour_project.tour_desc, tour_project.tour_url)
         virtual_tour_objs.append(tour_proj_obj)
 
     # Get all 3D Model Assets and create OBJs

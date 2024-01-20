@@ -8,14 +8,14 @@ class Project:
 
 #Client_Virtual_Tours
 class Client_Virtual_Tour_Obj:
-    def __init__(self, tour_id, creation_date, tour_desc, tour_imgs):
+    def __init__(self, tour_id, creation_date, tour_desc, tour_url: str):
         self.tour_id = tour_id
         self.creation_date = creation_date
         self.tour_desc = tour_desc
-        self.tour_imgs = tour_imgs
+        self.tour_url = tour_url
 
-#Client Tour Still Images Data Obj
-class Client_Proj_Tour_Still_Obj:
+#Client Tour Still Images Data Obj - remove later not storing individual tour images
+class Client_Proj_Tour_Still_Obj: 
     def __init__(self, tour_proj_id, tour_img_id, photo_url):
         self.tour_proj_id = tour_proj_id
         self.tour_img_id = tour_img_id

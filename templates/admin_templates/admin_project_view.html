@@ -531,6 +531,11 @@
                     <input oninput="EnableSaveButton('tour_save_button_{{ tour.id }}')" class="form-control" type="text" name="tour_desc_input" id="tour_desc_input_{{ tour.id }}" value="{{ tour.tour_desc }}" readonly=true>
                     <label id="tour_desc_label_{{ tour.id }}" for="tour_desc_input_{{ tour.id }}">Tour Desc:</label>
                 </form>
+                <!--Tour URL-->
+                <form class="form-floating">
+                    <input oninput="EnableSaveButton('tour_save_button_{{ tour.id }}')" class="form-control" type="text" name="tour_url_input_{{ tour.id }}" id="tour_url_input_{{ tour.id }}" value="{{ tour.tour_url }}" readonly=true>
+                    <label id="tour_url_label_{{ tour.id }}" for="tour_url_input_{{ tour.id }}">Tour URL:</label>
+                </form>
                 <button class="btn bg-danger bg-gradient mt-2" style="color: white; font-weight:bold" data-bs-toggle="modal" data-bs-target="#delete_asset_modal" onclick="delete_asset_prime('tour',{{ tour.id }}, {{ tour.project_id }})">Delete Asset</button>
             </div>
         <!-- Add Tour Images -->
@@ -717,6 +722,7 @@
                 case "tour":
                 //get field values
                 const tour_desc_input = document.getElementById('tour_desc_input_' + asset_id);
+                const tour_url_input = document.getElementById('tour_url_input_' +  asset_id);
 
                 // check if field values are empty
                 if (tour_desc_input.value != '' ) {
@@ -728,6 +734,17 @@
                     UpdateAssetAttributes(field_update_obj, form_values_obj.project_id);
                     console.log('Updating Tour description');
                 }
+
+                if(tour_url_input.value != '') {
+                    let field_update_obj = {
+                        type_asset: asset_type,
+                        new_tour_url: tour_url_input.value,
+                        asset_id: asset_id
+                    };
+                    UpdateAssetAttributes(field_update_obj, form_values_obj.project_id)
+                    console.log('Updating Tour URL');
+                }
+
                     break;
                 case "ortho":
                     // Get field values
@@ -908,22 +925,32 @@
                     // Get all editable model asset attributes
                     // Get Tour Desc Field
                     let desc_input_field = document.getElementById('tour_desc_input_' + asset_id);
+                    let url_input_field = document.getElementById('tour_url_input_' + asset_id);
                     // Save previous tour Description
                     let desc_value = desc_input_field.value;
+                    let tour_url_value = url_input_field.value;
                     // Clear Desc Text Field
                     desc_input_field.value = '';
+                    url_input_field.value = '';
                     // Make Text Field Editable
                     desc_input_field.readOnly = false;
                     desc_input_field.placeholder = "New Desc";
+                    url_input_field.readOnly = false;
+                    url_input_field.placeholder = "New Tour URL";
                     // update desc label of previous value
                     let desc_label = document.getElementById('tour_desc_label_' + asset_id);
                     desc_label.textContent = 'Old Desc: ' + desc_value;
+                    let tour_url_label = document.getElementById('tour_url_label_' +  asset_id);
+                    tour_url_label.textContent = 'Old URL: ' + tour_url_value;
                     // Create tour previous fields object
                     const tour_previous_fields_obj = {
                         tour_desc: desc_value,
+                        tour_url: tour_url_value,
                         tour_button_id: 'tour_' + asset_id + '_button',
                         desc_input_id: 'tour_desc_input_' + asset_id,
                         desc_label_id: 'tour_desc_label_' + asset_id,
+                        tour_url_input_id: 'tour_url_label_' + asset_id,
+                        tour_url_label_id: 'tour_url_input_' + asset_id,
                         save_button_id: 'tour_save_button_' + asset_id,
                         cancel_button_id: 'tour_cancel_button_' + asset_id,
                         project_id: project_id
@@ -1189,11 +1216,18 @@
                    const tour_desc_field = document.getElementById(previous_field_vals_obj.desc_input_id);
                    const tour_desc_label = document.getElementById(previous_field_vals_obj.desc_label_id);
 
+                   const tour_url_field = document.getElementById(previous_field_vals_obj.tour_url_input_id);
+                   const tour_url_label = document.getElementById(previous_field_vals_obj.tour_url_label_id);
+
                    // Reset Label and fields
                    tour_desc_field.value = previous_field_vals_obj.tour_desc;
                    tour_desc_field.readOnly = true;
                    tour_desc_label.textContent = 'Tour Desc:';
                    
+                   tour_url_field.value = previous_field_vals_obj.tour_url;
+                   tour_url_field.readOnly = true;
+                   tour_url_label.textContent = 'Tour URL:';
+
                    // remove save and cancel buttons/ re-enable modify button
                    var cancel_button = document.getElementById(previous_field_vals_obj.cancel_button_id);
                    var save_button = document.getElementById(previous_field_vals_obj.save_button_id);

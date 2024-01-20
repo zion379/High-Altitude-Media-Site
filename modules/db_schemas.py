@@ -66,6 +66,8 @@ class Virtual_tour_projects(UserMixin, db.Model):
     creation_date = db.Column(db.Date, nullable=False)
     tour_desc = db.Column(db.Text, nullable=True)
     project_id = db.Column(db.Integer, ForeignKey('projects.id'), nullable=False)
+    tour_desc = db.Column(db.Text, nullable=True)
+    tour_url = db.Column(db.Text, nullable=True)
 
     #Create one-to-one relationship to Projects
     projects = relationship('Projects', backref='virtual_tour_projects', uselist=False, lazy="joined")

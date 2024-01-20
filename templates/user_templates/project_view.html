@@ -165,6 +165,7 @@
                             tour_id: '{{ tour.tour_id }}',
                             creation_date: '{{ tour.creation_date }}',
                             tour_desc: '{{ tour.tour_desc }}',
+                            tour_url: '{{ tour.tour_url }}',
                             tour_imgs: [
                                 {% for tour_img in tour.tour_imgs %}
                                     {
@@ -476,7 +477,27 @@
                     reset_asset_buttons();
                     button_element.classList.add('disabled');
                     // Tour will take in the url for a js file. which will contain object for the virtual tour
-                    console.log('Load new tour');
+                    project_tours.forEach( tour => {
+                        // load asset
+                        if(tour.tour_id == asset_id) {
+                            //console.log('Load new tour ' + tour.tour_id);
+                            //console.log(tour);
+                            // var tour imgs is misleading name it holds virtual tours not individual imgs
+                            
+                            show_new_tour(tour.tour_url);
+                            /*
+                            var tour_projs = project_tours[0]['tour_imgs']
+                            tour_projs.forEach(tour => {
+                                if (tour.tour_img_id == asset_id) {
+                                    console.log(tour);
+                                    // clear view container
+                                    show_new_tour(tour.photo_url);
+                                    // break
+                                }
+                            });
+                            */
+                        }
+                    });
                 break;
                 case 'ortho':
                     reset_asset_buttons();
@@ -484,6 +505,7 @@
 
                     project_orthos.forEach( ortho => {
                         // load asset
+                        console.log(ortho);
                         if (ortho.ortho_id == asset_id) {
                             //update project view
                             load_new_ortho(ortho.ortho_url);
@@ -620,12 +642,54 @@
 
               model3d_script_loaded = true;
           }
+
+          /*
+          // load virtual tour json data
+          async function load_tour_json_data(src, callback) {
+            try {
+                // Fetch the JSON File
+                const options = {
+                    method: 'GET',
+                    mode: 'cors'
+                };
+
+                const response = await fetch(src, options);
+
+                // check if fetch was successful
+                if(!response.ok) {
+                    throw new Error('Failed to load Virtual Tour data');
+                }
+
+                // parse the json data
+                const jsonData = await response.json();
+                // Log json data to console.
+                console.log(jsonData)
+                current_tour_data = jsonData
+                return jsonData
+                
+            } catch (error) {
+                console.error(error);
+            }
+          }
+          */
+
+          function load_tour_viewer_Script(src, callback) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.type = 'module'
+            script.defer = true;
+            document.head.appendChild(script);
+            callback(script)
+          }
+
           // Virtual Tour Loading Helper Functions
           function loadScript_virtual_tour(src, callback) {
             const script = document.createElement('script');
             script.src = src;
             script.type =  'text/javascript';
+            script.defer = true;
             document.head.appendChild(script);
+            callback()
           }
 
           function loadStyles_virtual_tour(src, callback) {
@@ -633,6 +697,7 @@
             styles.rel = 'stylesheet';
             styles.href = src;
             document.head.appendChild(styles);
+            callback()
           }
 
           function load360TourViewer(container_) {
@@ -648,10 +713,32 @@
               });
               tour_script_loaded = true;
 
-              // load tour viewer script
-              loadScript_virtual_tour('/static/js_scripts/Panorama_Image_Viewer.js', function() {
-                console.log('Virtual Tour Viewer script loaded.');
+
+              // load tour viewer script -- this is the file that loads the virtual tour. '/static/js_scripts/Panorama_Image_Viewer.js'
+              load_tour_viewer_Script('/static/js_scripts/Panorama_Image_Viewer.js', function(tour_script_ref_el) {
+                console.log('Virtual Tour - Viewer script loaded.')
+                //console.log(project_tours[0]["tour_imgs"][0])
+                tour_script_ref_el.addEventListener('load', function() {
+                    console.log('External script loaded!');
+                    // Call functions or perform actions after the script is loaded
+                    tour_data_url = project_tours[0]['tour_url']; // get first tour
+                    show_tour(tour_data_url); // load first tour in project
+                  });
+                //test_func();
               });
+              /*
+              tour_script_ref_el = document.querySelector('script[src="Panorama_Image_Viewer.js"]')
+              tour_script_ref_el.addEventListener('load', function() {
+                console.log('External script loaded!');
+                // Call functions or perform actions after the script is loaded
+              });
+              */
+              // load json data file for tour
+              /*
+              load_tour_json_data('https://high-altitude-media-assets.nyc3.cdn.digitaloceanspaces.com/Virtual_Tours/example_tour.json').then(json_data => {
+                console.log('json data loaded');
+              });
+              */
 
               // Render 360 Tour
               // create panorama container div

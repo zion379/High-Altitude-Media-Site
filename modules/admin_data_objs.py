@@ -36,13 +36,14 @@ class Admin_3dModel_obj:
 
 #Admin Tour Object
 class Admin_virtual_tour_obj:
-    def __init__(self, tour_id: int, project_id: int, date: str, tour_desc: str):
+    def __init__(self, tour_id: int, project_id: int, date: str, tour_desc: str, tour_url: str):
         self.tour_id: int = tour_id
         self.project_id: int = project_id
         self.date: str = date
         self.tour_desc: str = tour_desc
+        self.tour_url: str = tour_url
 
-#Admin Tour Image Object
+#Admin Tour Image Object - remove later no longer storing individual images
 class Admin_virtual_tour_img_obj:
     def __init__(self, img_id: int, tour_id: int, photo_url: str):
         self.img_id: int = img_id
