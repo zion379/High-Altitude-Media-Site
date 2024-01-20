@@ -16,7 +16,7 @@ from modules.payment_processor_utils import handle_create_checkout_session
 app = Flask(__name__)
 
 #site dev testing Mode varible for testing
-dev_testing_mode = True
+dev_testing_mode = False
 
 #Load Enviorment Variables for testing
 if dev_testing_mode==True:
